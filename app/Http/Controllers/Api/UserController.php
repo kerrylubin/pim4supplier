@@ -11,10 +11,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
+// use App\Laravue\Models\SupplierProfileUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
@@ -39,6 +41,7 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
+        //list users that was created by the creators id
         $searchParams = $request->all();
         $userQuery = User::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
@@ -56,15 +59,31 @@ class UserController extends BaseController
 
         return UserResource::collection($userQuery->paginate($limit));
     }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function supplierUser(User $user, $supplier_user)
+    {
+        if (!$user->isAdmin()) {
+            DB::table('supplier_user')
+            ->insert([$supplier_user]);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param  User $user_id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        // $supplier_user = new SupplierProfileUsers;
+
         $validator = Validator::make(
             $request->all(),
             array_merge(
@@ -79,14 +98,45 @@ class UserController extends BaseController
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
+
+
             $params = $request->all();
             $user = User::create([
                 'name' => $params['name'],
                 'email' => $params['email'],
                 'password' => Hash::make($params['password']),
             ]);
+
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
+
+            // $supplier_user = SupplierProfileUsers::create([
+            //     'creator_id' => $user->id,
+            //     'name' => $params['name'],
+            //     'email' => $params['email'],
+            //     'role' => $params['role']
+            // ]);
+
+            // $supplier_user->creator_id = $user->id;
+            // $supplier_user->name = $params['name'];
+            // $supplier_user->email = $params['email'];
+            // $supplier_user->role = $params['role'];
+            // $supplier_user->save();
+
+            $supplier_user = array( 'creator_id' => $user->id,
+                                    'name' => $params['name'],
+                                    'email' => $params['email'],
+                                    'role' => $params['role']
+            );
+            // if (!$user_id->isAdmin()) {
+                DB::table('supplier_profile_users')
+                ->insert([$supplier_user]);
+            // }
+
+            //create function to store in other relative view db
+            //it will take the params id , name, email and role. also the profile
+            //who created the user, its user id will be used to check it it which role it has.
+            //then that id will be stored along side that new created user
 
             return new UserResource($user);
         }
