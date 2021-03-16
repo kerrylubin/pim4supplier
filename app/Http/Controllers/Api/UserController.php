@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\PermissionResource;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
