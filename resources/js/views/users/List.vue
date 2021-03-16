@@ -1,4 +1,4 @@
-<template>
+<template slot-scope="scope">
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -51,7 +51,7 @@
           <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
             Permissions
           </el-button>
-          <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
+          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
             Delete
           </el-button>
         </template>
@@ -111,14 +111,16 @@
             <el-input v-model="newUser.confirmPassword" show-password />
           </el-form-item>
         </el-form>
+        <!-- <template slot-scope="scope"> -->
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createUser()">
+          <el-button type="primary" @click="createUser(currentUserId);">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
+        <!-- </template> -->
       </div>
     </el-dialog>
   </div>
@@ -159,8 +161,8 @@ export default {
         keyword: '',
         role: '',
       },
-      roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
-      nonAdminRoles: ['editor', 'user', 'visitor'],
+      roles: ['admin', 'supplier', 'editor', 'user', 'visitor'],
+      nonAdminRoles: ['supplier', 'editor', 'user', 'visitor'],
       newUser: {},
       dialogFormVisible: false,
       dialogPermissionVisible: false,
@@ -332,13 +334,15 @@ export default {
         this.$refs.otherPermissions.setCheckedKeys(this.permissionKeys(this.userOtherPermissions));
       });
     },
-    createUser() {
+    createUser(id){
+      console.log('current user id: ', id);
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.newUser.roles = [this.newUser.role];
           this.userCreating = true;
+          // console.log('new user: ', this.newUser);
           userResource
-            .store(this.newUser)
+            .store(this.newUser, 2)
             .then(response => {
               this.$message({
                 message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',

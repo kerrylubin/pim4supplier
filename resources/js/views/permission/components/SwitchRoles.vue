@@ -9,7 +9,7 @@
     <div>
       <el-radio-group v-model="switchRoles" v-loading="loading">
         <el-radio-button label="admin" />
-        <el-radio-button label="manager" />
+        <el-radio-button label="supplier" />
         <el-radio-button label="editor" />
         <el-radio-button label="user" />
         <el-radio-button label="visitor" />
