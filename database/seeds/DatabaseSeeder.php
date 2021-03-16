@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@laravue.dev',
             'password' => Hash::make('laravue'),
         ]);
-        $manager = User::create([
+        $supplier = User::create([
             'name' => 'Manager',
-            'email' => 'manager@laravue.dev',
+            'email' => 'supplier@laravue.dev',
             'password' => Hash::make('laravue'),
         ]);
         $editor = User::create([
@@ -41,12 +41,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
-        $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
+        $supplierRole = Role::findByName(\App\Laravue\Acl::ROLE_SUPPLIER);
         $editorRole = Role::findByName(\App\Laravue\Acl::ROLE_EDITOR);
         $userRole = Role::findByName(\App\Laravue\Acl::ROLE_USER);
         $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_VISITOR);
         $admin->syncRoles($adminRole);
-        $manager->syncRoles($managerRole);
+        $supplier->syncRoles($supplierRole);
         $editor->syncRoles($editorRole);
         $user->syncRoles($userRole);
         $visitor->syncRoles($visitorRole);
