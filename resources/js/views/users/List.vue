@@ -166,6 +166,7 @@ export default {
       dialogPermissionVisible: false,
       dialogPermissionLoading: false,
       currentUserId: 0,
+      userData: null,
       currentUser: {
         name: '',
         permissions: [],
@@ -261,6 +262,9 @@ export default {
       this.getPermissions();
     }
   },
+  mounted: function(){
+    this.getUser();
+  },
   methods: {
     checkPermission,
     async getPermissions() {
@@ -270,7 +274,11 @@ export default {
       this.menuPermissions = menu;
       this.otherPermissions = other;
     },
-
+    async getUser() {
+      const data = await this.$store.dispatch('user/getInfo');
+      this.userData = data;
+      console.log('userData: ', this.userData.id);
+    },
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
@@ -320,6 +328,7 @@ export default {
       this.dialogPermissionLoading = true;
       this.dialogPermissionVisible = true;
       const found = this.list.find(user => user.id === id);
+      console.log('handlePermission: ', id);
       const { data } = await userResource.permissions(id);
       this.currentUser = {
         id: found.id,
@@ -338,7 +347,7 @@ export default {
           this.newUser.roles = [this.newUser.role];
           this.userCreating = true;
           userResource
-            .store(this.newUser)
+            .store(this.newUser, this.userData)
             .then(response => {
               this.$message({
                 message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',

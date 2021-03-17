@@ -61,11 +61,13 @@ class UserController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
+     *  @param  User $user_id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        $currentUser = Auth::user();//gets current user
         $validator = Validator::make(
             $request->all(),
             array_merge(
@@ -89,15 +91,15 @@ class UserController extends BaseController
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
 
-            $supplier_user = array( 'creator_id' => $user->id,
+            $supplier_user = array( 'creator_id' => $currentUser->id,
                                     'name' => $params['name'],
                                     'email' => $params['email'],
                                     'role' => $params['role']
             );
-            // if (!$user_id->isAdmin()) {
+            if (!$currentUser->isAdmin()) {
                 DB::table('supplier_profile_users')
                 ->insert([$supplier_user]);
-            // }
+            }
 
             return new UserResource($user);
         }
