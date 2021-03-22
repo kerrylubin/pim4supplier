@@ -12,7 +12,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\DB;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
@@ -110,10 +109,12 @@ class UserController extends BaseController
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
 
-            $supplier_user = array( 'creator_id' => $currentUser->id,
-                                    'name' => $params['name'],
-                                    'email' => $params['email'],
-                                    'role' => $params['role']
+            $supplier_user = array(
+                'id'    => $user->id,
+                'creator_id' => $currentUser->id,
+                'name' => $params['name'],
+                'email' => $params['email'],
+                'role' => $params['role']
             );
 
             if (!$currentUser->isAdmin()) {// if not admin ad to this table
@@ -217,12 +218,17 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
+        $currentUser = Auth::user();
         if ($user->isAdmin()) {
             return response()->json(['error' => 'Ehhh! Can not delete admin user'], 403);
         }
 
         try {
             $user->delete();
+            if (!$currentUser->isAdmin()) {// if not admin delete from this table
+                DB::table('supplier_profile_users')
+                ->where('id', $user->id)->delete();
+            }
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }
