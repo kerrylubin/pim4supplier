@@ -1,4 +1,4 @@
-<template>
+<template slot-scope="scope">
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -111,14 +111,16 @@
             <el-input v-model="newUser.confirmPassword" show-password />
           </el-form-item>
         </el-form>
+        <!-- <template slot-scope="scope"> -->
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createUser()">
+          <el-button type="primary" @click="createUser(currentUserId);">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
+        <!-- </template> -->
       </div>
     </el-dialog>
   </div>
@@ -341,11 +343,13 @@ export default {
         this.$refs.otherPermissions.setCheckedKeys(this.permissionKeys(this.userOtherPermissions));
       });
     },
-    createUser() {
+    createUser(id){
+      console.log('current user id: ', id);
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.newUser.roles = [this.newUser.role];
           this.userCreating = true;
+          // console.log('new user: ', this.newUser);
           userResource
             .store(this.newUser, this.userData)
             .then(response => {

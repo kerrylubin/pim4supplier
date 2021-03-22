@@ -12,10 +12,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
+use App\Laravue\Models\SupplierProfileUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
@@ -40,6 +42,7 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
+        //list users that was created by the creators id
         $searchParams = $request->all();
         $userQuery = User::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
@@ -57,6 +60,19 @@ class UserController extends BaseController
 
         return UserResource::collection($userQuery->paginate($limit));
     }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function supplierUser(User $user, $supplier_user)
+    {
+        if (!$user->isAdmin()) {
+            DB::table('supplier_user')
+            ->insert([$supplier_user]);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,7 +81,7 @@ class UserController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user_id)
     {
         $currentUser = Auth::user();//gets current user
         $validator = Validator::make(
@@ -82,12 +98,15 @@ class UserController extends BaseController
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
+
+
             $params = $request->all();
             $user = User::create([
                 'name' => $params['name'],
                 'email' => $params['email'],
                 'password' => Hash::make($params['password']),
             ]);
+
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
 
