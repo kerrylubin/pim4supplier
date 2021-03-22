@@ -33,6 +33,10 @@ export default {
   created() {
     this.getUser();
   },
+  mounted: function(){
+    this.getUser();
+    console.log('self profile user data: ', this.user);
+  },
   methods: {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');

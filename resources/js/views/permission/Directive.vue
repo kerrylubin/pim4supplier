@@ -19,12 +19,12 @@
         </el-tag>
       </div>
       <div>
-        <span v-role="['manager']" class="permission-alert">
+        <span v-role="['supplier']" class="permission-alert">
           Only
-          <el-tag class="permission-tag" size="small">manager</el-tag> can see this
+          <el-tag class="permission-tag" size="small">supplier</el-tag> can see this
         </span>
-        <el-tag v-role="['manager']" class="permission-sourceCode" type="info">
-          v-role="['manager']"
+        <el-tag v-role="['supplier']" class="permission-sourceCode" type="info">
+          v-role="['supplier']"
         </el-tag>
       </div>
       <div>
@@ -99,10 +99,10 @@
           </el-tag>
         </el-tab-pane>
 
-        <el-tab-pane v-if="checkRole(['manager'])" label="Manager">
-          Manager can see this
+        <el-tab-pane v-if="checkRole(['supplier'])" label="Supplier">
+          Supplier can see this
           <el-tag class="permission-sourceCode" type="info">
-            v-if="checkRole(['manager'])"
+            v-if="checkRole(['supplier'])"
           </el-tag>
         </el-tab-pane>
 

@@ -40,11 +40,20 @@ export default {
       return;
     }
     this.getUser(id);
+    console.log('user data: ', this.user);
+  },
+  mounted: function(){
+    const id = this.$route.params && this.$route.params.id;
+    const currentUserId = this.$store.getters.userId;
+    console.log('user data: ', this.user);
+    console.log('id: ', id);
+    console.log('currentUserId: ', currentUserId);
   },
   methods: {
     async getUser(id) {
       const { data } = await userResource.get(id);
       this.user = data;
+      console.log('user data: ', this.user);
     },
   },
 };

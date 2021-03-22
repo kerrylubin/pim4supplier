@@ -21,7 +21,7 @@ class SetupRolePermissions extends Migration
         }
 
         $adminRole = Role::findByName(Acl::ROLE_ADMIN);
-        $managerRole = Role::findByName(Acl::ROLE_MANAGER);
+        $supplierRole = Role::findByName(Acl::ROLE_SUPPLIER);
         $editorRole = Role::findByName(Acl::ROLE_EDITOR);
         $userRole = Role::findByName(Acl::ROLE_USER);
         $visitorRole = Role::findByName(Acl::ROLE_VISITOR);
@@ -32,7 +32,7 @@ class SetupRolePermissions extends Migration
 
         // Setup basic permission
         $adminRole->givePermissionTo(Acl::permissions());
-        $managerRole->givePermissionTo(Acl::permissions([Acl::PERMISSION_PERMISSION_MANAGE]));
+        $supplierRole->givePermissionTo(Acl::permissions([Acl::PERMISSION_PERMISSION_MANAGE]));
         $editorRole->givePermissionTo(Acl::menuPermissions());
         $editorRole->givePermissionTo(Acl::PERMISSION_ARTICLE_MANAGE);
         $userRole->givePermissionTo([

@@ -67,12 +67,16 @@ export default {
       ],
     };
   },
+  mounted: function(){
+    console.log('usercard data: ', this.user);
+  },
   methods: {
     getRole() {
-      const roles = this.user.roles.map(value => this.$options.filters.uppercaseFirst(value));
+      var roles = this.user.roles.map(value => this.$options.filters.uppercaseFirst(value));
       return roles.join(' | ');
     },
   },
+
 };
 </script>
 
