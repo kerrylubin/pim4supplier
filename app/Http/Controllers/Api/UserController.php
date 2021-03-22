@@ -96,7 +96,8 @@ class UserController extends BaseController
                                     'email' => $params['email'],
                                     'role' => $params['role']
             );
-            if (!$currentUser->isAdmin()) {
+
+            if (!$currentUser->isAdmin()) {// if not admin ad to this table
                 DB::table('supplier_profile_users')
                 ->insert([$supplier_user]);
             }
