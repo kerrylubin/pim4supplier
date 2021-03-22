@@ -99,8 +99,8 @@
           </el-tag>
         </el-tab-pane>
 
-        <el-tab-pane v-if="checkRole(['supplier'])" label="Supplier">
-          Supplier can see this
+        <el-tab-pane v-if="checkRole(['supplier'])" label="Manager">
+          Manager can see this
           <el-tag class="permission-sourceCode" type="info">
             v-if="checkRole(['supplier'])"
           </el-tag>

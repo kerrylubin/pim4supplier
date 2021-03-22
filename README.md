@@ -81,7 +81,7 @@ This project uses [Envoy](https://laravel.com/docs/5.8/envoy) for deployment, an
 * [Laravel Sanctum](https://github.com/laravel/sanctum/) - Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.
 * [spatie/laravel-permission](https://github.com/spatie/laravel-permission) - Associate users with permissions and roles.
 * [VueJS](https://vuejs.org/) - The Progressive JavaScript Framework
-* [Element](https://element.eleme.io/) - A  Vue 2.0 based component library for developers, designers and product managers
+* [Element](https://element.eleme.io/) - A  Vue 2.0 based component library for developers, designers and product suppliers
 * [Vue Admin Template](https://github.com/PanJiaChen/vue-admin-template) - A minimal vue admin template with Element UI
 
 ## Contributing

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('laravue'),
         ]);
         $supplier = User::create([
-            'name' => 'Supplier',
+            'name' => 'Manager',
             'email' => 'supplier@laravue.dev',
             'password' => Hash::make('laravue'),
         ]);

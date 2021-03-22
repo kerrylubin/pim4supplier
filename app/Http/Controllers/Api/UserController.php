@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\PermissionResource;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
 use App\Laravue\JsonResponse;
@@ -76,14 +77,13 @@ class UserController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  User $user_id
+     *  @param  User $user_id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, User $user_id)
     {
-        // $supplier_user = new SupplierProfileUsers;
-
+        $currentUser = Auth::user();//gets current user
         $validator = Validator::make(
             $request->all(),
             array_merge(
@@ -110,19 +110,16 @@ class UserController extends BaseController
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
 
-            $supplier_user = SupplierProfileUsers::create([
-                'creator_id' => $user->id,
-                'name' => $params['name'],
-                'email' => $params['email'],
-                'role' => $params['role']
-            ]);
+            $supplier_user = array( 'creator_id' => $currentUser->id,
+                                    'name' => $params['name'],
+                                    'email' => $params['email'],
+                                    'role' => $params['role']
+            );
 
-
-
-            //create function to store in other relative view db
-            //it will take the params id , name, email and role. also the profile
-            //who created the user, its user id will be used to check it it which role it has.
-            //then that id will be stored along side that new created user
+            if (!$currentUser->isAdmin()) {// if not admin ad to this table
+                DB::table('supplier_profile_users')
+                ->insert([$supplier_user]);
+            }
 
             return new UserResource($user);
         }
