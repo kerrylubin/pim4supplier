@@ -41,36 +41,42 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
-        //list users that was created by the creators id
-        $searchParams = $request->all();
-        $userQuery = User::query();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $role = Arr::get($searchParams, 'role', '');
-        $keyword = Arr::get($searchParams, 'keyword', '');
+        $currentUser = Auth::user();
 
-        if (!empty($role)) {
-            $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+        if (!$currentUser->isAdmin()) {
+
+            $searchParams = $request->all();
+            $userQuery = DB::table('supplier_profile_users');
+            $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+            $role = Arr::get($searchParams, 'role', '');
+            $keyword = Arr::get($searchParams, 'keyword', '');
+
+            $userQuery->select('supplier_profile_users.name', 'supplier_profile_users.email', 'supplier_profile_users.role')
+            ->where('supplier_profile_users.id', '=', $currentUser->id)->first();
+            // return response()->json( $userQuery );
+            return UserResource::collection($userQuery->paginate($limit));
+
+        }
+        else{
+
+            $searchParams = $request->all();
+            $userQuery = User::query();
+            $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+            $role = Arr::get($searchParams, 'role', '');
+            $keyword = Arr::get($searchParams, 'keyword', '');
+
+            if (!empty($role)) {
+                $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+            }
+
+            if (!empty($keyword)) {
+                $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
+                $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
+            }
+
+            return UserResource::collection($userQuery->paginate($limit));
         }
 
-        if (!empty($keyword)) {
-            $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
-            $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
-        }
-
-        return UserResource::collection($userQuery->paginate($limit));
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function supplierUser(User $user, $supplier_user)
-    {
-        if (!$user->isAdmin()) {
-            DB::table('supplier_user')
-            ->insert([$supplier_user]);
-        }
     }
 
     /**
