@@ -43,19 +43,30 @@ class UserController extends BaseController
     {
         $currentUser = Auth::user();
 
-        if (!$currentUser->isAdmin()) {
+        if ( !$currentUser->isAdmin() ) {
 
             $searchParams = $request->all();
-            $userQuery = DB::table('supplier_profile_users');
             $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
             $role = Arr::get($searchParams, 'role', '');
-            $keyword = Arr::get($searchParams, 'keyword', '');
+            $keyword = Arr::get($searchParams, 'keyword', '' );
 
-            $userQuery->select('supplier_profile_users.name', 'supplier_profile_users.email', 'supplier_profile_users.role')
-            ->where('supplier_profile_users.id', '=', $currentUser->id)->first();
-            // return response()->json( $userQuery );
-            return UserResource::collection($userQuery->paginate($limit));
+            $userQuery = DB::table('supplier_profile_users')
+            ->select('supplier_profile_users.user_id','supplier_profile_users.name',
+            'supplier_profile_users.email', 'supplier_profile_users.role')
+            ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
 
+            if (!empty($role)) {
+                $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+            }
+
+            if (!empty($keyword)) {
+                $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
+                $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
+            }
+
+            echo'user query: '.var_dump($userQuery);
+            return json_encode( $userQuery );
+            // return UserResource::collection($userQuery);
         }
         else{
 
@@ -116,8 +127,8 @@ class UserController extends BaseController
             $user->syncRoles($role);
 
             $supplier_user = array(
-                'id'    => $user->id,
-                'creator_id' => $currentUser->id,
+                'user_id'    => $user->id,
+                'id' => $currentUser->id,
                 'name' => $params['name'],
                 'email' => $params['email'],
                 'role' => $params['role']
