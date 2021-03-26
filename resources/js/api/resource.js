@@ -14,6 +14,13 @@ class Resource {
       params: query,
     });
   }
+  supplier_list(query) {
+    return request({
+      url: '/' + this.uri + '/' + this.id,
+      method: 'get',
+      params: query,
+    });
+  }
   get(id) {
     return request({
       url: '/' + this.uri + '/' + id,

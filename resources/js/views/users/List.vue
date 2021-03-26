@@ -279,13 +279,16 @@ export default {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      console.log('userData: ', this.userData.id);
+      console.log('userData: ', this.userData);
     },
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
       const { data, meta } = await userResource.list(this.query);
       this.list = data;
+      console.log('currentUserId: ', this.currentUserId);
+      console.log('currentUser: ', this.currentUser);
+      console.log('list: ', this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });

@@ -14,8 +14,8 @@ class CreateSupplierProfileUsersTable extends Migration
     public function up()
     {
         Schema::create('supplier_profile_users', function (Blueprint $table) {
-            $table->id();
-            $table->integer('creator_id');
+            $table->id('user_id');
+            $table->intiger('id');
             $table->string('name');
             $table->string('email');
             $table->string('role');

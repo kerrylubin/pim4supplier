@@ -12,7 +12,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\DB;
+use App\Http\Resources\SupplierUserResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
@@ -42,36 +42,53 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
-        //list users that was created by the creators id
-        $searchParams = $request->all();
-        $userQuery = User::query();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $role = Arr::get($searchParams, 'role', '');
-        $keyword = Arr::get($searchParams, 'keyword', '');
+        $currentUser = Auth::user();
 
-        if (!empty($role)) {
-            $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+        if ( !$currentUser->isAdmin() ) {
+
+            $searchParams = $request->all();
+            $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+            $role = Arr::get($searchParams, 'role', '');
+            $keyword = Arr::get($searchParams, 'keyword', '' );
+
+            $userQuery = DB::table('supplier_profile_users')
+            ->select('supplier_profile_users.user_id','supplier_profile_users.name',
+            'supplier_profile_users.email', 'supplier_profile_users.role')
+            ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
+
+            if (!empty($role)) {
+                $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+            }
+
+            if (!empty($keyword)) {
+                $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
+                $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
+            }
+
+            // echo'user query: '.var_dump($userQuery);
+            // return json_encode( $userQuery );
+            return UserResource::collection($userQuery);
+        }
+        else{
+
+            $searchParams = $request->all();
+            $userQuery = User::query();
+            $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+            $role = Arr::get($searchParams, 'role', '');
+            $keyword = Arr::get($searchParams, 'keyword', '');
+
+            if (!empty($role)) {
+                $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+            }
+
+            if (!empty($keyword)) {
+                $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
+                $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
+            }
+
+            return UserResource::collection($userQuery->paginate($limit));
         }
 
-        if (!empty($keyword)) {
-            $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
-            $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
-        }
-
-        return UserResource::collection($userQuery->paginate($limit));
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function supplierUser(User $user, $supplier_user)
-    {
-        if (!$user->isAdmin()) {
-            DB::table('supplier_user')
-            ->insert([$supplier_user]);
-        }
     }
 
     /**
@@ -110,10 +127,12 @@ class UserController extends BaseController
             $role = Role::findByName($params['role']);
             $user->syncRoles($role);
 
-            $supplier_user = array( 'creator_id' => $currentUser->id,
-                                    'name' => $params['name'],
-                                    'email' => $params['email'],
-                                    'role' => $params['role']
+            $supplier_user = array(
+                'user_id'    => $user->id,
+                'id' => $currentUser->id,
+                'name' => $params['name'],
+                'email' => $params['email'],
+                'role' => $params['role']
             );
 
             if (!$currentUser->isAdmin()) {// if not admin ad to this table
@@ -217,12 +236,17 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
+        $currentUser = Auth::user();
         if ($user->isAdmin()) {
             return response()->json(['error' => 'Ehhh! Can not delete admin user'], 403);
         }
 
         try {
             $user->delete();
+            if (!$currentUser->isAdmin()) {// if not admin delete from this table
+                DB::table('supplier_profile_users')
+                ->where('id', $user->id)->delete();
+            }
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }
