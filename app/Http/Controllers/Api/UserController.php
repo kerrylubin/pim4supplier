@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\SupplierUserResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
@@ -64,9 +65,9 @@ class UserController extends BaseController
                 $userQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
             }
 
-            echo'user query: '.var_dump($userQuery);
-            return json_encode( $userQuery );
-            // return UserResource::collection($userQuery);
+            // echo'user query: '.var_dump($userQuery);
+            // return json_encode( $userQuery );
+            return UserResource::collection($userQuery);
         }
         else{
 
