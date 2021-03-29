@@ -36,7 +36,14 @@ final class Acl
     const PERMISSION_VIEW_MENU_EXCEL = 'view menu excel';
     const PERMISSION_VIEW_MENU_ZIP = 'view menu zip';
     const PERMISSION_VIEW_MENU_PDF = 'view menu pdf';
-    const PERMISSION_VIEW_MENU_I18N = 'view menu i18n';
+
+    const PERMISSION_VIEW_MENU_CATEGORY_LIST = 'view menu category list';
+    const PERMISSION_VIEW_MENU_CREATE_CATEGORIES = 'view menu create categories';
+    const PERMISSION_VIEW_MENU_MAP_CATEGORIES = 'view menu map categories';
+    const PERMISSION_VIEW_MENU_LIST_ATTRIBUTES = 'view menu list attributes';
+    const PERMISSION_VIEW_MENU_CREATE_ATTRIBUTES = 'view menu create attributes';
+    const PERMISSION_VIEW_MENU_MAPPING = 'view menu mapping';
+
 
     const PERMISSION_USER_MANAGE = 'manage user';
     const PERMISSION_ARTICLE_MANAGE = 'manage article';

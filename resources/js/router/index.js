@@ -133,38 +133,29 @@ export const constantRoutes = [
         path: 'categorylist',
         component: () => import('@/views/categories/categorylist/index'), // Parent router-view
         name: 'Categorylist',
-        meta: { title: 'Category List' },
+        meta: {
+          title: 'Category List',
+          icon: 'list',
+          permissions: ['view menu category list'],
+        },
       },
       {
         path: 'createcategories',
         component: () => import('@/views/categories/createcategories/index'),
-        meta: { title: 'Create Categories' },
+        meta: {
+          title: 'Create Categories',
+          icon: 'plus',
+          permissions: ['view menu create categories'],
+        },
       },
       {
         path: 'mapcategories',
         component: () => import('@/views/categories/mapcategories/index'),
-        meta: { title: 'Mapcategories' },
-        // children:
-        // [
-        //   {
-        //     path: 'listattributes',
-        //     component: () => import('@/views/products/attributes/listattributes'),
-        //     name: 'list attributes',
-        //     meta: { title: 'List Attributes' },
-        //   },
-        //   {
-        //     path: 'createattributes',
-        //     component: () => import('@/views/products/attributes/createattributes'),
-        //     name: 'Create Attributes',
-        //     meta: { title: 'Create Attributes' },
-        //   },
-        //   {
-        //     path: 'mapping',
-        //     component: () => import('@/views/products/attributes/mapping'),
-        //     name: 'Mapping',
-        //     meta: { title: 'Mapping' },
-        //   },
-        // ],
+        meta: {
+          title: 'Mapcategories',
+          icon: 'sort',
+          permissions: ['view menu map categories'],
+        },
       },
     ],
   },
@@ -176,14 +167,17 @@ export const constantRoutes = [
     meta: {
       title: 'Products',
       icon: 'shopping',
-      permissions: ['view menu nested routes'],
+      // permissions: ['view menu nested routes'],
     },
     children: [
       {
         path: 'productlist',
         component: () => import('@/views/products/productlist/index'), // Parent router-view
         name: 'Productlist',
-        meta: { title: 'Product List' },
+        meta: {
+          title: 'Product List',
+          icon: 'list',
+        },
       },
       {
         path: 'createproducts',
