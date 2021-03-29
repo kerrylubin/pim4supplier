@@ -105,6 +105,169 @@ export const constantRoutes = [
       },
     ],
   },
+  // {
+  //   path: '/categories',
+  //   component: Layout,
+  //   redirect: '/categories/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/categories/index'),
+  //       name: 'Categories',
+  //       meta: { title: 'Categories', icon: 'component', noCache: true },
+  //     },
+  //   ],
+  // },
+  {
+    path: '/categories',
+    component: Layout,
+    redirect: '/categories/index',
+    name: 'Categories',
+    meta: {
+      title: 'Categories',
+      icon: 'component',
+      permissions: ['view menu nested routes'],
+    },
+    children: [
+      {
+        path: 'categorylist',
+        component: () => import('@/views/categories/categorylist/index'), // Parent router-view
+        name: 'Categorylist',
+        meta: { title: 'Category List' },
+      },
+      {
+        path: 'createcategories',
+        component: () => import('@/views/categories/createcategories/index'),
+        meta: { title: 'Create Categories' },
+      },
+      {
+        path: 'mapcategories',
+        component: () => import('@/views/categories/mapcategories/index'),
+        meta: { title: 'Mapcategories' },
+        // children:
+        // [
+        //   {
+        //     path: 'listattributes',
+        //     component: () => import('@/views/products/attributes/listattributes'),
+        //     name: 'list attributes',
+        //     meta: { title: 'List Attributes' },
+        //   },
+        //   {
+        //     path: 'createattributes',
+        //     component: () => import('@/views/products/attributes/createattributes'),
+        //     name: 'Create Attributes',
+        //     meta: { title: 'Create Attributes' },
+        //   },
+        //   {
+        //     path: 'mapping',
+        //     component: () => import('@/views/products/attributes/mapping'),
+        //     name: 'Mapping',
+        //     meta: { title: 'Mapping' },
+        //   },
+        // ],
+      },
+    ],
+  },
+  {
+    path: '/products',
+    component: Layout,
+    redirect: '/products/menu1',
+    name: 'Products',
+    meta: {
+      title: 'Products',
+      icon: 'shopping',
+      permissions: ['view menu nested routes'],
+    },
+    children: [
+      {
+        path: 'productlist',
+        component: () => import('@/views/products/productlist/index'), // Parent router-view
+        name: 'Productlist',
+        meta: { title: 'Product List' },
+      },
+      {
+        path: 'createproducts',
+        component: () => import('@/views/products/createproducts/index'),
+        meta: { title: 'Create Products' },
+      },
+      {
+        path: 'attributes',
+        component: () => import('@/views/products/attributes/index'),
+        meta: { title: 'Attributes' },
+        children:
+        [
+          {
+            path: 'listattributes',
+            component: () => import('@/views/products/attributes/listattributes'),
+            name: 'list attributes',
+            meta: { title: 'List Attributes' },
+          },
+          {
+            path: 'createattributes',
+            component: () => import('@/views/products/attributes/createattributes'),
+            name: 'Create Attributes',
+            meta: { title: 'Create Attributes' },
+          },
+          {
+            path: 'mapping',
+            component: () => import('@/views/products/attributes/mapping'),
+            name: 'Mapping',
+            meta: { title: 'Mapping' },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/settings',
+    component: Layout,
+    redirect: '/settings/menu1',
+    name: 'Settings',
+    meta: {
+      title: 'Settings',
+      icon: 'admin',
+      permissions: ['view menu nested routes'],
+    },
+    children: [
+      {
+        path: 'setting-1',
+        component: () => import('@/views/settings/setting-1/index'), // Parent router-view
+        name: 'Setting-1',
+        meta: { title: 'Setting 1' },
+      },
+      {
+        path: 'setting-2',
+        component: () => import('@/views/settings/setting-2/index'),
+        meta: { title: 'Setting 2' },
+      },
+      {
+        path: 'setting-3',
+        component: () => import('@/views/settings/setting-3/index'),
+        meta: { title: 'Setting-3' },
+        // children:
+        // [
+        //   {
+        //     path: 'listattributes',
+        //     component: () => import('@/views/products/attributes/listattributes'),
+        //     name: 'list attributes',
+        //     meta: { title: 'List Attributes' },
+        //   },
+        //   {
+        //     path: 'createattributes',
+        //     component: () => import('@/views/products/attributes/createattributes'),
+        //     name: 'Create Attributes',
+        //     meta: { title: 'Create Attributes' },
+        //   },
+        //   {
+        //     path: 'mapping',
+        //     component: () => import('@/views/products/attributes/mapping'),
+        //     name: 'Mapping',
+        //     meta: { title: 'Mapping' },
+        //   },
+        // ],
+      },
+    ],
+  },
   {
     path: '/profile',
     component: Layout,
