@@ -127,6 +127,7 @@ export default {
       for (let route of routes) {
         // skip some route
         if (route.hidden) {
+          console.log('route: ', route);
           continue;
         }
 

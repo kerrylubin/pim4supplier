@@ -123,10 +123,12 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/categories/index',
     name: 'Categories',
+    hidden: false,
     meta: {
+      roles: ['admin', 'editor'],
       title: 'Categories',
       icon: 'component',
-      permissions: ['view menu nested routes'],
+      permissions: ['view menu categories'],
     },
     children: [
       {
@@ -321,7 +323,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/clipboard/index'),
         name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['admin', 'supplier', 'editor', 'user'] },
+        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['supplier', 'editor', 'user'] },
       },
     ],
   },

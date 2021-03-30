@@ -37,6 +37,7 @@ final class Acl
     const PERMISSION_VIEW_MENU_ZIP = 'view menu zip';
     const PERMISSION_VIEW_MENU_PDF = 'view menu pdf';
 
+    const PERMISSION_VIEW_MENU_CATEGORIES = 'view menu categories';
     const PERMISSION_VIEW_MENU_CATEGORY_LIST = 'view menu category list';
     const PERMISSION_VIEW_MENU_CREATE_CATEGORIES = 'view menu create categories';
     const PERMISSION_VIEW_MENU_MAP_CATEGORIES = 'view menu map categories';
