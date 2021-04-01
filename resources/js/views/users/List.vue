@@ -95,7 +95,7 @@
         <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('user.role')" prop="role">
             <el-select v-model="newUser.role" class="filter-item" placeholder="Please select role">
-              <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
+              <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('user.name')" prop="name">
@@ -279,7 +279,6 @@ export default {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
       console.log('userData: ', this.userData);
     },
     async getList() {
