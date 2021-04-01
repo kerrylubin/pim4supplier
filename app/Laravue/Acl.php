@@ -45,7 +45,6 @@ final class Acl
     const PERMISSION_VIEW_MENU_CREATE_ATTRIBUTES = 'view menu create attributes';
     const PERMISSION_VIEW_MENU_MAPPING = 'view menu mapping';
 
-
     const PERMISSION_USER_MANAGE = 'manage user';
     const PERMISSION_ARTICLE_MANAGE = 'manage article';
     const PERMISSION_PERMISSION_MANAGE = 'manage permission';

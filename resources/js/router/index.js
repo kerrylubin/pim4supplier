@@ -15,13 +15,14 @@ import Layout from '@/layout';
 /* Router for modules */
 import elementUiRoutes from './modules/element-ui';
 import componentRoutes from './modules/components';
-import chartsRoutes from './modules/charts';
+// import chartsRoutes from './modules/charts';
 import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import nestedRoutes from './modules/nested';
 import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
+import categoriesRoutes from './modules/categories';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -109,58 +110,46 @@ export const constantRoutes = [
   //   path: '/categories',
   //   component: Layout,
   //   redirect: '/categories/index',
+  //   name: 'Categories',
+  //   hidden: false,
+  //   meta: {
+  //     // roles: ['admin', 'editor'],
+  //     title: 'Categories',
+  //     icon: 'component',
+  //     // permissions: ['view menu nested routes'],
+  //   },
   //   children: [
   //     {
-  //       path: 'index',
-  //       component: () => import('@/views/categories/index'),
-  //       name: 'Categories',
-  //       meta: { title: 'Categories', icon: 'component', noCache: true },
+  //       path: 'categorylist',
+  //       component: () => import('@/views/categories/categorylist/index'), // Parent router-view
+  //       name: 'Categorylist',
+  //       meta: {
+  //         title: 'Category List',
+  //         icon: 'list',
+  //         permissions: ['view menu category list'],
+  //       },
+  //     },
+  //     {
+  //       path: 'createcategories',
+  //       component: () => import('@/views/categories/createcategories/index'),
+  //       meta: {
+  //         title: 'Create Categories',
+  //         icon: 'plus',
+  //         permissions: ['view menu create categories'],
+  //       },
+  //     },
+  //     {
+  //       path: 'mapcategories',
+  //       component: () => import('@/views/categories/mapcategories/index'),
+  //       meta: {
+  //         title: 'Map Categories',
+  //         icon: 'sort',
+  //         permissions: ['view menu map categories'],
+  //       },
   //     },
   //   ],
   // },
-  {
-    path: '/categories',
-    component: Layout,
-    redirect: '/categories/index',
-    name: 'Categories',
-    hidden: false,
-    meta: {
-      roles: ['admin', 'editor'],
-      title: 'Categories',
-      icon: 'component',
-      permissions: ['view menu categories'],
-    },
-    children: [
-      {
-        path: 'categorylist',
-        component: () => import('@/views/categories/categorylist/index'), // Parent router-view
-        name: 'Categorylist',
-        meta: {
-          title: 'Category List',
-          icon: 'list',
-          permissions: ['view menu category list'],
-        },
-      },
-      {
-        path: 'createcategories',
-        component: () => import('@/views/categories/createcategories/index'),
-        meta: {
-          title: 'Create Categories',
-          icon: 'plus',
-          permissions: ['view menu create categories'],
-        },
-      },
-      {
-        path: 'mapcategories',
-        component: () => import('@/views/categories/mapcategories/index'),
-        meta: {
-          title: 'Mapcategories',
-          icon: 'sort',
-          permissions: ['view menu map categories'],
-        },
-      },
-    ],
-  },
+  categoriesRoutes,
   {
     path: '/products',
     component: Layout,
@@ -169,7 +158,6 @@ export const constantRoutes = [
     meta: {
       title: 'Products',
       icon: 'shopping',
-      // permissions: ['view menu nested routes'],
     },
     children: [
       {
@@ -222,7 +210,7 @@ export const constantRoutes = [
     meta: {
       title: 'Settings',
       icon: 'admin',
-      permissions: ['view menu nested routes'],
+      permissions: ['view menu settings'],
     },
     children: [
       {
@@ -240,27 +228,6 @@ export const constantRoutes = [
         path: 'setting-3',
         component: () => import('@/views/settings/setting-3/index'),
         meta: { title: 'Setting-3' },
-        // children:
-        // [
-        //   {
-        //     path: 'listattributes',
-        //     component: () => import('@/views/products/attributes/listattributes'),
-        //     name: 'list attributes',
-        //     meta: { title: 'List Attributes' },
-        //   },
-        //   {
-        //     path: 'createattributes',
-        //     component: () => import('@/views/products/attributes/createattributes'),
-        //     name: 'Create Attributes',
-        //     meta: { title: 'Create Attributes' },
-        //   },
-        //   {
-        //     path: 'mapping',
-        //     component: () => import('@/views/products/attributes/mapping'),
-        //     name: 'Mapping',
-        //     meta: { title: 'Mapping' },
-        //   },
-        // ],
       },
     ],
   },
@@ -296,7 +263,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   permissionRoutes,
   componentRoutes,
-  chartsRoutes,
+  // chartsRoutes,
   nestedRoutes,
   tableRoutes,
   adminRoutes,

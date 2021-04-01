@@ -12,6 +12,7 @@ export default {
       });
 
       if (!hasPermission) {
+        console.log('el permission: ', el);
         el.parentNode && el.parentNode.removeChild(el);
       }
     } else {
