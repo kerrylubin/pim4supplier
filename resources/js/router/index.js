@@ -15,13 +15,14 @@ import Layout from '@/layout';
 /* Router for modules */
 import elementUiRoutes from './modules/element-ui';
 import componentRoutes from './modules/components';
-import chartsRoutes from './modules/charts';
+// import chartsRoutes from './modules/charts';
 import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import nestedRoutes from './modules/nested';
 import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
+import categoriesRoutes from './modules/categories';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -105,6 +106,131 @@ export const constantRoutes = [
       },
     ],
   },
+  // {
+  //   path: '/categories',
+  //   component: Layout,
+  //   redirect: '/categories/index',
+  //   name: 'Categories',
+  //   hidden: false,
+  //   meta: {
+  //     // roles: ['admin', 'editor'],
+  //     title: 'Categories',
+  //     icon: 'component',
+  //     // permissions: ['view menu nested routes'],
+  //   },
+  //   children: [
+  //     {
+  //       path: 'categorylist',
+  //       component: () => import('@/views/categories/categorylist/index'), // Parent router-view
+  //       name: 'Categorylist',
+  //       meta: {
+  //         title: 'Category List',
+  //         icon: 'list',
+  //         permissions: ['view menu category list'],
+  //       },
+  //     },
+  //     {
+  //       path: 'createcategories',
+  //       component: () => import('@/views/categories/createcategories/index'),
+  //       meta: {
+  //         title: 'Create Categories',
+  //         icon: 'plus',
+  //         permissions: ['view menu create categories'],
+  //       },
+  //     },
+  //     {
+  //       path: 'mapcategories',
+  //       component: () => import('@/views/categories/mapcategories/index'),
+  //       meta: {
+  //         title: 'Map Categories',
+  //         icon: 'sort',
+  //         permissions: ['view menu map categories'],
+  //       },
+  //     },
+  //   ],
+  // },
+  categoriesRoutes,
+  {
+    path: '/products',
+    component: Layout,
+    redirect: '/products/menu1',
+    name: 'Products',
+    meta: {
+      title: 'Products',
+      icon: 'shopping',
+    },
+    children: [
+      {
+        path: 'productlist',
+        component: () => import('@/views/products/productlist/index'), // Parent router-view
+        name: 'Productlist',
+        meta: {
+          title: 'Product List',
+          icon: 'list',
+        },
+      },
+      {
+        path: 'createproducts',
+        component: () => import('@/views/products/createproducts/index'),
+        meta: { title: 'Create Products' },
+      },
+      {
+        path: 'attributes',
+        component: () => import('@/views/products/attributes/index'),
+        meta: { title: 'Attributes' },
+        children:
+        [
+          {
+            path: 'listattributes',
+            component: () => import('@/views/products/attributes/listattributes'),
+            name: 'list attributes',
+            meta: { title: 'List Attributes' },
+          },
+          {
+            path: 'createattributes',
+            component: () => import('@/views/products/attributes/createattributes'),
+            name: 'Create Attributes',
+            meta: { title: 'Create Attributes' },
+          },
+          {
+            path: 'mapping',
+            component: () => import('@/views/products/attributes/mapping'),
+            name: 'Mapping',
+            meta: { title: 'Mapping' },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/settings',
+    component: Layout,
+    redirect: '/settings/menu1',
+    name: 'Settings',
+    meta: {
+      title: 'Settings',
+      icon: 'admin',
+      permissions: ['view menu settings'],
+    },
+    children: [
+      {
+        path: 'setting-1',
+        component: () => import('@/views/settings/setting-1/index'), // Parent router-view
+        name: 'Setting-1',
+        meta: { title: 'Setting 1' },
+      },
+      {
+        path: 'setting-2',
+        component: () => import('@/views/settings/setting-2/index'),
+        meta: { title: 'Setting 2' },
+      },
+      {
+        path: 'setting-3',
+        component: () => import('@/views/settings/setting-3/index'),
+        meta: { title: 'Setting-3' },
+      },
+    ],
+  },
   {
     path: '/profile',
     component: Layout,
@@ -137,7 +263,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   permissionRoutes,
   componentRoutes,
-  chartsRoutes,
+  // chartsRoutes,
   nestedRoutes,
   tableRoutes,
   adminRoutes,
@@ -164,7 +290,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/clipboard/index'),
         name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['admin', 'supplier', 'editor', 'user'] },
+        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['supplier', 'editor', 'user'] },
       },
     ],
   },
