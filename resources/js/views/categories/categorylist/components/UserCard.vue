@@ -1,0 +1,199 @@
+<template>
+  <el-card>
+    <div class="user-profile">
+      <div class="box-center" />
+      <!-- <div class="box-social"> -->
+      <div class="box-social">
+        <ul class="directory-list">
+          <li>assets
+            <ul>
+              <li>css
+                <ul>
+                  <li>typography.css</li>
+                  <li>layout.css</li>
+                  <li>modules.css</li>
+                  <li>states.css</li>
+                  <li>theme.css</li>
+                </ul>
+              </li>
+              <li>js
+                <ul>
+                  <li>custom.js</li>
+                  <li>jquery.js</li>
+                </ul>
+              </li>
+              <li>images
+                <ul>
+                  <li>logo.svg</li>
+                  <li>arrow-sprite.svg</li>
+                  <li>social-sprite.svg</li>
+                </ul>
+              </li>
+              <li>functions.php</li>
+            </ul>
+          </li>
+          <li>templates
+            <ul>
+              <li>pages
+                <ul>
+                  <li>about.tpl</li>
+                  <li>pricing.tpl</li>
+                  <li>contact.tpl</li>
+                  <li>home.tpl</li>
+                  <li>features.tpl</li>
+                </ul>
+              </li>
+              <li>header.tpl</li>
+              <li>menu.tpl</li>
+              <li>footer.tpl</li>
+            </ul>
+          </li>
+          <li>index.php</li>
+          <li>style.css</li>
+        </ul>
+      </div>
+      <!-- <InfoList /> -->
+      <!-- </div> -->
+      <div class="user-follow" />
+    </div>
+  </el-card>
+</template>
+
+<script>
+import $ from 'jquery';
+// import InfoList from './Infolist';
+
+export default {
+  name: 'Infolist',
+  data: () => {
+    return {};
+  },
+  mounted: function(){
+    // get all folders in our .directory-list
+    var allFolders = $('.directory-list li > ul');
+    allFolders.each(function() {
+      // add the folder class to the parent <li>
+      var folderAndName = $(this).parent();
+      folderAndName.addClass('folder');
+
+      // backup this inner <ul>
+      var backupOfThisFolder = $(this);
+      // then delete it
+      $(this).remove();
+      // add an <a> tag to whats left ie. the folder name
+      folderAndName.wrapInner("<a href='#' />");
+      // then put the inner <ul> back
+      folderAndName.append(backupOfThisFolder);
+
+      // now add a slideToggle to the <a> we just added
+      folderAndName.find('a').click(function(e) {
+        $(this).siblings('ul').slideToggle('slow');
+        e.preventDefault();
+      });
+    });
+  },
+  // methods: { },
+};
+</script>
+
+<style lang="scss" scoped>
+.user-profile {
+  .box-center {
+    padding-top: 10px;
+  }
+  .box-social {
+    padding-top: 30px;
+    .el-table {
+      border-top: 1px solid #dfe6ec;
+    }
+  }
+
+  body {
+  background: #eee;
+  font-family: "times new roman", serif;
+  line-height: 30px;
+  }
+
+  h2 {
+    color: #aaa;
+    font-size: 30px;
+    line-height: 40px;
+    font-style: italic;
+    font-weight: 200;
+    margin: 40px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
+  }
+
+  .box {
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    margin: 30px 5%;
+    padding: 5%;
+  }
+
+  @media (min-width: 544px) {
+    .box {
+      margin: 40px auto;
+      max-width: 440px;
+      padding: 40px;
+    }
+  }
+  /* The list style
+  -------------------------------------------------------------- */
+
+  .directory-list ul {
+    margin-left: 10px;
+    padding-left: 20px;
+    border-left: 1px dashed #ddd;
+  }
+
+  .directory-list li {
+    list-style: none;
+    color: #888;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: normal;
+  }
+
+  .directory-list a {
+    border-bottom: 1px solid transparent;
+    color: #888;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .directory-list a:hover {
+    border-color: #eee;
+    color: #000;
+  }
+  .directory-list .folder,
+  .directory-list .folder > a {
+    color: #777;
+    font-weight: bold;
+  }
+  /* The icons
+  -------------------------------------------------------------- */
+
+  .directory-list li:before {
+    margin-right: 10px;
+    content: "";
+    height: 20px;
+    vertical-align: middle;
+    width: 20px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    /* file icon by default */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='lightgrey' d='M85.714,42.857V87.5c0,1.487-0.521,2.752-1.562,3.794c-1.042,1.041-2.308,1.562-3.795,1.562H19.643 c-1.488,0-2.753-0.521-3.794-1.562c-1.042-1.042-1.562-2.307-1.562-3.794v-75c0-1.487,0.521-2.752,1.562-3.794 c1.041-1.041,2.306-1.562,3.794-1.562H50V37.5c0,1.488,0.521,2.753,1.562,3.795s2.307,1.562,3.795,1.562H85.714z M85.546,35.714 H57.143V7.311c3.05,0.558,5.505,1.767,7.366,3.627l17.41,17.411C83.78,30.209,84.989,32.665,85.546,35.714z' /></svg>");
+    background-position: center 2px;
+    background-size: 60% auto;
+  }
+  .directory-list li.folder:before {
+    /* folder icon if folder class is specified */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='lightblue' d='M96.429,37.5v39.286c0,3.423-1.228,6.361-3.684,8.817c-2.455,2.455-5.395,3.683-8.816,3.683H16.071 c-3.423,0-6.362-1.228-8.817-3.683c-2.456-2.456-3.683-5.395-3.683-8.817V23.214c0-3.422,1.228-6.362,3.683-8.817 c2.455-2.456,5.394-3.683,8.817-3.683h17.857c3.422,0,6.362,1.228,8.817,3.683c2.455,2.455,3.683,5.395,3.683,8.817V25h37.5 c3.422,0,6.361,1.228,8.816,3.683C95.201,31.138,96.429,34.078,96.429,37.5z' /></svg>");
+    background-position: center top;
+    background-size: 75% auto;
+  }
+}
+</style>
