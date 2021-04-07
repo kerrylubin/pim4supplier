@@ -25,6 +25,10 @@ export default {
     if (title) {
       vnodes.push(<span slot='title'>{(title)}</span>);
     }
+
+    if (title === 'Category List'){
+      console.log('title: ', title);
+    }
     return vnodes;
   },
 };

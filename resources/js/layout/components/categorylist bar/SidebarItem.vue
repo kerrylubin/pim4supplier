@@ -71,12 +71,9 @@ export default {
     hasOneShowingChild(children, parent) {
       const showingChildren = children.filter(item => {
         if (item.hidden) {
-          console.log('sidebar item: ', item);
           return false;
         } else {
           // Temp set(will be used if only has one showing child)
-          console.log('sidebar item: ', item);
-
           this.onlyOneChild = item;
           return true;
         }

@@ -29,6 +29,7 @@ const categoriesRoutes = {
         title: 'Create Categories',
         icon: 'plus',
         permissions: ['view menu create categories'],
+        noCache: true,
       },
     },
     {
