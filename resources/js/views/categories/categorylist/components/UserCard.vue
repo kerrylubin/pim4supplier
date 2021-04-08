@@ -5,51 +5,19 @@
       <!-- <div class="box-social"> -->
       <div class="box-social">
         <ul class="directory-list">
-          <li>assets
-            <ul>
-              <li>css
+          <li>Categories
+            <ul v-for=" categories in categorylist" :key="categories.id">
+              <li>{{ categories.name }} (59)
                 <ul>
-                  <li>typography.css</li>
-                  <li>layout.css</li>
-                  <li>modules.css</li>
-                  <li>states.css</li>
-                  <li>theme.css</li>
+                  <li>{{ categories.child.name }}
+                    <ul>
+                      <!-- cat content -->
+                    </ul>
+                  </li>
                 </ul>
               </li>
-              <li>js
-                <ul>
-                  <li>custom.js</li>
-                  <li>jquery.js</li>
-                </ul>
-              </li>
-              <li>images
-                <ul>
-                  <li>logo.svg</li>
-                  <li>arrow-sprite.svg</li>
-                  <li>social-sprite.svg</li>
-                </ul>
-              </li>
-              <li>functions.php</li>
             </ul>
           </li>
-          <li>templates
-            <ul>
-              <li>pages
-                <ul>
-                  <li>about.tpl</li>
-                  <li>pricing.tpl</li>
-                  <li>contact.tpl</li>
-                  <li>home.tpl</li>
-                  <li>features.tpl</li>
-                </ul>
-              </li>
-              <li>header.tpl</li>
-              <li>menu.tpl</li>
-              <li>footer.tpl</li>
-            </ul>
-          </li>
-          <li>index.php</li>
-          <li>style.css</li>
         </ul>
       </div>
       <!-- <InfoList /> -->
@@ -66,33 +34,68 @@ import $ from 'jquery';
 export default {
   name: 'Infolist',
   data: () => {
-    return {};
+    return {
+      categorylist: [],
+    };
   },
   mounted: function(){
-    // get all folders in our .directory-list
-    var allFolders = $('.directory-list li > ul');
-    allFolders.each(function() {
-      // add the folder class to the parent <li>
-      var folderAndName = $(this).parent();
-      folderAndName.addClass('folder');
-
-      // backup this inner <ul>
-      var backupOfThisFolder = $(this);
-      // then delete it
-      $(this).remove();
-      // add an <a> tag to whats left ie. the folder name
-      folderAndName.wrapInner("<a href='#' />");
-      // then put the inner <ul> back
-      folderAndName.append(backupOfThisFolder);
-
-      // now add a slideToggle to the <a> we just added
-      folderAndName.find('a').click(function(e) {
-        $(this).siblings('ul').slideToggle('slow');
-        e.preventDefault();
-      });
-    });
+    this.categoryList();
+    this.getCategories();
   },
-  // methods: { },
+  methods: {
+    categoryList(){
+      // get all folders in our .directory-list
+      var allFolders = $('.directory-list li > ul');
+      allFolders.each(function() {
+        // add the folder class to the parent <li>
+        var folderAndName = $(this).parent();
+        folderAndName.addClass('folder');
+
+        // backup this inner <ul>
+        var backupOfThisFolder = $(this);
+        // then delete it
+        $(this).remove();
+        // add an <a> tag to whats left ie. the folder name
+        folderAndName.wrapInner("<a href='#' />");
+        // then put the inner <ul> back
+        folderAndName.append(backupOfThisFolder);
+
+        // now add a slideToggle to the <a> we just added
+        folderAndName.find('a').click(function(e) {
+          $(this).siblings('ul').slideToggle('slow');
+          e.preventDefault();
+        });
+      });
+    },
+    getCategories(){
+      this.categorylist = [
+        {
+          id: 1,
+          name: 'Bokshandschoenen',
+          child: [{
+            id: 1,
+            name: 'Joya',
+          }],
+        },
+        {
+          id: 2,
+          name: 'Broeken',
+          child: [{
+            id: 1,
+            name: 'Joya',
+          }],
+        },
+        {
+          id: 3,
+          name: 'Bokszaken',
+          child: [{
+            id: 1,
+            name: 'Venum',
+          }],
+        },
+      ];
+    },
+  },
 };
 </script>
 
