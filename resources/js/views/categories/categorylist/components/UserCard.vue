@@ -2,26 +2,58 @@
   <el-card>
     <div class="user-profile">
       <div class="box-center" />
-      <!-- <div class="box-social"> -->
       <div class="box-social">
-        <ul class="directory-list">
+
+        <!-- <ul class="directory-list">
           <li>Categories
             <ul v-for=" categories in categorylist" :key="categories.id">
-              <li>{{ categories.name }} (59)
-                <ul>
-                  <li>{{ categories.child.name }}
+              <li>{{ categories.name }}
+                <ul v-for=" categoryChild in categorylist" :key="categoryChild.child.id">
+                  <li>{{ categoryChild.child.name }}
                     <ul>
-                      <!-- cat content -->
                     </ul>
                   </li>
                 </ul>
               </li>
             </ul>
           </li>
+        </ul> -->
+
+        <ul class="treeRoot">
+          <li class="hasSubMenu"><span>Categories</span>
+            <ul class="activeSubMenu">
+              <li v-for=" categories in categorylist" :key="categories.id" class="hasSubMenu"><span>{{ categories.name }}</span>
+                <ul>
+                  <li v-for=" categoryChildren in categorylist" :key="categoryChildren.child.id"><span>{{ categoryChildren.child.name }}</span></li>
+                  <!-- <li><span>Branch1-sub3</span></li>
+                  <li><span>Branch1-sub4</span></li>
+                  <li><span>Branch1-sub5</span></li>
+                  <li><span>Branch1-sub6</span></li> -->
+                </ul>
+              </li>
+              <!-- <li class="hasSubMenu"><span>Has Sub Menu</span>
+                <ul>
+                  <li><span>Branch3-sub1</span></li>
+                  <li class="hasSubMenu"><span>Branch3-sub2</span>
+                    <ul>
+                      <li><span>Branch3-sub1</span></li>
+                      <li><span>Branch3-sub2</span></li>
+                      <li><span>Branch3-sub3</span></li>
+                      <li><span>Branch3-sub4</span></li>
+                      <li><span>Branch3-sub5</span></li>
+                      <li><span>Branch3-sub6</span></li>
+                    </ul>
+                  </li>
+                  <li><span>Branch3-sub3</span></li>
+                  <li><span>Branch3-sub4</span></li>
+                  <li><span>Branch3-sub5</span></li>
+                  <li><span>Branch3-sub6</span></li>
+                </ul>
+              </li> -->
+            </ul>
+          </li>
         </ul>
       </div>
-      <!-- <InfoList /> -->
-      <!-- </div> -->
       <div class="user-follow" />
     </div>
   </el-card>
@@ -36,13 +68,26 @@ export default {
   data: () => {
     return {
       categorylist: [],
+      categoryChild: [],
     };
   },
   mounted: function(){
     this.categoryList();
     this.getCategories();
+    this.catTree();
   },
   methods: {
+    catTree(){
+      $('ul.treeRoot li span').on('click', function(){
+        if ($(this).parent().hasClass('hasSubMenu')){
+          if ($(this).parent().find('ul').hasClass('activeSubMenu')){
+            $(this).parent().find('ul').removeClass('activeSubMenu');
+          } else {
+            $(this).parent().find('ul').addClass('activeSubMenu');
+          }
+        }
+      });
+    },
     categoryList(){
       // get all folders in our .directory-list
       var allFolders = $('.directory-list li > ul');
@@ -50,7 +95,6 @@ export default {
         // add the folder class to the parent <li>
         var folderAndName = $(this).parent();
         folderAndName.addClass('folder');
-
         // backup this inner <ul>
         var backupOfThisFolder = $(this);
         // then delete it
@@ -74,24 +118,47 @@ export default {
           name: 'Bokshandschoenen',
           child: [{
             id: 1,
-            name: 'Joya',
-          }],
+            name: 'VSO',
+          },
+          {
+            id: 1,
+            name: 'VENUM',
+          },
+          {
+            id: 1,
+            name: 'JOYA',
+          },
+          ],
         },
         {
           id: 2,
           name: 'Broeken',
-          child: [{
-            id: 1,
+          child: {
+            id: 2,
             name: 'Joya',
-          }],
+          },
         },
         {
           id: 3,
           name: 'Bokszaken',
-          child: [{
-            id: 1,
+          child: {
+            id: 3,
             name: 'Venum',
-          }],
+          },
+        },
+      ];
+      this.categoryChild = [
+        {
+          id: 1,
+          name: 'VSO',
+        },
+        {
+          id: 2,
+          name: 'Supreme',
+        },
+        {
+          id: 3,
+          name: 'Zaak',
         },
       ];
     },
@@ -198,5 +265,54 @@ export default {
     background-position: center top;
     background-size: 75% auto;
   }
+}
+
+ul , li {
+  list-style: none;
+  margin: 0;
+  padding:0;
+}
+ul.treeRoot > li ul,
+ul.treeRoot > li ul {
+  padding-left:20px;
+}
+ul.treeRoot li{
+  border-left: 1px solid #000;
+}
+ul.treeRoot ul li,
+ul.treeRoot li{
+  border-left:1px solid #000;
+  padding-left: 20px;
+  position: relative;
+  font-size: 16px;
+  line-height: 24px;
+}
+ul.treeRoot ul li:last-child:after,
+ul.treeRoot li:last-child:after{
+  position:absolute;
+  content: "";
+  display:inline-block;
+ top: 12px;
+  width:1px;
+  left: -1px;
+  bottom: 0;
+  background: #fff
+}
+ul.treeRoot ul li:before,
+ul.treeRoot li:before{
+  height: 1px;
+  background: #000;
+  width: 15px;
+  left:0;
+  top: 11px;
+  display: inline-block;
+  content: "";
+  position: absolute;
+}
+.treeRoot li ul {
+  display: none;
+}
+.treeRoot li ul.activeSubMenu{
+  display: block;
 }
 </style>
