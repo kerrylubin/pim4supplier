@@ -2,58 +2,94 @@
   <el-card>
     <div class="user-profile">
       <div class="box-center" />
-      <!-- <div class="box-social"> -->
       <div class="box-social">
-        <ul class="directory-list">
-          <li>assets
-            <ul>
-              <li>css
-                <ul>
-                  <li>typography.css</li>
-                  <li>layout.css</li>
-                  <li>modules.css</li>
-                  <li>states.css</li>
-                  <li>theme.css</li>
+
+        <!-- <ul class="directory-list">
+          <li>Categories
+            <ul v-for=" categories in categorylist" :key="categories.id">
+              <li>{{ categories.name }}
+                <ul v-for=" categoryChild in categorylist" :key="categoryChild.child.id">
+                  <li>{{ categoryChild.child.name }}
+                    <ul>
+                    </ul>
+                  </li>
                 </ul>
               </li>
-              <li>js
-                <ul>
-                  <li>custom.js</li>
-                  <li>jquery.js</li>
-                </ul>
-              </li>
-              <li>images
-                <ul>
-                  <li>logo.svg</li>
-                  <li>arrow-sprite.svg</li>
-                  <li>social-sprite.svg</li>
-                </ul>
-              </li>
-              <li>functions.php</li>
             </ul>
           </li>
-          <li>templates
-            <ul>
-              <li>pages
+        </ul> -->
+
+        <ul class="treeRoot">
+          <li class="hasSubMenu"><span>Dyanamic Category Tree</span>
+            <ul class="activeSubMenu">
+              <li v-for=" categories in categorylist" :key="categories.id" class="hasSubMenu"><span>{{ categories.name }}</span>
                 <ul>
-                  <li>about.tpl</li>
-                  <li>pricing.tpl</li>
-                  <li>contact.tpl</li>
-                  <li>home.tpl</li>
-                  <li>features.tpl</li>
+                  <li v-for=" categoryChildren in categorylist" :key="categoryChildren.child.id"><span>{{ categoryChildren.child.name }}</span></li>
+                  <!-- <li><span>Branch1-sub3</span></li>
+                  <li><span>Branch1-sub4</span></li>
+                  <li><span>Branch1-sub5</span></li>
+                  <li><span>Branch1-sub6</span></li> -->
                 </ul>
               </li>
-              <li>header.tpl</li>
-              <li>menu.tpl</li>
-              <li>footer.tpl</li>
+              <!-- <li class="hasSubMenu"><span>Has Sub Menu</span>
+                <ul>
+                  <li><span>Branch3-sub1</span></li>
+                  <li class="hasSubMenu"><span>Branch3-sub2</span>
+                    <ul>
+                      <li><span>Branch3-sub1</span></li>
+                      <li><span>Branch3-sub2</span></li>
+                      <li><span>Branch3-sub3</span></li>
+                      <li><span>Branch3-sub4</span></li>
+                      <li><span>Branch3-sub5</span></li>
+                      <li><span>Branch3-sub6</span></li>
+                    </ul>
+                  </li>
+                  <li><span>Branch3-sub3</span></li>
+                  <li><span>Branch3-sub4</span></li>
+                  <li><span>Branch3-sub5</span></li>
+                  <li><span>Branch3-sub6</span></li>
+                </ul>
+              </li> -->
             </ul>
           </li>
-          <li>index.php</li>
-          <li>style.css</li>
         </ul>
+
+        <ul class="treeRoot">
+          <li class="hasSubMenu"><span>Hard Coded Category Tree</span>
+            <ul class="activeSubMenu">
+              <li class="hasSubMenu"><span>Broeken</span>
+                <ul>
+                  <li><span>Lord</span></li>
+                  <li><span>Branch1-sub3</span></li>
+                  <li><span>Branch1-sub4</span></li>
+                  <li><span>Branch1-sub5</span></li>
+                  <li><span>Branch1-sub6</span></li>
+                </ul>
+              </li>
+              <!-- <li class="hasSubMenu"><span>Has Sub Menu</span>
+                <ul>
+                  <li><span>Branch3-sub1</span></li>
+                  <li class="hasSubMenu"><span>Branch3-sub2</span>
+                    <ul>
+                      <li><span>Branch3-sub1</span></li>
+                      <li><span>Branch3-sub2</span></li>
+                      <li><span>Branch3-sub3</span></li>
+                      <li><span>Branch3-sub4</span></li>
+                      <li><span>Branch3-sub5</span></li>
+                      <li><span>Branch3-sub6</span></li>
+                    </ul>
+                  </li>
+                  <li><span>Branch3-sub3</span></li>
+                  <li><span>Branch3-sub4</span></li>
+                  <li><span>Branch3-sub5</span></li>
+                  <li><span>Branch3-sub6</span></li>
+                </ul>
+              </li> -->
+            </ul>
+          </li>
+        </ul>
+
       </div>
-      <!-- <InfoList /> -->
-      <!-- </div> -->
       <div class="user-follow" />
     </div>
   </el-card>
@@ -66,33 +102,103 @@ import $ from 'jquery';
 export default {
   name: 'Infolist',
   data: () => {
-    return {};
+    return {
+      categorylist: [],
+      categoryChild: [],
+    };
   },
   mounted: function(){
-    // get all folders in our .directory-list
-    var allFolders = $('.directory-list li > ul');
-    allFolders.each(function() {
-      // add the folder class to the parent <li>
-      var folderAndName = $(this).parent();
-      folderAndName.addClass('folder');
-
-      // backup this inner <ul>
-      var backupOfThisFolder = $(this);
-      // then delete it
-      $(this).remove();
-      // add an <a> tag to whats left ie. the folder name
-      folderAndName.wrapInner("<a href='#' />");
-      // then put the inner <ul> back
-      folderAndName.append(backupOfThisFolder);
-
-      // now add a slideToggle to the <a> we just added
-      folderAndName.find('a').click(function(e) {
-        $(this).siblings('ul').slideToggle('slow');
-        e.preventDefault();
-      });
-    });
+    this.categoryList();
+    this.getCategories();
+    this.catTree();
   },
-  // methods: { },
+  methods: {
+    catTree(){
+      $('ul.treeRoot li span').on('click', function(){
+        if ($(this).parent().hasClass('hasSubMenu')){
+          if ($(this).parent().find('ul').hasClass('activeSubMenu')){
+            $(this).parent().find('ul').removeClass('activeSubMenu');
+          } else {
+            $(this).parent().find('ul').addClass('activeSubMenu');
+          }
+        }
+      });
+    },
+    categoryList(){
+      // get all folders in our .directory-list
+      var allFolders = $('.directory-list li > ul');
+      allFolders.each(function() {
+        // add the folder class to the parent <li>
+        var folderAndName = $(this).parent();
+        folderAndName.addClass('folder');
+        // backup this inner <ul>
+        var backupOfThisFolder = $(this);
+        // then delete it
+        $(this).remove();
+        // add an <a> tag to whats left ie. the folder name
+        folderAndName.wrapInner("<a href='#' />");
+        // then put the inner <ul> back
+        folderAndName.append(backupOfThisFolder);
+
+        // now add a slideToggle to the <a> we just added
+        folderAndName.find('a').click(function(e) {
+          $(this).siblings('ul').slideToggle('slow');
+          e.preventDefault();
+        });
+      });
+    },
+    getCategories(){
+      this.categorylist = [
+        {
+          id: 1,
+          name: 'Bokshandschoenen',
+          child: [{
+            id: 1,
+            name: 'VSO',
+          },
+          {
+            id: 1,
+            name: 'VENUM',
+          },
+          {
+            id: 1,
+            name: 'JOYA',
+          },
+          ],
+        },
+        {
+          id: 2,
+          name: 'Broeken',
+          child: {
+            id: 2,
+            name: 'Joya',
+          },
+        },
+        {
+          id: 3,
+          name: 'Bokszaken',
+          child: {
+            id: 3,
+            name: 'Venum',
+          },
+        },
+      ];
+      this.categoryChild = [
+        {
+          id: 1,
+          name: 'VSO',
+        },
+        {
+          id: 2,
+          name: 'Supreme',
+        },
+        {
+          id: 3,
+          name: 'Zaak',
+        },
+      ];
+    },
+  },
 };
 </script>
 
@@ -195,5 +301,54 @@ export default {
     background-position: center top;
     background-size: 75% auto;
   }
+}
+
+ul , li {
+  list-style: none;
+  margin: 0;
+  padding:0;
+}
+ul.treeRoot > li ul,
+ul.treeRoot > li ul {
+  padding-left:20px;
+}
+ul.treeRoot li{
+  border-left: 1px solid #000;
+}
+ul.treeRoot ul li,
+ul.treeRoot li{
+  border-left:1px solid #000;
+  padding-left: 20px;
+  position: relative;
+  font-size: 16px;
+  line-height: 24px;
+}
+ul.treeRoot ul li:last-child:after,
+ul.treeRoot li:last-child:after{
+  position:absolute;
+  content: "";
+  display:inline-block;
+ top: 12px;
+  width:1px;
+  left: -1px;
+  bottom: 0;
+  background: #fff
+}
+ul.treeRoot ul li:before,
+ul.treeRoot li:before{
+  height: 1px;
+  background: #000;
+  width: 15px;
+  left:0;
+  top: 11px;
+  display: inline-block;
+  content: "";
+  position: absolute;
+}
+.treeRoot li ul {
+  display: none;
+}
+.treeRoot li ul.activeSubMenu{
+  display: block;
 }
 </style>
