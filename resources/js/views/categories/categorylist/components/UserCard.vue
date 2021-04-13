@@ -20,7 +20,7 @@
         </ul> -->
 
         <ul class="treeRoot">
-          <li class="hasSubMenu"><span>Categories</span>
+          <li class="hasSubMenu"><span>Dyanamic Category Tree</span>
             <ul class="activeSubMenu">
               <li v-for=" categories in categorylist" :key="categories.id" class="hasSubMenu"><span>{{ categories.name }}</span>
                 <ul>
@@ -53,6 +53,42 @@
             </ul>
           </li>
         </ul>
+
+        <ul class="treeRoot">
+          <li class="hasSubMenu"><span>Hard Coded Category Tree</span>
+            <ul class="activeSubMenu">
+              <li class="hasSubMenu"><span>Broeken</span>
+                <ul>
+                  <li><span>Lord</span></li>
+                  <li><span>Branch1-sub3</span></li>
+                  <li><span>Branch1-sub4</span></li>
+                  <li><span>Branch1-sub5</span></li>
+                  <li><span>Branch1-sub6</span></li>
+                </ul>
+              </li>
+              <!-- <li class="hasSubMenu"><span>Has Sub Menu</span>
+                <ul>
+                  <li><span>Branch3-sub1</span></li>
+                  <li class="hasSubMenu"><span>Branch3-sub2</span>
+                    <ul>
+                      <li><span>Branch3-sub1</span></li>
+                      <li><span>Branch3-sub2</span></li>
+                      <li><span>Branch3-sub3</span></li>
+                      <li><span>Branch3-sub4</span></li>
+                      <li><span>Branch3-sub5</span></li>
+                      <li><span>Branch3-sub6</span></li>
+                    </ul>
+                  </li>
+                  <li><span>Branch3-sub3</span></li>
+                  <li><span>Branch3-sub4</span></li>
+                  <li><span>Branch3-sub5</span></li>
+                  <li><span>Branch3-sub6</span></li>
+                </ul>
+              </li> -->
+            </ul>
+          </li>
+        </ul>
+
       </div>
       <div class="user-follow" />
     </div>
