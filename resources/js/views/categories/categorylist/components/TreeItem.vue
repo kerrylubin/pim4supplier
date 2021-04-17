@@ -1,38 +1,39 @@
-<template id="item-template">
-  <el-card>
-    <div class="user-profile">
-      <div class="box-center" />
-      <div class="box-social">
-        <ul>
-          <tree-item
-            class="item"
-            :tree-data="treeData"
-            @make-folder="makeFolder"
-            @add-item="addItem"
-          />
-        </ul>
-      </div>
-      <div class="user-follow" />
+<template>
+  <li>
+    <div
+      :class="{bold: isFolder}"
+      @click="toggle"
+      @dblclick="makeFolder"
+    >
+      {{ treeData.name }}
+      <span v-if="isFolder">[{{ isOpen ? '-' : '+' }}]</span>
     </div>
-  </el-card>
+    <ul v-show="isOpen" v-if="isFolder">
+      <tree-item
+        v-for="(child, index) in treeData.children"
+        :key="index"
+        class="item"
+        :tree-data="child"
+        @make-folder="$emit('make-folder', $event)"
+        @add-item="$emit('add-item', $event)"
+      />
+      <li class="add" @click="$emit('add-item', treeData)">+</li>
+    </ul>
+  </li>
 </template>
-
 <script>
-import Vue from 'vue';
-import TreeItem from './TreeItem';
 
 export default {
-  name: 'UserCard',
-  components: { TreeItem },
+  name: 'TreeItem',
   data: () => {
     return {
-      treeData: [],
       isOpen: false,
+      treeData: [],
     };
   },
   computed: {
     isFolder: function() {
-      return this.item.children && this.item.children.length;
+      return this.treeData.children && this.treeData.children.length;
     },
   },
   mounted: function(){
@@ -60,21 +61,20 @@ export default {
               },
             ],
           },
-        ],
-      };
+        ] };
     },
-    makeFolder: function(item) {
-      Vue.set(item, 'children', []);
-      this.addItem(item);
+    toggle: function() {
+      if (this.isFolder) {
+        this.isOpen = !this.isOpen;
+      }
     },
-    addItem: function(item) {
-      item.children.push({
-        name: 'new stuff',
-      });
+    makeFolder: function() {
+      if (!this.isFolder) {
+        this.$emit('make-folder', this.treeData);
+        this.isOpen = true;
+      }
     },
-  },
-};
-
+  }};
 </script>
 
 <style lang="scss" scoped>

@@ -34,7 +34,7 @@ const categoriesRoutes = {
     },
     {
       path: 'mapcategories',
-      component: () => import('@/views/categories/mapcategories/index'),
+      component: () => import('@/views/categories/mapcategories/upload'),
       meta: {
         title: 'Map Categories',
         icon: 'sort',
