@@ -13,6 +13,13 @@ class UserResource extends Resource {
     });
   }
 
+  getCSVHeader() {
+    return request({
+      url: '/' + this.uri + '/getCSVData',
+      method: 'get',
+    });
+  }
+
   updatePermission(id, permissions) {
     return request({
       url: '/' + this.uri + '/' + id + '/permissions',
