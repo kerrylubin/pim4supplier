@@ -272,6 +272,13 @@ class UserController extends BaseController
         }
     }
 
+    public function getCSVData()
+    {
+        $csvData = DB::table('csv_mapping')->get();
+        echo'CSV DATA!!';
+        return response()->json( $csvData );
+    }
+
     /**
      * @param bool $isNew
      * @return array

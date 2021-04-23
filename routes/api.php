@@ -20,10 +20,13 @@ use \App\Laravue\Acl;
 
 Route::namespace('Api')->group(function() {
     Route::post('auth/login', 'AuthController@login');
+    // Route::get('getCSVData', 'CsvController@getCSVData');
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
         // Auth routes
         Route::get('auth/user', 'AuthController@user');
         Route::post('auth/logout', 'AuthController@logout');
+        // Route::get('getCSVData', 'CsvController@getCSVData');
 
         Route::get('/user', function (Request $request) {
             return new UserResource($request->user());
@@ -33,8 +36,11 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('roles', 'RoleController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
         Route::apiResource('users', 'UserController')->middleware('permission:' . Acl::PERMISSION_USER_MANAGE);
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
+        // Route::apiResource('getCSVData', 'CsvController')->middleware('getCSVData:' . Acl::PERMISSION_PERMISSION_MANAGE);
+        // Route::apiResource('users', 'UserController@getCSVData');
 
         // Custom routes
+        Route::get('getCSVData', 'CsvController@getCSVData');
         Route::put('users/{user}', 'UserController@update');
         Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
         Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' .Acl::PERMISSION_PERMISSION_MANAGE);
