@@ -15,7 +15,7 @@ class UserResource extends Resource {
 
   getCSVHeader() {
     return request({
-      url: '/' + this.uri + '/getCSVData',
+      url: '/getCSVData',
       method: 'get',
     });
   }

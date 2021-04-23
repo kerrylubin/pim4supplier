@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
-class CsvController extends Controller
+class CsvController extends BaseController
 {
         /**
      * Display a listing of the resource.
@@ -15,7 +15,8 @@ class CsvController extends Controller
      */
     public function getCSVData()
     {
-        $csvData = DB::table('csv_mapping')->get();
+        $csvData = DB::table('csv_mapping')->pluck('csv_header');
+        // ->first();
         return response()->json( $csvData );
     }
 

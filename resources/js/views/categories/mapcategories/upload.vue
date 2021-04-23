@@ -1,11 +1,7 @@
 <template>
   <div class="app-container">
     <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
-    <!-- <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-      <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
-    </el-table> -->
-    <!-- <div class="row" style="margin-top:50px;"> -->
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV">
       Save
     </el-button>
     <div class="col-12 csv_mapping">
@@ -20,19 +16,18 @@
         <div class="col-12">
           <el-form-item v-for="item of tableHeader" :key="item" :prop="item" :label="item">
             <el-select class="csv_picker">
-              <el-option v-for="items in tableHeader" :key="items" :label="items" :value="items" />
+              <el-option v-for="items in supplierHeader" :key="items" :label="items" :value="items" />
             </el-select>
           </el-form-item>
         </div>
       </el-form>
     </div>
   </div>
-  <!-- </div> -->
 </template>
 
 <script>
 import UploadExcelComponent from './index';
-// import axios from 'axios';
+import axios from 'axios';
 import UserResource from '@/api/user';
 
 const userResource = new UserResource();
@@ -50,24 +45,35 @@ export default {
   },
   mounted: function() {
     this.getUser();
-    this.getCSVData();
-
-    // axios.get(this.$apiAdress + '/api/getCSVData')
-    //   .then(function(response) {
-    //     console.log('CSVData: ', response);
-    //   }).catch(function(error) {
-    //     console.log(error);
-    //     self.errorHandler(error.response);
-    //   });
+    // this.getCSVData();
+    var self = this;
+    axios.get(self.$apiAdress + '/api/getCSVData')
+      .then(function(response) {
+        console.log('CSVData: ', response.data);
+        self.tableHeader = response.data;
+        console.log('tableHeader: ', self.tableHeader);
+      }).catch(function(error) {
+        console.log(error);
+        self.errorHandler(error.response);
+      });
   },
   methods: {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.user = data;
+      // this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
     },
     async getCSVData(){
       const { data } = await userResource.getCSVHeader();
+      console.log('Data: ', data);
       this.tableHeader = data;
+    },
+    saveCSV(){
+      if (this.user.roles[0] === 'admin'){
+        console.log('saved in admin csv mapping');
+      } else {
+        console.log('saved in supllier csv mapping');
+      }
     },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -84,9 +90,9 @@ export default {
     },
     handleSuccess({ results, header }) {
       this.tableData = results;
-      this.tableHeader = header;
       this.supplierHeader = header;
-      console.log('table Header: ', this.tableHeader);
+      // this.tableHeader = header;
+      console.log('supplierHeader: ', this.supplierHeader);
     },
   },
 };
