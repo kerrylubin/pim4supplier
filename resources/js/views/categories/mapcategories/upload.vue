@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV()">
       Save
     </el-button>
     <div class="col-12 csv_mapping">
@@ -28,9 +28,9 @@
 <script>
 import UploadExcelComponent from './index';
 import axios from 'axios';
-import UserResource from '@/api/user';
+// import UserResource from '@/api/user';
 
-const userResource = new UserResource();
+// const userResource = new UserResource();
 
 export default {
   name: 'Upload',
@@ -45,35 +45,45 @@ export default {
   },
   mounted: function() {
     this.getUser();
-    // this.getCSVData();
-    var self = this;
-    axios.get(self.$apiAdress + '/api/getCSVData')
-      .then(function(response) {
-        console.log('CSVData: ', response.data);
-        self.tableHeader = response.data;
-        console.log('tableHeader: ', self.tableHeader);
-      }).catch(function(error) {
-        console.log(error);
-        self.errorHandler(error.response);
-      });
+    this.getCSVData();
+    // console.log('user: ', this.user);
   },
   methods: {
     async getUser() {
-      const data = await this.$store.dispatch('user/getInfo');
-      this.user = data;
-      // this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
+      var self = this;
+      const data = await self.$store.dispatch('user/getInfo');
+      self.user = data;
     },
     async getCSVData(){
-      const { data } = await userResource.getCSVHeader();
-      console.log('Data: ', data);
-      this.tableHeader = data;
+      var self = this;
+      const data = await self.$store.dispatch('user/getInfo');
+      self.user = data;
+      console.log('user data: ', self.user);
+      axios.get(self.$apiAdress + '/api/getCSVData')
+        .then(function(response) {
+          console.log('CSVData: ', response.data);
+          if (!self.user.roles[0] === 'admin'){
+            self.supplierHeader = response.data;
+          } else {
+            self.tableHeader = response.data;
+          }
+          console.log('tableHeader: ', self.tableHeader);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
     },
     saveCSV(){
-      if (this.user.roles[0] === 'admin'){
-        console.log('saved in admin csv mapping');
-      } else {
-        console.log('saved in supllier csv mapping');
-      }
+      var self = this;
+      var csvHeaderData = self.tableHeader;
+      // var supCsvData = self.supplierHeader;
+      axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
+        .then(function(response) {
+          console.log('userCSVData: ', response.data);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
     },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -88,11 +98,19 @@ export default {
       });
       return false;
     },
-    handleSuccess({ results, header }) {
-      this.tableData = results;
-      this.supplierHeader = header;
-      // this.tableHeader = header;
-      console.log('supplierHeader: ', this.supplierHeader);
+    async handleSuccess({ results, header }) {
+      var self = this;
+      const data = await self.$store.dispatch('user/getInfo');
+      self.user = data;
+
+      self.tableData = results;
+      if (self.user.roles[0] === 'admin'){
+        self.tableHeader = header;
+        console.log('tableHeaders: ', self.tableHeader);
+      } else {
+        self.supplierHeader = header;
+      }
+      console.log('supplierHeader: ', self.supplierHeader);
     },
   },
 };
