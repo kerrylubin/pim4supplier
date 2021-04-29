@@ -37,15 +37,17 @@ class CsvController extends BaseController
     public function storeUserCSVData($csv_headers)
     {
         $currentUser = Auth::user();
+        // $array = serialize($csv_headers);
 
-        echo'csv_headers: '.array($csv_headers);
+        $array = explode(',',$csv_headers);
+        echo'csv_headers: '.var_dump($array);
 
         if(!$currentUser->isAdmin()){
-            for($i = 0; $i<= count($csv_headers); $i++)
+            for($i = 0; $i<= count($array); $i++)
             {
                 $sup_csv_data = array(
                     'user_id'     => $currentUser->id,
-                    'csv_headers' => $csv_headers[$i],
+                    'csv_headers' => $array[$i],
                 );
 
                 echo'csv sup data: '.$sup_csv_data;
@@ -63,10 +65,10 @@ class CsvController extends BaseController
             }
         }
         else{
-            for($i = 0; $i<= count($csv_headers); $i++)
+            for($i = 0; $i<= count($array); $i++)
             {
                 $admin_csv_data = array(
-                    'csv_header' => $csv_headers[$i],
+                    'csv_header' => $array[$i],
                 );
 
                 DB::table('csv_mapping')->insert([$admin_csv_data]);

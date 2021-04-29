@@ -76,6 +76,7 @@ export default {
     saveCSV(){
       var self = this;
       var csvHeaderData = self.tableHeader;
+      console.log('csvData: ', csvHeaderData);
       // var supCsvData = self.supplierHeader;
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
         .then(function(response) {
@@ -106,7 +107,11 @@ export default {
       self.tableData = results;
       if (self.user.roles[0] === 'admin'){
         self.tableHeader = header;
-        console.log('tableHeaders: ', self.tableHeader);
+        console.log('uploaded Headers: ', header);
+
+        self.tableHeader = self.tableHeader.toString().replace(/[^a-zA-Z ]/g, ' ').split(' ').filter(item => item);
+
+        console.log('uploaded tableHeaders: ', self.tableHeader);
       } else {
         self.supplierHeader = header;
       }
