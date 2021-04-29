@@ -17,61 +17,57 @@ class CsvController extends BaseController
      */
     public function getCSVData()
     {
-        $currentUser = Auth::user();
+        // $currentUser = Auth::user();
+        // if(!$currentUser->isAdmin()){
+        //     $csvData = DB::table('supplier_mapping')->pluck('csv_headers');
+        //     return response()->json( $csvData );
+        // }
+        // else{
+        // }
 
-        if(!$currentUser->isAdmin()){
-            $csvData = DB::table('supplier_mapping')->pluck('csv_headers');
-            return response()->json( $csvData );
-        }
-        else{
-            $csvData = DB::table('csv_mapping')->pluck('csv_header');
-            return response()->json( $csvData );
-        }
+        $csvData = DB::table('csv_mapping')->pluck('csv_header');
+        return response()->json( $csvData );
     }
 
     public function getUserCSVData()
     {
-        $csvData = DB::table('supplier_mapping')->pluck('csv_header');
+        $currentUser = Auth::user();
+        if(!$currentUser->isAdmin()){
+            $csvData = DB::table('supplier_mapping')->pluck('csv_headers');
+            return response()->json( $csvData );
+        }
+        // $csvData = DB::table('supplier_mapping')->pluck('csv_header');
     }
 
     public function storeUserCSVData($csv_headers)
     {
         $currentUser = Auth::user();
-        // $array = serialize($csv_headers);
 
         $array = explode(',',$csv_headers);
-        echo'csv_headers: '.var_dump($array);
 
-        if(!$currentUser->isAdmin()){
-            for($i = 0; $i<= count($array); $i++)
-            {
-                $sup_csv_data = array(
-                    'user_id'     => $currentUser->id,
-                    'csv_headers' => $array[$i],
-                );
+        if(isset($array)){
+            // $array = null;
 
-                echo'csv sup data: '.$sup_csv_data;
+            if(!$currentUser->isAdmin()){
+                for($i = 0; $i<= count($array); $i++)
+                {
+                    $sup_csv_data = array(
+                        'user_id'     => $currentUser->id,
+                        'csv_headers' => $array[$i],
+                    );
 
-                DB::table('supplier_mapping')->insert([$sup_csv_data]);
-
-                // DB::table('supplier_mapping')->insert('insert into supplier_mapping
-                // (
-                //     user_id, csv_headers
-                // )
-                // values (?,?)',
-                // [
-                //     $sup_csv_data
-                // ]);
+                    DB::table('supplier_mapping')->insert([$sup_csv_data]);
+                }
             }
-        }
-        else{
-            for($i = 0; $i<= count($array); $i++)
-            {
-                $admin_csv_data = array(
-                    'csv_header' => $array[$i],
-                );
+            else{
+                for($i = 0; $i<= count($array); $i++)
+                {
+                    $admin_csv_data = array(
+                        'csv_header' => $array[$i],
+                    );
 
-                DB::table('csv_mapping')->insert([$admin_csv_data]);
+                    DB::table('csv_mapping')->insert([$admin_csv_data]);
+                }
             }
         }
     }

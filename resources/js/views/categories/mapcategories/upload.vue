@@ -14,9 +14,9 @@
 
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
-          <el-form-item v-for="item of tableHeader" :key="item" :prop="item" :label="item">
+          <el-form-item v-for="(item, index) of tableHeader" :key="index" :prop="item" :label="item">
             <el-select class="csv_picker">
-              <el-option v-for="items in supplierHeader" :key="items" :label="items" :value="items" />
+              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :label="items" :value="items" />
             </el-select>
           </el-form-item>
         </div>
@@ -59,23 +59,33 @@ export default {
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
       console.log('user data: ', self.user);
+
       axios.get(self.$apiAdress + '/api/getCSVData')
         .then(function(response) {
-          console.log('CSVData: ', response.data);
-          if (!self.user.roles[0] === 'admin'){
-            self.supplierHeader = response.data;
-          } else {
-            self.tableHeader = response.data;
-          }
+          self.tableHeader = response.data;
           console.log('tableHeader: ', self.tableHeader);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
         });
+
+      axios.get(self.$apiAdress + '/api/getUserCSVData')
+        .then(function(response) {
+          self.supplierHeader = response.data;
+          console.log('supplierHeader: ', self.supplierHeader);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
     },
-    saveCSV(){
+    async saveCSV(){
       var self = this;
-      var csvHeaderData = self.tableHeader;
+      const data = await self.$store.dispatch('user/getInfo');
+      self.user = data;
+      var csvHeaderData = null;
+
+      self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
+
       console.log('csvData: ', csvHeaderData);
       // var supCsvData = self.supplierHeader;
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
@@ -108,14 +118,14 @@ export default {
       if (self.user.roles[0] === 'admin'){
         self.tableHeader = header;
         console.log('uploaded Headers: ', header);
-
         self.tableHeader = self.tableHeader.toString().replace(/[^a-zA-Z ]/g, ' ').split(' ').filter(item => item);
-
         console.log('uploaded tableHeaders: ', self.tableHeader);
       } else {
         self.supplierHeader = header;
+        // console.log('uploaded Headers: ', header);
+        self.supplierHeader = self.supplierHeader.toString().replace(/[^a-zA-Z ]/g, ' ').split(' ').filter(item => item);
+        console.log('supplierHeader: ', self.supplierHeader);
       }
-      console.log('supplierHeader: ', self.supplierHeader);
     },
   },
 };
