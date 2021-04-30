@@ -4,12 +4,12 @@
       <div class="box-center" />
       <div class="box-social">
         <ul>
-          <tree-item
+          <!-- <tree-item
             class="item"
             :tree-data="treeData"
             @make-folder="makeFolder"
             @add-item="addItem"
-          />
+          /> -->
         </ul>
       </div>
       <div class="user-follow" />
@@ -19,11 +19,11 @@
 
 <script>
 import Vue from 'vue';
-import TreeItem from './TreeItem';
+// import TreeItem from './TreeItem';
 
 export default {
   name: 'UserCard',
-  components: { TreeItem },
+  // components: { TreeItem },
   data: () => {
     return {
       treeData: [],

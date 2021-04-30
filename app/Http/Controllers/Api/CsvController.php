@@ -33,7 +33,7 @@ class CsvController extends BaseController
     {
         $currentUser = Auth::user();
         if(!$currentUser->isAdmin()){
-            $csvData = DB::table('supplier_mapping')->pluck('csv_headers');
+            $csvData = DB::table('supplier_mapping')->pluck('csv_header');
             return response()->json( $csvData );
         }
         // $csvData = DB::table('supplier_mapping')->pluck('csv_header');
@@ -53,7 +53,7 @@ class CsvController extends BaseController
                 {
                     $sup_csv_data = array(
                         'user_id'     => $currentUser->id,
-                        'csv_headers' => $array[$i],
+                        'csv_header' => $array[$i],
                     );
 
                     DB::table('supplier_mapping')->insert([$sup_csv_data]);

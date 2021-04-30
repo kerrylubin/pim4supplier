@@ -14,11 +14,20 @@
 
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
-          <el-form-item v-for="(item, index) of tableHeader" :key="index" :prop="item" :label="item">
-            <el-select class="csv_picker">
-              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :label="items" :value="items" />
+          <el-form-item v-for="(item, index) of tableHeader" :key="index" :label="item">
+            <el-select :id="index.toString()" v-model="form.select" :name="item" class="csv_picker">
+              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="items" :label="items" :value="items" />
             </el-select>
+            <span :id="'selected_'+index.toString()">selected: {{ form.select }}</span>
           </el-form-item>
+
+          <!-- <el-form-item v-for="(item, index) of tableHeader" :key="index" :label="item">
+            <el-select :id="index.toString()" :name="item" v-model="form.select" class="csv_picker">
+              <el-option :name="items" v-for="items in supplierHeader" :key="items" :label="items" :prop="items" v-bind:value="items.value" />
+            </el-select>
+            <span>{{ form.select }}</span>
+          </el-form-item> -->
+
         </div>
       </el-form>
     </div>
@@ -37,6 +46,15 @@ export default {
   components: { UploadExcelComponent },
   data() {
     return {
+      form: {
+        select: '',
+        time: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
+      },
+
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
@@ -87,7 +105,6 @@ export default {
       self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
 
       console.log('csvData: ', csvHeaderData);
-      // var supCsvData = self.supplierHeader;
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
         .then(function(response) {
           console.log('userCSVData: ', response.data);
@@ -95,6 +112,9 @@ export default {
           console.log(error);
           self.errorHandler(error.response);
         });
+    },
+    setValue(){
+      console.log('CLICK!!');
     },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;

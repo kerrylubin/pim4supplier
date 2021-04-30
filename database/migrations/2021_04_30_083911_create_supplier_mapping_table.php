@@ -16,7 +16,8 @@ class CreateSupplierMappingTable extends Migration
         Schema::create('supplier_mapping', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('csv_headers');
+            $table->string('csv_header');
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
     }

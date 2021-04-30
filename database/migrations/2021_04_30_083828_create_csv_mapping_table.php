@@ -16,6 +16,7 @@ class CreateCsvMappingTable extends Migration
         Schema::create('csv_mapping', function (Blueprint $table) {
             $table->id();
             $table->string('csv_header');
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
     }

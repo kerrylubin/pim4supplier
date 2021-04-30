@@ -4,7 +4,6 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <user-card :user="user" />
-          <!-- <user-bio /> -->
         </el-col>
         <el-col :span="18">
           <user-activity :user="user" />
