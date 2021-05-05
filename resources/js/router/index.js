@@ -162,7 +162,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'productlist',
-        component: () => import('@/views/products/productlist/index'), // Parent router-view
+        component: () => import('@/views/products/productlist'), // Parent router-view
         name: 'Productlist',
         meta: {
           title: 'Product List',
@@ -171,31 +171,39 @@ export const constantRoutes = [
       },
       {
         path: 'createproducts',
-        component: () => import('@/views/products/createproducts/index'),
+        component: () => import('@/views/products/createproducts'),
         meta: { title: 'Create Products' },
       },
       {
         path: 'attributes',
-        component: () => import('@/views/products/attributes/index'),
+        component: () => import('@/views/products/attributes/'),
         meta: { title: 'Attributes' },
         children:
         [
           {
             path: 'listattributes',
-            component: () => import('@/views/products/attributes/listattributes'),
+            component: () => import('@/views/products/attributes/listattributes/index'),
             name: 'list attributes',
             meta: { title: 'List Attributes' },
           },
           {
             path: 'createattributes',
-            component: () => import('@/views/products/attributes/createattributes'),
+            component: () => import('@/views/products/attributes/createattributes/index'),
             name: 'Create Attributes',
             meta: { title: 'Create Attributes' },
           },
           {
             path: 'mapping',
-            component: () => import('@/views/products/attributes/mapping'),
+            component: () => import('@/views/products/attributes/mapping/upload'),
             name: 'Mapping',
+            meta: { title: 'Mapping' },
+
+          },
+          {
+            path: 'mapping/:id(\\d+)',
+            component: () => import('@/views/products/attributes/mapping/upload'),
+            name: 'Mapping',
+            hidden: true,
             meta: { title: 'Mapping' },
           },
         ],

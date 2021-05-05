@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="350">
+      <el-table-column align="center" label="Actions" width="350" @click="goToUser()">
         <template slot-scope="scope">
           <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
@@ -54,6 +54,11 @@
           <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
             Delete
           </el-button>
+          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/products/attributes/mapping/'+scope.row.id">
+            <el-button type="info" size="small" icon="el-icon-edit">
+              Profile
+            </el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -327,6 +332,9 @@ export default {
           message: 'Delete canceled',
         });
       });
+    },
+    goToUser(){
+      console.log('CLICK!!');
     },
     async handleEditPermissions(id) {
       this.currentUserId = id;

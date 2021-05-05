@@ -45,28 +45,54 @@ class CsvController extends BaseController
 
         $array = explode(',',$csv_headers);
 
+
         if(isset($array)){
             // $array = null;
 
             if(!$currentUser->isAdmin()){
+
                 for($i = 0; $i<= count($array); $i++)
                 {
-                    $sup_csv_data = array(
-                        'user_id'     => $currentUser->id,
-                        'csv_header' => $array[$i],
-                    );
+                    // $csv_headers = $array[$i];
 
-                    DB::table('supplier_mapping')->insert([$sup_csv_data]);
+                    // $csv_header_sql = "select * from `supplier_mapping` where `csv_header` = $csv_headers ";
+
+                    // $query_csv = DB::table('supplier_mapping')
+                    // ->select($csv_header_sql);
+                    // if(!$query_csv){
+
+                        $sup_csv_data = array(
+                            'user_id'     => $currentUser->id,
+                            'csv_header' => $array[$i],
+                        );
+
+                        DB::table('supplier_mapping')->insert([$sup_csv_data]);
+                    // }
+
                 }
             }
             else{
                 for($i = 0; $i<= count($array); $i++)
                 {
-                    $admin_csv_data = array(
-                        'csv_header' => $array[$i],
-                    );
+                    // $csv_headers = $array[$i];
 
-                    DB::table('csv_mapping')->insert([$admin_csv_data]);
+                    // $csv_header_sql = "select `csv_header` from `csv_mapping`";
+
+                    // $query_csv = DB::table('csv_mapping')
+                    // ->select('csv_mapping.csv_header')->where('csv_mapping.csv_header', '=', $csv_headers);
+
+                    // $query_csv = DB::select($csv_header_sql);
+                    // echo'query: '.var_dump($query_csv);
+
+                    // if($query_csv){
+                    //     echo$array[$i];
+
+                        $admin_csv_data = array(
+                            'csv_header' => $array[$i],
+                        );
+
+                        DB::table('csv_mapping')->insert([$admin_csv_data]);
+                    // }
                 }
             }
         }
