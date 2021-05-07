@@ -200,11 +200,11 @@ export const constantRoutes = [
 
           },
           {
-            path: 'mapping/:id(\\d+)',
-            component: () => import('@/views/products/attributes/mapping/upload'),
-            name: 'Mapping',
+            path: 'suppliermapping/:id',
+            component: () => import('@/views/products/attributes/suppliermapping/upload'),
+            name: 'Supplier Mapping',
             hidden: true,
-            meta: { title: 'Mapping' },
+            meta: { title: 'Supplier Mapping' },
           },
         ],
       },

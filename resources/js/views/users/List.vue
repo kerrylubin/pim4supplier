@@ -54,9 +54,9 @@
           <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
             Delete
           </el-button>
-          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/products/attributes/mapping/'+scope.row.id">
-            <el-button type="info" size="small" icon="el-icon-edit">
-              Profile
+          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/products/attributes/suppliermapping/'+scope.row.id">
+            <el-button type="info" size="small" icon="el-icon-edit" @click="get(scope.row.id)">
+              Mapping
             </el-button>
           </router-link>
         </template>
@@ -281,10 +281,15 @@ export default {
       this.menuPermissions = menu;
       this.otherPermissions = other;
     },
+    get(id){
+      localStorage.setItem('user id', id);
+    },
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      console.log('userData: ', this.userData);
+      // console.log('userData: ', this.userData);
+      this.userData.roles[0] === 'admin' ? this.nonAdminRoles = this.roles
+        : this.nonAdminRoles = this.nonAdminRoles;
     },
     async getList() {
       const { limit, page } = this.query;

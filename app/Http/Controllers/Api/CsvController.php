@@ -33,10 +33,21 @@ class CsvController extends BaseController
     {
         $currentUser = Auth::user();
         if(!$currentUser->isAdmin()){
+
+            // $csvData = DB::table('supplier_mapping')->select('supplier_mapping.csv_header')->where('supplier_mapping.user_id', '=', $id)->get();
             $csvData = DB::table('supplier_mapping')->pluck('csv_header');
-            return response()->json( $csvData );
+
+            return response()->json($csvData);
         }
-        // $csvData = DB::table('supplier_mapping')->pluck('csv_header');
+    }
+
+    public function getSupCSVData($id)
+    {
+        $csvData = DB::table('supplier_mapping')
+        ->select('supplier_mapping.csv_header')
+        ->where('supplier_mapping.user_id', '=', $id)
+        ->pluck('csv_header');
+        return response()->json($csvData);
     }
 
     public function storeUserCSVData($csv_headers)
@@ -54,7 +65,6 @@ class CsvController extends BaseController
                 for($i = 0; $i<= count($array); $i++)
                 {
                     // $csv_headers = $array[$i];
-
                     // $csv_header_sql = "select * from `supplier_mapping` where `csv_header` = $csv_headers ";
 
                     // $query_csv = DB::table('supplier_mapping')

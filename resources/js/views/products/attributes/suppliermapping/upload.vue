@@ -20,14 +20,6 @@
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="items" :label="items" :value="items" />
             </el-select>
           </el-form-item>
-
-          <!-- <el-form-item v-for="(item, index) of tableHeader" :key="index" :label="item">
-            <el-select :id="index.toString()" :name="item" v-model="form.select" class="csv_picker">
-              <el-option :name="items" v-for="items in supplierHeader" :key="items" :label="items" :prop="items" v-bind:value="items.value" />
-            </el-select>
-            <span>{{ form.select }}</span>
-          </el-form-item> -->
-
         </div>
       </el-form>
     </div>
@@ -79,7 +71,7 @@ export default {
       self.user = data;
 
       console.log('user data: ', self.user);
-      // var userId = localStorage.getItem('user id');
+      var userId = localStorage.getItem('user id');
 
       axios.get(self.$apiAdress + '/api/getCSVData')
         .then(function(response) {
@@ -100,14 +92,15 @@ export default {
       //   });
 
       // if (!self.user.roles[0] === 'admin'){
-      // axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('sup Header: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
+
+      axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
+        .then(function(response) {
+          self.supplierHeader = response.data;
+          console.log('sup Header: ', self.supplierHeader);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
       // }
     },
     async saveCSV(){
