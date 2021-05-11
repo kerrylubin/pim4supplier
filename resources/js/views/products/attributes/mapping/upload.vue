@@ -6,6 +6,10 @@
     </el-button>
     <div class="col-12 csv_mapping">
 
+      <!-- <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
+        <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
+      </el-table> -->
+
       <el-form>
         <el-form-item :label="user.name">
           <el-time-picker class="csv_picker" style="width: 226px;" type="fixed-time" placeholder="Pick a time" />
@@ -79,7 +83,6 @@ export default {
       self.user = data;
 
       console.log('user data: ', self.user);
-      // var userId = localStorage.getItem('user id');
 
       axios.get(self.$apiAdress + '/api/getCSVData')
         .then(function(response) {
@@ -89,26 +92,6 @@ export default {
           console.log(error);
           self.errorHandler(error.response);
         });
-
-      // axios.get(self.$apiAdress + '/api/getUserCSVData')
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('supplierHeader: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      // if (!self.user.roles[0] === 'admin'){
-      // axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('sup Header: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-      // }
     },
     async saveCSV(){
       var self = this;
@@ -119,9 +102,18 @@ export default {
       self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
 
       console.log('csvData: ', csvHeaderData);
+
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
         .then(function(response) {
           console.log('userCSVData: ', response.data);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
+
+      axios.put(self.$apiAdress + '/api/storeTableData/' + self.tableData)
+        .then(function(response) {
+          console.log('storeTableData: ', response.data);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
@@ -149,6 +141,10 @@ export default {
       self.user = data;
 
       self.tableData = results;
+
+      // self.tableData = self.tableData.toString().filter(item => item);
+      // console.log('Table Data Array: ', self.tableData);
+
       if (self.user.roles[0] === 'admin'){
         self.tableHeader = header;
         console.log('uploaded Headers: ', header);

@@ -33,7 +33,6 @@ class CsvController extends BaseController
     {
         $currentUser = Auth::user();
         if(!$currentUser->isAdmin()){
-
             // $csvData = DB::table('supplier_mapping')->select('supplier_mapping.csv_header')->where('supplier_mapping.user_id', '=', $id)->get();
             $csvData = DB::table('supplier_mapping')->pluck('csv_header');
 
@@ -49,13 +48,60 @@ class CsvController extends BaseController
         ->pluck('csv_header');
         return response()->json($csvData);
     }
+        /**
+     * @param array table_keys
+     * @param array table_values
+     */
+    public function storeTableKeysData($table_keys )
+    {
+        $currentUser = Auth::user();
+        $header_array = explode(',',$table_keys);
+        // $content_array = explode(',',$table_values);
+
+        // echo'data: '.var_dump($header_array);
+        // echo'data: '.$content_array;
+
+        for($i = 0; $i<= count($header_array); $i++){
+
+            $csv_data = array(
+                'user_id'     => $currentUser->id,
+                'csv_header'  => $header_array[$i],
+                // 'csv_content' => $$content_array[$i]
+            );
+
+            DB::table('table_data')->insert([$csv_data]);
+        }
+
+    }
+
+    public function storeTableValData($table_val )
+    {
+        $currentUser = Auth::user();
+        $content_array = explode(',',$table_val);
+        // $content_array = explode(',',$table_values);
+
+        // echo'data: '.var_dump($content_array);
+        // echo'data: '.$content_array;
+
+        for($i = 0; $i<= count($content_array); $i++){
+
+            $csv_data = array(
+                'user_id'     => $currentUser->id,
+                // 'csv_header'  => $header_array[$i],
+                'csv_content' => $content_array[$i]
+            );
+
+            DB::table('table_data')->insert([$csv_data]);
+        }
+
+    }
+
 
     public function storeUserCSVData($csv_headers)
     {
         $currentUser = Auth::user();
 
         $array = explode(',',$csv_headers);
-
 
         if(isset($array)){
             // $array = null;

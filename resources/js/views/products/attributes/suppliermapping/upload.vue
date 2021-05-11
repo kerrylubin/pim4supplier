@@ -50,6 +50,8 @@ export default {
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
+      keys: [],
+      values: [],
       user: '',
       userId: '',
     };
@@ -112,13 +114,58 @@ export default {
       self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
 
       console.log('csvData: ', csvHeaderData);
-      axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
-        .then(function(response) {
-          console.log('userCSVData: ', response.data);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
+
+      // axios.put(self.$apiAdress + '/api/storeTableData/' + self.tableData)
+      //   .then(function(response) {
+      //     console.log('storeTableData: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+
+      // axios.put(self.$apiAdress + '/api/storeTableData/' + csvHeaderData)
+      //   .then(function(response) {
+      //     console.log('userCSVData: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+
+      for (var i = 0; i < self.tableData.length; i++){
+        var keys = Object.keys(self.tableData[i]);
+        var values = Object.values(self.tableData[i]);
+
+        console.log('data: ', self.tableData[i]);
+
+        axios.put(self.$apiAdress + '/api/storeTableKeysData/' + keys.toString().replace(/%20/g, ' '))
+          .then(function(response) {
+            console.log('storeTableKeysData: ', response.data);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
+          });
+
+        axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
+          .then(function(response) {
+            console.log('storeTableKeysData: ', response.data);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
+          });
+      }
+
+      // for(var i = 0; i < self.tableData.length; i++){
+      //   var keys = Object.keys(self.tableData[i]);
+      //   var values = Object.values(self.tableData[i]);
+
+      //   axios.put(self.$apiAdress + '/api/storeTableData/' + keys.toString().replace(/%20/g, " ").split(' ').filter(item => item) + '/' + values.toString().replace(/%20/g, " ").split(' ').filter(item => item) )
+      //     .then(function(response) {
+      //       console.log('storeTableData: ', response.data);
+      //     }).catch(function(error) {
+      //       console.log(error);
+      //       self.errorHandler(error.response);
+      //     });
+      // }
     },
     setValue(){
       console.log('CLICK!!');
@@ -142,6 +189,7 @@ export default {
       self.user = data;
 
       self.tableData = results;
+
       if (self.user.roles[0] === 'admin'){
         self.tableHeader = header;
         console.log('uploaded Headers: ', header);
