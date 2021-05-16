@@ -115,21 +115,23 @@ export default {
 
       console.log('csvData: ', csvHeaderData);
 
-      // axios.put(self.$apiAdress + '/api/storeTableData/' + self.tableData)
-      //   .then(function(response) {
-      //     console.log('storeTableData: ', response.data);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      // axios.put(self.$apiAdress + '/api/storeTableData/' + csvHeaderData)
-      //   .then(function(response) {
-      //     console.log('userCSVData: ', response.data);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
+      axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
+        .then(function(response) {
+          self.$message({
+            type: 'success',
+            message: 'CSV Headers Saved',
+            duration: 5 * 1000,
+          });
+          console.log('userCSVData: ', response.data);
+        }).catch(function(error) {
+          self.$message({
+            type: 'error',
+            message: error,
+            duration: 5 * 1000,
+          });
+          console.log(error);
+          self.errorHandler(error.response);
+        });
 
       for (var i = 0; i < self.tableData.length; i++){
         var keys = Object.keys(self.tableData[i]);
@@ -139,33 +141,40 @@ export default {
 
         axios.put(self.$apiAdress + '/api/storeTableKeysData/' + keys.toString().replace(/%20/g, ' '))
           .then(function(response) {
+            self.$message({
+              type: 'success',
+              message: 'CSV Keys Saved',
+              duration: 5 * 1000,
+            });
             console.log('storeTableKeysData: ', response.data);
           }).catch(function(error) {
+            self.$message({
+              type: 'error',
+              message: error,
+              duration: 5 * 1000,
+            });
             console.log(error);
             self.errorHandler(error.response);
           });
 
         axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
           .then(function(response) {
+            self.$message({
+              type: 'success',
+              message: 'Table Data is Saved',
+              duration: 5 * 1000,
+            });
             console.log('storeTableKeysData: ', response.data);
           }).catch(function(error) {
+            self.$message({
+              type: 'error',
+              message: error,
+              duration: 5 * 1000,
+            });
             console.log(error);
             self.errorHandler(error.response);
           });
       }
-
-      // for(var i = 0; i < self.tableData.length; i++){
-      //   var keys = Object.keys(self.tableData[i]);
-      //   var values = Object.values(self.tableData[i]);
-
-      //   axios.put(self.$apiAdress + '/api/storeTableData/' + keys.toString().replace(/%20/g, " ").split(' ').filter(item => item) + '/' + values.toString().replace(/%20/g, " ").split(' ').filter(item => item) )
-      //     .then(function(response) {
-      //       console.log('storeTableData: ', response.data);
-      //     }).catch(function(error) {
-      //       console.log(error);
-      //       self.errorHandler(error.response);
-      //     });
-      // }
     },
     setValue(){
       console.log('CLICK!!');
@@ -200,10 +209,8 @@ export default {
 
         // self.supplierHeader = Object.assign({}, self.supplierHeader, header);
         // for(var i = 0; i < self.supplierHeader; i++){
-
         // self.form.selectHeaders = self.supplierHeader;
         // }
-
         // console.log('uploaded Headers: ', header);
 
         self.supplierHeader = self.supplierHeader.toString().replace(/[^a-zA-Z ]/g, ' ').split(' ').filter(item => item);

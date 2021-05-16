@@ -100,21 +100,69 @@ export default {
       var csvHeaderData = null;
 
       self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
+      console.log('self.role : ', self.user.roles[0]);
 
-      console.log('csvData: ', csvHeaderData);
+      if (self.user.roles[0] !== 'admin'){
+        console.log('not admin');
+        for (var i = 0; i < self.tableData.length; i++){
+          var keys = Object.keys(self.tableData[i]);
+          var values = Object.values(self.tableData[i]);
+
+          console.log('data: ', self.tableData[i]);
+
+          axios.put(self.$apiAdress + '/api/storeTableKeysData/' + keys.toString().replace(/%20/g, ' '))
+            .then(function(response) {
+              self.$message({
+                type: 'success',
+                message: 'CSV Keys Saved',
+                duration: 5 * 1000,
+              });
+              console.log('storeTableKeysData: ', response.data);
+            }).catch(function(error) {
+              self.$message({
+                type: 'error',
+                message: error,
+                duration: 5 * 1000,
+              });
+              console.log(error);
+              self.errorHandler(error.response);
+            });
+
+          axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
+            .then(function(response) {
+              self.$message({
+                type: 'success',
+                message: 'Table Data is Saved',
+                duration: 5 * 1000,
+              });
+              console.log('storeTableValData: ', response.data);
+            }).catch(function(error) {
+              self.$message({
+                type: 'error',
+                message: error,
+                duration: 5 * 1000,
+              });
+              console.log(error);
+              self.errorHandler(error.response);
+            });
+        }
+      }
 
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
         .then(function(response) {
+          self.$message({
+            type: 'success',
+            message: 'CSV Headers Saved',
+            duration: 5 * 1000,
+          });
           console.log('userCSVData: ', response.data);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
-
-      axios.put(self.$apiAdress + '/api/storeTableData/' + self.tableData)
-        .then(function(response) {
-          console.log('storeTableData: ', response.data);
-        }).catch(function(error) {
+        })
+        .catch(function(error) {
+          self.$message({
+            type: 'error',
+            message: error,
+            duration: 5 * 1000,
+          });
           console.log(error);
           self.errorHandler(error.response);
         });

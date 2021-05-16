@@ -103,8 +103,11 @@
               <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('user.name')" prop="name">
+          <el-form-item label="Name" prop="name" placeholder="Add your Name and Brand">
             <el-input v-model="newUser.name" />
+          </el-form-item>
+          <el-form-item label="Brand" prop="brand" placeholder="Add your Brand">
+            <el-input v-model="newUser.brand" />
           </el-form-item>
           <el-form-item :label="$t('user.email')" prop="email">
             <el-input v-model="newUser.email" />
@@ -215,7 +218,6 @@ export default {
         disabled: true,
         children: this.classifyPermissions(tmp).menu,
       };
-
       tmp = this.menuPermissions.filter(permission => !this.currentUser.permissions.role.find(p => p.id === permission.id));
       const userPermissions = {
         id: 0, // Faked ID
@@ -287,7 +289,7 @@ export default {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      // console.log('userData: ', this.userData);
+      console.log('userData: ', this.userData);
       this.userData.roles[0] === 'admin' ? this.nonAdminRoles = this.roles
         : this.nonAdminRoles = this.nonAdminRoles;
     },
@@ -394,6 +396,7 @@ export default {
       this.newUser = {
         name: '',
         email: '',
+        brand: '',
         password: '',
         confirmPassword: '',
         role: 'user',
