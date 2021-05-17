@@ -40,6 +40,16 @@ class CsvController extends BaseController
         }
     }
 
+    public function getSupUsers()
+    {
+        $userQuery = DB::table('supplier_profile_users')
+        ->select('supplier_profile_users.user_id','supplier_profile_users.name',
+        'supplier_profile_users.email', 'supplier_profile_users.role')
+        ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
+        return response()->json($userQuery);
+    }
+
+
     public function getSupCSVData($id)
     {
         $csvData = DB::table('supplier_mapping')

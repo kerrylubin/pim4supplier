@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
@@ -294,18 +295,49 @@ export default {
         : this.nonAdminRoles = this.nonAdminRoles;
     },
     async getList() {
+      const data = await this.$store.dispatch('user/getInfo');
+      this.userData = data;
       const { limit, page } = this.query;
       this.loading = true;
-      const { data, meta } = await userResource.list(this.query);
-      this.list = data;
-      console.log('currentUserId: ', this.currentUserId);
-      console.log('currentUser: ', this.currentUser);
-      console.log('list: ', this.list);
-      this.list.forEach((element, index) => {
-        element['index'] = (page - 1) * limit + index + 1;
-      });
-      this.total = meta.total;
-      this.loading = false;
+
+      if (this.userData.roles[0] !== 'admin'){
+        axios.get('/api/getSupUsers')
+          .then(function(response) {
+            self.list = response.data;
+            console.log('sup list: ', self.list.data);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
+          });
+
+        this.list.forEach((element, index) => {
+          element['index'] = (page - 1) * limit + index + 1;
+        });
+        this.total = self.list.length;
+        this.loading = false;
+
+        // const { data, meta } = await userResource.supplier_list(this.query);
+        // this.list = data;
+        // console.log('data: ', data);
+        // console.log('meta: ', meta);
+        // console.log('list: ', this.list);
+        // this.list.forEach((element, index) => {
+        //   element['index'] = (page - 1) * limit + index + 1;
+        // });
+        // this.total = meta.total;
+        // this.loading = false;
+      } else {
+        const { data, meta } = await userResource.list(this.query);
+        this.list = data;
+        console.log('currentUserId: ', this.currentUserId);
+        console.log('currentUser: ', this.currentUser);
+        console.log('list: ', this.list);
+        this.list.forEach((element, index) => {
+          element['index'] = (page - 1) * limit + index + 1;
+        });
+        this.total = meta.total;
+        this.loading = false;
+      }
     },
     handleFilter() {
       this.query.page = 1;

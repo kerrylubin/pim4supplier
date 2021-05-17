@@ -67,7 +67,7 @@ class UserController extends BaseController
 
             // echo'user query: '.var_dump($userQuery);
             // return json_encode( $userQuery );
-            return UserResource::collection($userQuery);
+            return SupplierUserResource::collection($userQuery);
         }
         else{
 
@@ -90,6 +90,18 @@ class UserController extends BaseController
         }
 
     }
+
+    public function getSupUsers()
+    {
+        $currentUser = Auth::user();
+
+        $userQuery = DB::table('supplier_profile_users')
+        ->select('supplier_profile_users.user_id','supplier_profile_users.name',
+        'supplier_profile_users.email', 'supplier_profile_users.role')
+        ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
+        return SupplierUserResource::collection($userQuery);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -132,6 +144,7 @@ class UserController extends BaseController
                 'id' => $currentUser->id,
                 'name' => $params['name'],
                 'email' => $params['email'],
+                'password' => Hash::make($params['password']),
                 'role' => $params['role']
             );
 
