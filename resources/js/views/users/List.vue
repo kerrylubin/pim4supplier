@@ -103,8 +103,11 @@
               <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('user.name')" prop="name">
+          <el-form-item label="Name" prop="name" placeholder="Add your Name and Brand">
             <el-input v-model="newUser.name" />
+          </el-form-item>
+          <el-form-item label="Brand" prop="brand" placeholder="Add your Brand">
+            <el-input v-model="newUser.brand" />
           </el-form-item>
           <el-form-item :label="$t('user.email')" prop="email">
             <el-input v-model="newUser.email" />
@@ -132,6 +135,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
@@ -215,7 +219,6 @@ export default {
         disabled: true,
         children: this.classifyPermissions(tmp).menu,
       };
-
       tmp = this.menuPermissions.filter(permission => !this.currentUser.permissions.role.find(p => p.id === permission.id));
       const userPermissions = {
         id: 0, // Faked ID
@@ -287,23 +290,54 @@ export default {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      // console.log('userData: ', this.userData);
+      console.log('userData: ', this.userData);
       this.userData.roles[0] === 'admin' ? this.nonAdminRoles = this.roles
         : this.nonAdminRoles = this.nonAdminRoles;
     },
     async getList() {
+      const data = await this.$store.dispatch('user/getInfo');
+      this.userData = data;
       const { limit, page } = this.query;
       this.loading = true;
-      const { data, meta } = await userResource.list(this.query);
-      this.list = data;
-      console.log('currentUserId: ', this.currentUserId);
-      console.log('currentUser: ', this.currentUser);
-      console.log('list: ', this.list);
-      this.list.forEach((element, index) => {
-        element['index'] = (page - 1) * limit + index + 1;
-      });
-      this.total = meta.total;
-      this.loading = false;
+
+      if (this.userData.roles[0] !== 'admin'){
+        axios.get('/api/getSupUsers')
+          .then(function(response) {
+            self.list = response.data;
+            console.log('sup list: ', self.list.data);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
+          });
+
+        this.list.forEach((element, index) => {
+          element['index'] = (page - 1) * limit + index + 1;
+        });
+        this.total = self.list.length;
+        this.loading = false;
+
+        // const { data, meta } = await userResource.supplier_list(this.query);
+        // this.list = data;
+        // console.log('data: ', data);
+        // console.log('meta: ', meta);
+        // console.log('list: ', this.list);
+        // this.list.forEach((element, index) => {
+        //   element['index'] = (page - 1) * limit + index + 1;
+        // });
+        // this.total = meta.total;
+        // this.loading = false;
+      } else {
+        const { data, meta } = await userResource.list(this.query);
+        this.list = data;
+        console.log('currentUserId: ', this.currentUserId);
+        console.log('currentUser: ', this.currentUser);
+        console.log('list: ', this.list);
+        this.list.forEach((element, index) => {
+          element['index'] = (page - 1) * limit + index + 1;
+        });
+        this.total = meta.total;
+        this.loading = false;
+      }
     },
     handleFilter() {
       this.query.page = 1;
@@ -394,6 +428,7 @@ export default {
       this.newUser = {
         name: '',
         email: '',
+        brand: '',
         password: '',
         confirmPassword: '',
         role: 'user',
