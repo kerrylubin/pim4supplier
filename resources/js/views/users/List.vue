@@ -1,4 +1,5 @@
 <template slot-scope="scope">
+
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
