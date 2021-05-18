@@ -67,18 +67,29 @@ export default {
       return this.item.children.filter(item => !item.hidden);
     },
   },
+  mounted: function() {
+
+  },
   methods: {
     hasOneShowingChild(children, parent) {
+      // const data = await this.$store.dispatch('user/getInfo');
+      // var userData = data;
+
       const showingChildren = children.filter(item => {
-        if (item.name === 'Categorylist'){
-          console.log('catlist: ', item);
-        }
+        // if(userData.roles[0] !== 'admin'){
+
+        //   if (item.name === 'Create Attributes'){
+        //     item.hidden = true
+        //     console.log('Attributes: ', item);
+        //   }
+        // }
+
         if (item.hidden) {
-          console.log('sidebar item: ', item);
+          // console.log('sidebar item hidden: ', item);
           return false;
         } else {
           // Temp set(will be used if only has one showing child)
-          // console.log('sidebar item: ', item);
+          // console.log('sidebar item not hidden: ', item);
           this.onlyOneChild = item;
           return true;
         }
