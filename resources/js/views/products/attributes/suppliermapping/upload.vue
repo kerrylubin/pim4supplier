@@ -15,7 +15,7 @@
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
           <el-form-item v-for="(item, index) of tableHeader" :key="index" :label="item">
-            <span :id="'selected_'+index.toString()" name="selected">selected: {{ form.selectHeaders }}</span>
+            <!-- <span :id="'selected_'+index.toString()" name="selected">selected: {{ form.selectHeaders }}</span> -->
             <el-select :id="'selected_'+index.toString()" v-model="form.selectHeaders" :name="item" class="csv_picker">
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="items" :label="items" :value="items" />
             </el-select>
@@ -75,7 +75,7 @@ export default {
       console.log('user data: ', self.user);
       var userId = localStorage.getItem('user id');
 
-      axios.get(self.$apiAdress + '/api/getCSVData')
+      axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
           self.tableHeader = response.data;
           console.log('tableHeader: ', self.tableHeader);

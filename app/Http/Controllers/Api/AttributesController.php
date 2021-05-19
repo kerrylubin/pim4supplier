@@ -12,11 +12,19 @@ class AttributesController extends BaseController
 {
     public function getAttributes()
     {
-        $attr_data = DB::table('attributes')
-        ->select('attributes.id', 'attributes.code', 'attributes.name',
-         'attributes.type', 'attributes.required', 'attributes.unique')
-        ->get();
-        return response()->json($attr_data);
+        // $currentUser = Auth::user();
+        // if($currentUser->isAdmin()){
+            $attr_data = DB::table('attributes')->pluck('name');
+            return response()->json($attr_data);
+        // }
+        // else{
+
+        //     $attr_data = DB::table('attributes')
+        //     ->select('attributes.id', 'attributes.code', 'attributes.name',
+        //      'attributes.type', 'attributes.required', 'attributes.unique')
+        //     ->get();
+        //     return response()->json($attr_data);
+        // }
     }
     /**
      * Store a newly created resource in storage.
@@ -40,5 +48,15 @@ class AttributesController extends BaseController
 
         DB::table('attributes')->insert([$attr_data]);
     }
+
+    // public function getAttributes()
+    // {
+    //     $attr_data = DB::table('attributes')
+    //     ->select('attributes.id', 'attributes.code', 'attributes.name',
+    //      'attributes.type', 'attributes.required', 'attributes.unique')
+    //     ->get();
+    //     return response()->json($attr_data);
+    // }
+
 
 }
