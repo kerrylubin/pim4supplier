@@ -84,7 +84,7 @@ export default {
 
       console.log('user data: ', self.user);
 
-      axios.get(self.$apiAdress + '/api/getCSVData')
+      axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
           self.tableHeader = response.data;
           console.log('tableHeader: ', self.tableHeader);
