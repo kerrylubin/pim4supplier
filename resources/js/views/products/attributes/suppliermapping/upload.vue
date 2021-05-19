@@ -14,10 +14,9 @@
 
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
-          <el-form-item v-for="(item, index) of tableHeader" :key="index" :label="item">
-            <!-- <span :id="'selected_'+index.toString()" name="selected">selected: {{ form.selectHeaders }}</span> -->
-            <el-select :id="'selected_'+index.toString()" v-model="form.selectHeaders" :name="item" class="csv_picker">
-              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="items" :label="items" :value="items" />
+          <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id" :label="item.name">
+            <el-select :id="'selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="csv_picker">
+              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items +' '+ ind+' '+ item.id" />
             </el-select>
           </el-form-item>
         </div>
@@ -39,14 +38,8 @@ export default {
   data() {
     return {
       form: {
-        selectHeaders: '',
-        items: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
+        attributes: [],
       },
-
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
@@ -77,8 +70,8 @@ export default {
 
       axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
-          // self.tableHeader = response.data;
-          console.log('tableHeader: ', self.tableHeader);
+          self.tableHeader = response.data;
+          console.log('tableHeaders: ', self.tableHeader);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
@@ -95,14 +88,24 @@ export default {
 
       // if (!self.user.roles[0] === 'admin'){
 
-      axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
+      // axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
+      //   .then(function(response) {
+      //     self.supplierHeader = response.data;
+      //     console.log('sup Header: ', self.supplierHeader);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+      axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
         .then(function(response) {
           self.supplierHeader = response.data;
+          // self.form.attributes =
           console.log('sup Header: ', self.supplierHeader);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
         });
+
       // }
     },
     async saveCSV(){
@@ -209,7 +212,7 @@ export default {
 
         // self.supplierHeader = Object.assign({}, self.supplierHeader, header);
         // for(var i = 0; i < self.supplierHeader; i++){
-        // self.form.selectHeaders = self.supplierHeader;
+        // self.form.attributes = self.supplierHeader;
         // }
         // console.log('uploaded Headers: ', header);
 

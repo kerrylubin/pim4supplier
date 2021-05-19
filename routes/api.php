@@ -37,7 +37,9 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
 
         // Custom routes        Route::get('getCSVData', 'CsvController@getCSVData');
-        Route::post('storeAttributes', 'AttributesController@storeAttributes');
+        Route::get('getSupAttributes/{id}', 'AttributesController@getSupAttributes');
+        Route::post('storeAttributesMapping', 'AttributesController@storeAttributesMapping');
+        Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
         Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getAttributes', 'AttributesController@getAttributes');
         Route::get('getUserCSVData', 'CsvController@getUserCSVData');

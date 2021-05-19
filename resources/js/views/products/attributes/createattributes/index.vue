@@ -317,6 +317,7 @@ export default {
           // this.newUser.roles = [this.newUser.role];
           this.attributeCreating = true;
           console.log('new attr: ', self.newAttributes);
+
           axios.post(self.$apiAdress + '/api/storeAttributes', self.newAttributes)
             .then(function(response) {
               self.$message({
