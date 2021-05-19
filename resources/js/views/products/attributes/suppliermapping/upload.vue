@@ -77,7 +77,7 @@ export default {
 
       axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
-          self.tableHeader = response.data;
+          // self.tableHeader = response.data;
           console.log('tableHeader: ', self.tableHeader);
         }).catch(function(error) {
           console.log(error);
