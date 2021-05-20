@@ -87,7 +87,7 @@ export default {
             message: 'Attributes Saved',
             duration: 5 * 1000,
           });
-          // self.$router.go()
+          self.$router.go();
           console.log('storeSupAttributes: ', response.data);
         }).catch(function(error) {
           self.$message({
@@ -96,6 +96,8 @@ export default {
             duration: 5 * 1000,
           });
           console.log(error);
+          self.$router.go();
+
           self.errorHandler(error.response);
         });
     },
