@@ -33,7 +33,6 @@
 import UploadExcelComponent from './index';
 import axios from 'axios';
 // import UserResource from '@/api/user';
-
 // const userResource = new UserResource();
 
 export default {
@@ -43,6 +42,8 @@ export default {
     return {
       form: {
         attributes: [],
+        supplier_attributeId: [],
+        supplier_attributeVal: [],
       },
       tableData: [],
       tableHeader: [],
@@ -87,7 +88,7 @@ export default {
             message: 'Attributes Saved',
             duration: 5 * 1000,
           });
-          self.$router.go();
+          // self.$router.go();
           console.log('storeSupAttributes: ', response.data);
         }).catch(function(error) {
           self.$message({
@@ -96,8 +97,7 @@ export default {
             duration: 5 * 1000,
           });
           console.log(error);
-          self.$router.go();
-
+          // self.$router.go();
           self.errorHandler(error.response);
         });
     },
@@ -137,7 +137,6 @@ export default {
         //       console.log(error);
         //       self.errorHandler(error.response);
         //     });
-
         //   axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
         //     .then(function(response) {
         //       self.$message({
@@ -157,7 +156,6 @@ export default {
         //     });
         // }
       }
-
       axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
         .then(function(response) {
           self.$message({
@@ -210,7 +208,8 @@ export default {
         console.log('uploaded tableHeaders: ', self.tableHeader);
       } else {
         self.supplierHeader = header;
-        self.form.supplier_attribute_id = Object.keys(self.supplierHeader);
+        self.form.supplier_attributeId = Object.keys(self.supplierHeader);
+        self.form.supplier_attributeVal = Object.values(self.supplierHeader);
 
         // self.supplierHeader = Object.assign({}, self.supplierHeader, header);
         // for(var i = 0; i < self.supplierHeader; i++){

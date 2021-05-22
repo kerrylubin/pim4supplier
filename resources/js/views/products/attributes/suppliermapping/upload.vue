@@ -15,8 +15,8 @@
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
           <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id" :label="item.name">
-            <el-select :id="'selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="csv_picker">
-              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items +' '+ ind+' '+ item.id" />
+            <el-select :id="'selected_'+index.toString()" v-model="form.edited[item.id]" :name="item.code" class="csv_picker">
+              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label + ' ' + ind + ' ' + item.id" />
             </el-select>
           </el-form-item>
         </div>
@@ -96,19 +96,26 @@ export default {
       //     console.log(error);
       //     self.errorHandler(error.response);
       //   });
+
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
         .then(function(response) {
           self.supplierHeader = response.data;
-
           for (var i = 0; i < self.supplierHeader.length; i++){
             var attrId = self.supplierHeader[i].attribute_id;
+            // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
             var attributeLabel = self.supplierHeader[i].attribute_label;
             self.form.attributes[attrId];// sets json key to the attribute Id
             self.form.attributes[attrId] = attributeLabel;// this sets the value
+            self.form.edited[attrId] = attributeLabel;
+            // self.form.edited[attrId];
+            // self.form.edited[attrId] = attributeLabel + ' ' + attrSupId + ' ' + attrId;
+            // self.form.edited[attrId].attributeLabel[attrSupId];
           }
+          console.log('form: ', self.form);
+          console.log('form edited: ', self.form.edited);
+          console.log('form attributes: ', self.form.attributes);
 
-          console.log('attributeLabel: ', attributeLabel);
-          console.log('form: ', self.form.attributes);
+          // console.log('attributeLabel: ', attributeLabel);
           console.log('sup Header: ', self.supplierHeader);
         }).catch(function(error) {
           console.log(error);
@@ -119,7 +126,7 @@ export default {
     },
     storeSupAttributes(){
       var self = this;
-      axios.post(self.$apiAdress + '/api/storeSupAttributes', self.form)
+      axios.post(self.$apiAdress + '/api/storeEditedSupAttributes', self.form)
         .then(function(response) {
           self.$message({
             type: 'success',
@@ -148,7 +155,9 @@ export default {
 
       // self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
 
-      console.log('form: ', self.form);
+      console.log('form: ', self.form.attributes);
+      console.log('form edited: ', self.form.edited);
+      console.log('sup headers: ', self.supplierHeader);
 
       // self.storeSupAttributes();
 

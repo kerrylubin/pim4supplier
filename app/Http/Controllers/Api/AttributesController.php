@@ -82,36 +82,48 @@ class AttributesController extends BaseController
         $currentUser = Auth::user();
         $params = $request->all();
         $attributes = $params['attributes'];
-        echo'params: '.var_dump($attributes);
+        $supplier_attributes = $params['supplier_attributeVal'];
+        $supplier_attributes_id = $params['supplier_attributeId'];
 
-        for($i = 0; $i<= count($attributes); $i++){
+        // echo'params: '.var_dump($attributes);
+        echo'supplier_attributes_id: '.var_dump($supplier_attributes);
+        echo'supplier_attributes_id: '.var_dump($supplier_attributes_id);
 
-            if(isset($attributes[$i])){
-                $attr_sup_id = explode(" ", $attributes[$i]);
-                $attr = explode(" ", $attributes[$i]);
-                $attr_id = explode(" ", $attributes[$i]);
+        for($i = 0; $i<= count($supplier_attributes); $i++){
 
-                echo'attr_sup_id: '.var_dump($attr_sup_id[1]);
-                echo'attr_id: '.var_dump($attr_id[2]);
-
-                $attr_mapping_data = array(
+            if(isset($supplier_attributes[$i])){
+                $attr_data = array(
                     'supplier_id'  => $currentUser->id,
-                    'attribute_id'  => $attr_id[2],
-                    'attribute_supplier_id'  => $attr_sup_id[1],
-                    'attribute_label'  => $attr[0],
+                    'attribute_id' => $supplier_attributes_id[$i],
+                    'attribute_label'  => $supplier_attributes[$i],
                 );
 
-                DB::table('attribute_mapping')->insert([$attr_mapping_data]);
-
-                // $attr_data = array(
-                //     'id'           => $attr_sup_id[1],
-                //     'supplier_id'  => $currentUser->id,
-                //     'attribute_label'  => $attr[0],
-                // );
-
-                // DB::table('supplier_attribute')->insert([$attr_data]);
+                DB::table('supplier_attributes')->insert([$attr_data]);
             }
         }
+
+
+        // for($i = 0; $i<= count($attributes); $i++){
+
+        //     if(isset($attributes[$i])){
+        //         $attr_sup_id = explode(" ", $attributes[$i]);
+        //         $attr = explode(" ", $attributes[$i]);
+        //         $attr_id = explode(" ", $attributes[$i]);
+
+        //         echo'attr_sup_id: '.var_dump($attr_sup_id[1]);
+        //         echo'attr_id: '.var_dump($attr_id[2]);
+
+        //         $attr_mapping_data = array(
+        //             'supplier_id'  => $currentUser->id,
+        //             'attribute_id'  => $attr_id[2],
+        //             'attribute_supplier_id'  => $attr_sup_id[1],
+        //             'attribute_label'  => $attr[0],
+        //         );
+
+        //         DB::table('attribute_mapping')->insert([$attr_mapping_data]);
+
+        //     }
+        // }
     }
 
         /**
@@ -125,8 +137,9 @@ class AttributesController extends BaseController
     {
         $currentUser = Auth::user();
         $params = $request->all();
+        echo'params: '.var_dump($params);
         $attributes = $params['attributes'];
-        echo'params: '.var_dump($attributes);
+        echo'attributes: '.var_dump($attributes);
 
         for($i = 0; $i<= count($attributes); $i++){
 
