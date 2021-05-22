@@ -21,7 +21,6 @@ class CreateSupplierFiltersTable extends Migration
             $table->string('category');
             $table->string('brand');
             $table->timestamps();
-            $table->timestamp('last_synced_at');
         });
     }
 
