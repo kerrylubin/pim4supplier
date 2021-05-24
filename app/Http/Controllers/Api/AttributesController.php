@@ -239,9 +239,10 @@ class AttributesController extends BaseController
 
                     // if(isset($sup_attr_id[$i])){
 
+
                         $attr_mapping_data = array(
                             'supplier_id'  => $user_id,
-                            'attribute_id'  => $admin_attr_id[$i]['attribute_id'],
+                            'attribute_id'  => $admin_attr_id[$i],
                             'attribute_supplier_id'  => $sup_attr_id[0]['attribute_id'],
                             'attribute_label'  => $attributes[$i],
                         );
@@ -277,8 +278,8 @@ class AttributesController extends BaseController
             // echo'sup_attr_id: '.var_dump($sup_attr_id);
 
             $attr_mapping_data = array(
-                // 'supplier_id'  => $user_id,
-                // 'attribute_id'  => $admin_attr_id[$i]['attribute_id'],
+                'supplier_id'  => $user_id,
+                'attribute_id'  => $admin_attr_id[$i],
                 'attribute_supplier_id'  => $sup_attr_id[0]['attribute_id'],
                 'attribute_label'  => $attributes[$i],
             );
