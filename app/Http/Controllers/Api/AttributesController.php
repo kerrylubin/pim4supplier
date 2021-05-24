@@ -19,9 +19,9 @@ class AttributesController extends BaseController
         // }
         // else{
 
-            $attr_data = DB::table('attributes')
-            ->select('attributes.id', 'attributes.code', 'attributes.name',
-             'attributes.type', 'attributes.required', 'attributes.unique')
+            $attr_data = DB::table('admin_attributes')
+            ->select('admin_attributes.id', 'admin_attributes.code', 'admin_attributes.name',
+             'admin_attributes.type', 'admin_attributes.required', 'admin_attributes.unique')
             ->get();
             return response()->json($attr_data);
         // }
@@ -29,44 +29,27 @@ class AttributesController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     *  @param  User $user_id
+     * @param  User $user_id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeAttributes(Request $request )
+    public function storeAdminAttributes(Request $request )
     {
         // echo'data: '.var_dump($request->all());
         $params = $request->all();
-        if($params['required'] && $params['unique'] == 'yes'){
 
-            $params['required'] = 0;
-            $params['unique'] = 0;
+        $bool_required = ($params['required'] == 'yes' ? 1 : 0);
+        $bool_unique = ($params['unique'] == 'yes' ? 1 : 0);
 
-            $attr_data = array(
-                'code'  => $params['code'],
-                'name'  => $params['name'],
-                'type'  => $params['type'],
-                'required'  => $params['required'],
-                'unique'  => $params['unique'],
-            );
+        $attr_data = array(
+            'code'  => $params['code'],
+            'name'  => $params['name'],
+            'type'  => $params['type'],
+            'required'  => $bool_required,
+            'unique'  => $bool_unique,
+        );
 
-            DB::table('attributes')->insert([$attr_data]);
-        }
-        else if($params['required'] && $params['unique'] == 'no'){
-
-            $params['required'] = 1;
-            $params['unique'] = 1;
-
-            $attr_data = array(
-                'code'  => $params['code'],
-                'name'  => $params['name'],
-                'type'  => $params['type'],
-                'required'  => $params['required'],
-                'unique'  => $params['unique'],
-            );
-
-            DB::table('attributes')->insert([$attr_data]);
-        }
+        DB::table('admin_attributes')->insert([$attr_data]);
     }
     /**
      * Store a newly created resource in storage.
@@ -106,7 +89,7 @@ class AttributesController extends BaseController
         // ->where('supplier_attributes.attribute_label', '=', $label)
         // ->get();
 
-        $attr_data = DB::table('attributes')->pluck('id');
+        $attr_data = DB::table('admin_attributes')->pluck('id');
 
         return json_encode($attr_data);
     }

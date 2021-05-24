@@ -16,28 +16,28 @@ class DatabaseSeeder extends Seeder
     {
         $admin = User::create([
             'name' => 'Admin',
-            'email' => 'admin@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'admin@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
         ]);
         $supplier = User::create([
             'name' => 'Manager',
-            'email' => 'supplier@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'supplier@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
         ]);
         $editor = User::create([
             'name' => 'Editor',
-            'email' => 'editor@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'editor@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
         ]);
         $user = User::create([
             'name' => 'User',
-            'email' => 'user@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'user@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
         ]);
         $visitor = User::create([
             'name' => 'Visitor',
-            'email' => 'visitor@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'visitor@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
         ]);
 
         $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);

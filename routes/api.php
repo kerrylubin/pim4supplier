@@ -40,6 +40,7 @@ Route::namespace('Api')->group(function() {
         Route::get('getSupAttributes/{id}', 'AttributesController@getSupAttributes');
         Route::post('getSupAttributesLabels', 'AttributesController@getSupAttributesLabels');
         Route::post('storeAttributesMapping', 'AttributesController@storeAttributesMapping');
+        Route::post('storeAdminAttributes', 'AttributesController@storeAdminAttributes');
         Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
         Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
         Route::get('getCSVData', 'CsvController@getCSVData');
