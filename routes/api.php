@@ -38,6 +38,7 @@ Route::namespace('Api')->group(function() {
 
         // Custom routes        Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getSupAttributes/{id}', 'AttributesController@getSupAttributes');
+        Route::post('getSupAttributesLabels', 'AttributesController@getSupAttributesLabels');
         Route::post('storeAttributesMapping', 'AttributesController@storeAttributesMapping');
         Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
         Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');

@@ -18,8 +18,8 @@ class CreateAttributesTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('type');
-            $table->string('required');
-            $table->string('unique');
+            $table->integer('required');
+            $table->integer('unique');
             $table->timestamps();
         });
     }

@@ -105,10 +105,10 @@ export default {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
-      var csvHeaderData = null;
+      // var csvHeaderData = null;
 
-      self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
-      console.log('self.role : ', self.user.roles[0]);
+      // self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
+      // console.log('self.role : ', self.user.roles[0]);
 
       console.log('mapping: ', self.form);
 
@@ -156,24 +156,25 @@ export default {
         //     });
         // }
       }
-      axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
-        .then(function(response) {
-          self.$message({
-            type: 'success',
-            message: 'CSV Headers Saved',
-            duration: 5 * 1000,
-          });
-          console.log('userCSVData: ', response.data);
-        })
-        .catch(function(error) {
-          self.$message({
-            type: 'error',
-            message: error,
-            duration: 5 * 1000,
-          });
-          console.log(error);
-          self.errorHandler(error.response);
-        });
+      // we dont use this no more we use the attributes
+      // axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
+      //   .then(function(response) {
+      //     self.$message({
+      //       type: 'success',
+      //       message: 'CSV Headers Saved',
+      //       duration: 5 * 1000,
+      //     });
+      //     console.log('userCSVData: ', response.data);
+      //   })
+      //   .catch(function(error) {
+      //     self.$message({
+      //       type: 'error',
+      //       message: error,
+      //       duration: 5 * 1000,
+      //     });
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
     },
     setValue(){
       console.log('CLICK!!');
@@ -208,8 +209,6 @@ export default {
         console.log('uploaded tableHeaders: ', self.tableHeader);
       } else {
         self.supplierHeader = header;
-        self.form.supplier_attributeId = Object.keys(self.supplierHeader);
-        self.form.supplier_attributeVal = Object.values(self.supplierHeader);
 
         // self.supplierHeader = Object.assign({}, self.supplierHeader, header);
         // for(var i = 0; i < self.supplierHeader; i++){
@@ -220,6 +219,8 @@ export default {
         console.log('Key Headers: ', Object.keys(self.supplierHeader));
 
         self.supplierHeader = self.supplierHeader.toString().replace(/[^a-zA-Z ]/g, ' ').split(' ').filter(item => item);
+        self.form.supplier_attributeId = Object.keys(self.supplierHeader);
+        self.form.supplier_attributeVal = Object.values(self.supplierHeader);
         console.log('supplierHeader: ', self.supplierHeader);
       }
     },

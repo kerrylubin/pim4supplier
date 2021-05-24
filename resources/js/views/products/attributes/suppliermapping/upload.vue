@@ -15,8 +15,8 @@
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
           <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id" :label="item.name">
-            <el-select :id="'selected_'+index.toString()" v-model="form.edited[item.id]" :name="item.code" class="csv_picker">
-              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label + ' ' + ind + ' ' + item.id" />
+            <el-select :id="'selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="csv_picker">
+              <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label" />
             </el-select>
           </el-form-item>
         </div>
@@ -39,10 +39,16 @@ export default {
       form: {
         attributes: [],
         edited: [],
+        userId: '',
+      },
+      map: {
+        userId: '',
+        supAttrId: [],
       },
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
+      labels: [],
       keys: [],
       values: [],
       user: '',
@@ -60,6 +66,17 @@ export default {
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
     },
+    getSupAttributesLabels(){
+      var self = this;
+      axios.post(self.$apiAdress + '/api/getSupAttributesLabels', self.map)
+        .then(function(response) {
+          self.labels = response.data;
+          console.log('sup labels: ', self.labels);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
+    },
     async getCSVData(){
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
@@ -67,6 +84,8 @@ export default {
 
       console.log('user data: ', self.user);
       var userId = localStorage.getItem('user id');
+      self.form.userId = localStorage.getItem('user id');
+      self.map.userId = localStorage.getItem('user id');
 
       axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
@@ -101,17 +120,20 @@ export default {
         .then(function(response) {
           self.supplierHeader = response.data;
           for (var i = 0; i < self.supplierHeader.length; i++){
+            self.map.supAttrId.push(self.supplierHeader[i].attribute_supplier_id);
             var attrId = self.supplierHeader[i].attribute_id;
             // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
             var attributeLabel = self.supplierHeader[i].attribute_label;
             self.form.attributes[attrId];// sets json key to the attribute Id
             self.form.attributes[attrId] = attributeLabel;// this sets the value
-            self.form.edited[attrId] = attributeLabel;
+            // self.form.edited[attrId] = attributeLabel;
             // self.form.edited[attrId];
             // self.form.edited[attrId] = attributeLabel + ' ' + attrSupId + ' ' + attrId;
             // self.form.edited[attrId].attributeLabel[attrSupId];
           }
+          // self.getSupAttributesLabels();
           console.log('form: ', self.form);
+          console.log('map: ', self.map);
           console.log('form edited: ', self.form.edited);
           console.log('form attributes: ', self.form.attributes);
 
@@ -159,7 +181,7 @@ export default {
       console.log('form edited: ', self.form.edited);
       console.log('sup headers: ', self.supplierHeader);
 
-      // self.storeSupAttributes();
+      self.storeSupAttributes();
 
       // axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
       //   .then(function(response) {
