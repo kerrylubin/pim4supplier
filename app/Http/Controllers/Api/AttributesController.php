@@ -157,7 +157,6 @@ class AttributesController extends BaseController
         ->select('attribute_mapping.supplier_id')
         ->where('attribute_mapping.supplier_id','=',$currentUser->id)->get();
 
-
         // echo'user_id: '.count($user_id);
 
         // if(count($user_id) <= 0){
