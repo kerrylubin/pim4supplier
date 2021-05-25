@@ -14,13 +14,12 @@ class CreateAttributeMappingTable extends Migration
     public function up()
     {
         Schema::create('attribute_mapping', function (Blueprint $table) {
-            // $table->id();
+            // $table->increments('attribute_id');
             $table->id('attribute_id');
             $table->integer('attribute_supplier_id');
             $table->integer('supplier_id');
+            $table->string('attribute_label');
             $table->timestamps();
-
-            // $table->primary('attribute_id', 'attribute_mapping_attribute_id_primary');
         });
     }
 

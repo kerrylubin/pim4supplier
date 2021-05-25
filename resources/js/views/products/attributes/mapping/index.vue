@@ -28,13 +28,16 @@ export default {
     };
   },
   methods: {
+    storeFile(){
+      console.log('File is Stored:');
+    },
     generateData({ header, results }) {
       this.excelData.header = header;
       console.log('header', this.excelData);
       this.excelData.results = results;
       this.onSuccess && this.onSuccess(this.excelData);
     },
-    handleDrop(e) {
+    handleDrop(e) { // (e) has the files of the CSV
       e.stopPropagation();
       e.preventDefault();
       if (this.loading) {
@@ -42,16 +45,18 @@ export default {
       }
       const files = e.dataTransfer.files;
       if (files.length !== 1) {
+        console.log('file: ', files);
         this.$message.error('Only support uploading one file!');
         return;
       }
-      const rawFile = files[0]; // only use files[0]
+      const rawFile = files[0]; // only use files[0] You use this to save in DB
+      console.log('rawFiles: ', rawFile);
 
       if (!this.isExcel(rawFile)) {
         this.$message.error('Only supports upload .xlsx, .xls, .csv suffix files');
         return false;
       }
-      this.upload(rawFile);
+      this.upload(rawFile);// file is uploaded
       e.stopPropagation();
       e.preventDefault();
     },
@@ -63,7 +68,7 @@ export default {
     handleUpload() {
       this.$refs['excel-upload-input'].click();
     },
-    handleClick(e) {
+    handleClick(e) { // when you click browse
       const files = e.target.files;
       const rawFile = files[0]; // only use files[0]
       if (!rawFile) {
@@ -71,7 +76,7 @@ export default {
       }
       this.upload(rawFile);
     },
-    upload(rawFile) {
+    upload(rawFile) { // this function will be used to upload the CSV
       this.$refs['excel-upload-input'].value = null; // fix can't select the same excel
 
       if (!this.beforeUpload) {
@@ -83,7 +88,7 @@ export default {
         this.readerData(rawFile);
       }
     },
-    readerData(rawFile) {
+    readerData(rawFile) { // this reads the data
       this.loading = true;
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
