@@ -7,8 +7,14 @@
     <div class="col-12 csv_mapping">
 
       <el-form>
-        <el-form-item :label="user.name">
+        <!-- <el-form-item :label="user.name">
           <el-time-picker class="csv_picker" style="width: 226px;" type="fixed-time" placeholder="Pick a time" />
+        </el-form-item> -->
+
+        <el-form-item :label="user.name">
+          <el-select v-model="form.time" class="csv_picker" placeholder="Please select time">
+            <el-option v-for="items in time" :key="items" :label="items" :value="items" />
+          </el-select>
         </el-form-item>
       </el-form>
 
@@ -37,6 +43,7 @@ export default {
   data() {
     return {
       form: {
+        time: '',
         attributes: [],
         edited: [],
         userId: '',
@@ -45,6 +52,7 @@ export default {
         userId: '',
         supAttrId: [],
       },
+      time: ['hourly', 'daily', 'weekly'],
       tableData: [],
       tableHeader: [],
       supplierHeader: [],

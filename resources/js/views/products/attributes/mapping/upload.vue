@@ -11,9 +11,16 @@
       </el-table> -->
 
       <el-form>
-        <el-form-item :label="user.name">
+        <!-- <el-form-item :label="user.name">
           <el-time-picker class="csv_picker" style="width: 226px;" type="fixed-time" placeholder="Pick a time" />
+        </el-form-item> -->
+
+        <el-form-item :label="user.name">
+          <el-select v-model="form.time" class="csv_picker" placeholder="Please select time">
+            <el-option v-for="items in time" :key="items" :label="items" :value="items" />
+          </el-select>
         </el-form-item>
+
       </el-form>
 
       <el-form :data="tableData" border highlight-current-row>
@@ -41,10 +48,12 @@ export default {
   data() {
     return {
       form: {
+        time: '',
         attributes: [],
         supplier_attributeId: [],
         supplier_attributeVal: [],
       },
+      time: ['hourly', 'daily', 'weekly'],
       tableData: [],
       tableHeader: [],
       supplierHeader: [],

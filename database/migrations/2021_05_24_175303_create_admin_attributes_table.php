@@ -14,7 +14,6 @@ class CreateAdminAttributesTable extends Migration
     public function up()
     {
         // Schema::create('attribute_mapping', function (Blueprint $table) {
-        //     // $table->id();
         //     $table->increments('attribute_id');
         //     $table->integer('attribute_supplier_id');
         //     $table->integer('supplier_id');
@@ -22,14 +21,8 @@ class CreateAdminAttributesTable extends Migration
         // });
 
         Schema::create('admin_attributes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            // $table->index('id');
-            $table->foreign('id')
-            ->references('attribute_id')
-            ->on('attribute_mapping');
-            // ->onUpdate('cascade')
-            // ->onDelete('cascade');
-
+            // $table->unsignedInteger('id');
+            $table->id();
             $table->string('code');
             $table->string('name');
             $table->string('type');
@@ -37,6 +30,13 @@ class CreateAdminAttributesTable extends Migration
             $table->boolean('unique');
             $table->timestamps();
 
+            // $table->foreign('id')
+            // ->references('attribute_id')
+            // ->on('attribute_mapping')
+            // ->onUpdate('cascade')
+            // ->onDelete('cascade');
+
+            // $table->primary('id');
 
         });
     }
@@ -49,5 +49,7 @@ class CreateAdminAttributesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('admin_attributes');
+        Schema::dropIfExists('attribute_mapping');
+
     }
 }

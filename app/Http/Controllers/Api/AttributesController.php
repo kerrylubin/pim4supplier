@@ -40,8 +40,10 @@ class AttributesController extends BaseController
 
         $bool_required = ($params['required'] == 'yes' ? 1 : 0);
         $bool_unique = ($params['unique'] == 'yes' ? 1 : 0);
+        // echo'id: '.var_dump($id);
 
         $attr_data = array(
+            // 'id'    => $id,
             'code'  => $params['code'],
             'name'  => $params['name'],
             'type'  => $params['type'],
@@ -50,6 +52,23 @@ class AttributesController extends BaseController
         );
 
         DB::table('admin_attributes')->insert([$attr_data]);
+
+        // $data = DB::table('admin_attributes')
+        // ->select('admin_attributes.id')
+        // ->get();
+
+        // $json = json_encode($data);
+        // $attr_id = json_decode($json, true);
+        // $id = ( count($attr_id));
+
+        // $attr_mapping_data = array(
+        //     // 'supplier_id'  => $currentUser->id,
+        //     'attribute_id'  => $attr_id,
+        //     // 'attribute_supplier_id'  => $sup_attr_id[0]['attribute_id'],
+        //     // 'attribute_label'  => $attr[0],
+        // );
+
+        // DB::table('attribute_mapping')->insert([$attr_mapping_data]);
     }
     /**
      * Store a newly created resource in storage.
@@ -80,6 +99,7 @@ class AttributesController extends BaseController
         ->where('supplier_attributes.attribute_label', '=', $label)
         ->get();
         return json_encode($attr_data);
+
     }
 
     public function getAdminAttributeId(){
