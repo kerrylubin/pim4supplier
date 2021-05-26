@@ -13,13 +13,36 @@ class CreateAttributeMappingTable extends Migration
      */
     public function up()
     {
+
         Schema::create('suppliers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('supplier_name');
             $table->timestamps();
 
+            // $table->foreign('id')
+            // ->references('id')
+            // ->on('users')
+            // ->onDelete('cascade')
+            // ->onUpdate('cascade');
+
             // $table->primary('id');
         });
+
+        // Schema::create('users', function (Blueprint $table) {
+        //     $table->unsignedInteger('id');
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->timestamp('email_verified_at')->nullable();
+        //     $table->string('password');
+        //     $table->rememberToken();
+        //     $table->timestamps();
+
+        //     $table->foreign('id')
+        //     ->references('id')
+        //     ->on('suppliers')
+        //     ->onDelete('cascade')
+        //     ->onUpdate('cascade');
+        // });
 
         Schema::create('supplier_profile', function (Blueprint $table) {
             $table->increments('id');
@@ -34,8 +57,8 @@ class CreateAttributeMappingTable extends Migration
             $table->foreign('supplier_id')
             ->references('id')
             ->on('suppliers')
-            ->onDelete('restrict')
-            ->onUpdate('restrict');
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
 
         });
 
@@ -49,8 +72,8 @@ class CreateAttributeMappingTable extends Migration
             $table->foreign('profile_id')
             ->references('id')
             ->on('supplier_profile')
-            ->onDelete('restrict')
-            ->onUpdate('restrict');
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
 
         Schema::create('admin_attributes', function (Blueprint $table) {
@@ -77,14 +100,14 @@ class CreateAttributeMappingTable extends Migration
             $table->foreign('admin_attribute_id')
             ->references('id')
             ->on('admin_attributes')
-            ->onDelete('restrict')
-            ->onUpdate('restrict');
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
 
             $table->foreign('supplier_attribute_id')
             ->references('id')
             ->on('supplier_attributes')
-            ->onDelete('restrict')
-            ->onUpdate('restrict');
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
 
         });
     }
@@ -97,6 +120,7 @@ class CreateAttributeMappingTable extends Migration
     public function down()
     {
         Schema::dropIfExists('suppliers');
+        // Schema::dropIfExists('users');
         Schema::dropIfExists('supplier_profile');
         Schema::dropIfExists('supplier_attributes');
         Schema::dropIfExists('admin_attributes');

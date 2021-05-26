@@ -156,6 +156,7 @@ class UserController extends BaseController
             if($params['role'] == 'supplier'){
 
                 $suppliers = array(
+                    'id'    => $user->id,
                     'supplier_name' => $params['name'],
                 );
 
