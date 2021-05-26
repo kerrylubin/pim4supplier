@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSupplierProfileTable extends Migration
+class CreateTableHeadersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateSupplierProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_profile', function (Blueprint $table) {
+        Schema::create('table_headers', function (Blueprint $table) {
             $table->id();
-            $table->integer('supplier_id');
-            $table->string('feed_url');
-            $table->string('delimiter');
-            $table->string('frequency');
+            $table->integer('user_id');
+            $table->string('csv_header');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateSupplierProfileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_profile');
+        Schema::dropIfExists('table_headers');
     }
 }

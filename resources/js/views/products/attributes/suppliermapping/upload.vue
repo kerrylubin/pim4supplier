@@ -185,11 +185,11 @@ export default {
 
       // self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
 
-      console.log('form: ', self.form.attributes);
-      console.log('form edited: ', self.form.edited);
-      console.log('sup headers: ', self.supplierHeader);
+      // console.log('form: ', self.form.attributes);
+      // console.log('form edited: ', self.form.edited);
+      // console.log('sup headers: ', self.supplierHeader);
 
-      self.storeSupAttributes();
+      // self.storeSupAttributes();
 
       // axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
       //   .then(function(response) {
@@ -209,48 +209,49 @@ export default {
       //     self.errorHandler(error.response);
       //   });
 
-      // for (var i = 0; i < self.tableData.length; i++){
-      //   var keys = Object.keys(self.tableData[i]);
-      //   var values = Object.values(self.tableData[i]);
+      for (var i = 0; i < self.tableData.length; i++){
+        // var keys = Object.keys(self.tableData[i]);
+        // var values = Object.values(self.tableData[i]);
 
-      //   console.log('data: ', self.tableData[i]);
+        console.log('tableData: ', self.tableData[i]);
+        console.log('tableHeader: ', self.tableHeader[i]);
 
-      //   axios.put(self.$apiAdress + '/api/storeTableKeysData/' + keys.toString().replace(/%20/g, ' '))
-      //     .then(function(response) {
-      //       self.$message({
-      //         type: 'success',
-      //         message: 'CSV Keys Saved',
-      //         duration: 5 * 1000,
-      //       });
-      //       console.log('storeTableKeysData: ', response.data);
-      //     }).catch(function(error) {
-      //       self.$message({
-      //         type: 'error',
-      //         message: error,
-      //         duration: 5 * 1000,
-      //       });
-      //       console.log(error);
-      //       self.errorHandler(error.response);
-      //     });
+        // axios.put(self.$apiAdress + '/api/storeTableKeysData/' + keys.toString().replace(/%20/g, ' '))
+        //   .then(function(response) {
+        //     self.$message({
+        //       type: 'success',
+        //       message: 'CSV Keys Saved',
+        //       duration: 5 * 1000,
+        //     });
+        //     console.log('storeTableKeysData: ', response.data);
+        //   }).catch(function(error) {
+        //     self.$message({
+        //       type: 'error',
+        //       message: error,
+        //       duration: 5 * 1000,
+        //     });
+        //     console.log(error);
+        //     self.errorHandler(error.response);
+        //   });
 
-      //   axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
-      //     .then(function(response) {
-      //       self.$message({
-      //         type: 'success',
-      //         message: 'Table Data is Saved',
-      //         duration: 5 * 1000,
-      //       });
-      //       console.log('storeTableKeysData: ', response.data);
-      //     }).catch(function(error) {
-      //       self.$message({
-      //         type: 'error',
-      //         message: error,
-      //         duration: 5 * 1000,
-      //       });
-      //       console.log(error);
-      //       self.errorHandler(error.response);
-      //     });
-      // }
+        // axios.put(self.$apiAdress + '/api/storeTableValData/' + values.toString().replace(/\//g, '-'))
+        //   .then(function(response) {
+        //     self.$message({
+        //       type: 'success',
+        //       message: 'Table Data is Saved',
+        //       duration: 5 * 1000,
+        //     });
+        //     console.log('storeTableKeysData: ', response.data);
+        //   }).catch(function(error) {
+        //     self.$message({
+        //       type: 'error',
+        //       message: error,
+        //       duration: 5 * 1000,
+        //     });
+        //     console.log(error);
+        //     self.errorHandler(error.response);
+        //   });
+      }
     },
     setValue(){
       console.log('CLICK!!');

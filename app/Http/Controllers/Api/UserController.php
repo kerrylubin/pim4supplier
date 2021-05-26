@@ -153,6 +153,17 @@ class UserController extends BaseController
                 ->insert([$supplier_user]);
             }
 
+            if($params['role'] == 'supplier'){
+
+                $suppliers = array(
+                    'supplier_name' => $params['name'],
+                );
+
+                DB::table('suppliers')
+                ->insert([$suppliers]);
+            }
+
+
             return new UserResource($user);
         }
     }
