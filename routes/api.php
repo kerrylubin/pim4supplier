@@ -37,13 +37,18 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
 
         // Custom routes        Route::get('getCSVData', 'CsvController@getCSVData');
-        Route::post('storeAttributes', 'AttributesController@storeAttributes');
+        Route::get('getSupAttributes/{id}', 'AttributesController@getSupAttributes');
+        Route::post('getSupAttributesLabels', 'AttributesController@getSupAttributesLabels');
+        Route::post('storeAttributesMapping', 'AttributesController@storeAttributesMapping');
+        Route::post('storeAdminAttributes', 'AttributesController@storeAdminAttributes');
+        Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
+        Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
         Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getAttributes', 'AttributesController@getAttributes');
         Route::get('getUserCSVData', 'CsvController@getUserCSVData');
         Route::get('getSupCSVData/{id}', 'CsvController@getSupCSVData');
-        Route::put('storeTableKeysData/{keys}', 'CsvController@storeTableKeysData')->name('storeTableKeysData');
-        Route::put('storeTableValData/{val}', 'CsvController@storeTableValData')->name('storeTableValData');
+        Route::post('storeTableKeysData', 'CsvController@storeTableKeysData')->name('storeTableKeysData');
+        Route::post('storeTableValData', 'CsvController@storeTableValData')->name('storeTableValData');
         Route::put('storeUserCSVData/{csvHeaderData}', 'CsvController@storeUserCSVData');
         Route::put('users/{user}', 'UserController@update');
         Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);

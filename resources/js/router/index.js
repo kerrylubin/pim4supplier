@@ -20,7 +20,7 @@ import Layout from '@/layout';
 import adminRoutes from './modules/admin';
 // import nestedRoutes from './modules/nested';
 // import errorRoutes from './modules/error';
-// import excelRoutes from './modules/excel';
+import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
 import categoriesRoutes from './modules/categories';
 
@@ -303,7 +303,7 @@ export const asyncRoutes = [
   //   ],
   // },
   // errorRoutes,
-  // excelRoutes,
+  excelRoutes,
   // {
   //   path: '/zip',
   //   component: Layout,

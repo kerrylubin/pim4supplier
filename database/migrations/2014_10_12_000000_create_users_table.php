@@ -14,14 +14,46 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
         });
+
+        // Schema::create('suppliers', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('supplier_name');
+        //     $table->timestamps();
+
+        //     // $table->foreign('id')
+        //     // ->references('id')
+        //     // ->on('users')
+        //     // ->onDelete('cascade')
+        //     // ->onUpdate('cascade');
+
+        //     // $table->primary('id');
+        // });
+
+        // Schema::create('users', function (Blueprint $table) {
+        //     $table->unsignedInteger('id');
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->timestamp('email_verified_at')->nullable();
+        //     $table->string('password');
+        //     $table->rememberToken();
+        //     $table->timestamps();
+
+        //     $table->foreign('id')
+        //     ->references('id')
+        //     ->on('suppliers')
+        //     ->onDelete('cascade')
+        //     ->onUpdate('cascade');
+        // });
+
     }
 
     /**
@@ -32,5 +64,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+
     }
 }

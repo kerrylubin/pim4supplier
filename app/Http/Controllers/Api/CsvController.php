@@ -58,51 +58,63 @@ class CsvController extends BaseController
         ->pluck('csv_header');
         return response()->json($csvData);
     }
-        /**
-     * @param array table_keys
-     * @param array table_values
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  User $user_id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function storeTableKeysData($table_keys )
+    public function storeTableKeysData(Request $request)
     {
         $currentUser = Auth::user();
-        $header_array = explode(',',$table_keys);
-        // $content_array = explode(',',$table_values);
 
-        // echo'data: '.var_dump($header_array);
-        // echo'data: '.$content_array;
+        $params = $request->all();
+        // $csv_keys = array_keys($params);
 
-        for($i = 0; $i<= count($header_array); $i++){
+        echo'params: '.var_dump($params);
 
-            if(isset($header_array[$i])){
+        for($i = 0; $i<= count($params); $i++){
+
+            if(isset($params[$i])){
 
                 $csv_data = array(
                     'user_id'     => $currentUser->id,
-                    'csv_header'  => $header_array[$i],
-                    // 'csv_content' => $$content_array[$i]
+                    'csv_header'  => $params[$i],
+                    // 'csv_content' => $params[$i]
                 );
 
-                DB::table('table_data')->insert([$csv_data]);
+                DB::table('table_headers')->insert([$csv_data]);
             }
         }
     }
-
-    public function storeTableValData($table_val )
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  User $user_id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeTableValData(Request $request)
     {
         $currentUser = Auth::user();
-        $content_array = explode(',',$table_val);
+        // $content_array = explode(',',$table_val);
         // $content_array = explode(',',$table_values);
-
         // echo'data: '.var_dump($content_array);
-        // echo'data: '.$content_array;
 
-        for($i = 0; $i<= count($content_array); $i++){
+        $params = $request->all();
+        $csv_values = array_values($params);
 
-            if(isset($content_array[$i])){
+        for($i = 0; $i<= count($csv_values); $i++){
+            // echo'csv_keys: '.var_dump($csv_keys[$i]);
+            // echo'params: '.var_dump($params[$i]);
+
+            if(isset($csv_values[$i])){
 
                 $csv_data = array(
                     'user_id'     => $currentUser->id,
-                    // 'csv_header'  => $header_array[$i],
-                    'csv_content' => $content_array[$i]
+                    // 'csv_header'  => $csv_keys[$i],
+                    'csv_content' => $csv_values[$i]
                 );
 
                 DB::table('table_data')->insert([$csv_data]);
