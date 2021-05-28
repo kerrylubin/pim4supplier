@@ -77,22 +77,21 @@ export default {
       dialogFormVisible: false,
       userCreating: false,
       form: {
-        time: '',
         attributes: [],
         supplier_attributeId: [],
         supplier_attributeVal: [],
       },
+      time: ['daily', 'weekly', 'monthly'],
       importForm: {
         url: '',
         delimiter: '',
         frequency: '',
       },
       rules: {
-        url: [{ required: true, message: 'URL is required', trigger: ['blur', 'change'] }],
-        delimiter: [{ required: true, message: 'Delimiter is required', trigger: ['blur', 'change'] }],
-        frequency: [{ required: true, message: 'Frequency is required', trigger: ['blur', 'change'] }],
+        url: [{ required: true, message: 'URL is required!', trigger: ['blur', 'change'] }],
+        delimiter: [{ required: true, message: 'Delimiter is required!', trigger: ['blur', 'change'] }],
+        frequency: [{ required: true, message: 'Frequency is required!', trigger: ['blur', 'change'] }],
       },
-      time: ['hourly', 'daily', 'weekly'],
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
@@ -128,10 +127,7 @@ export default {
               self.resetImportForm();
               self.dialogFormVisible = false;
               self.userCreating = false;
-              // self.handleFilter();
-              // self.$router.go()
-
-              console.log('import: ', response.data);
+              // console.log('import: ', response.data);
             }).catch(function(error) {
               self.$message({
                 type: 'error',
@@ -163,6 +159,7 @@ export default {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
+      console.log('user: ', self.user);
     },
     async getCSVData(){
       var self = this;

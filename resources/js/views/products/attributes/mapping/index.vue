@@ -41,6 +41,7 @@ export default {
       this.onSuccess && this.onSuccess(this.excelData);
     },
     handleDrop(e) { // (e) has the files of the CSV
+    // can send to php to test importer
       e.stopPropagation();
       e.preventDefault();
       if (this.loading) {
