@@ -357,9 +357,9 @@ class AttributesController extends BaseController
 
     // public function getSupAttributes($id)
     // {
-    //     $attr_data = DB::table('supplier_attribute')
-    //     ->select('supplier_attribute.attribute_label', 'supplier_attribute.id')
-    //     ->where('supplier_attribute.supplier_id', '=', $id)
+    //     $attr_data = DB::table('supplier_attributes')
+    //     ->select('supplier_attributes.attribute_label')
+    //     ->where('supplier_attributes.profile_id', '=', $id)
     //     ->get();
     //     return response()->json($attr_data);
     // }

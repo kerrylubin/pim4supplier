@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSupplierFiltersTable extends Migration
+class CreateSupplierProfileTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateSupplierFiltersTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_filters', function (Blueprint $table) {
+        Schema::create('supplier_profile', function (Blueprint $table) {
             $table->id();
-            $table->string('status');
-            $table->string('sku');
-            $table->string('product_name');
-            $table->string('category');
-            $table->string('brand');
+            $table->integer('supplier_id');
+            $table->string('feed_url');
+            $table->string('delimiter');
+            $table->string('frequency');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateSupplierFiltersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_filters');
+        Schema::dropIfExists('supplier_profile');
     }
 }

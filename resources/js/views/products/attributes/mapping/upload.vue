@@ -4,16 +4,13 @@
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV()">
       Save
     </el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      Import CSV
+    </el-button>
+
     <div class="col-12 csv_mapping">
 
-      <!-- <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-        <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
-      </el-table> -->
-
-      <el-form>
-        <!-- <el-form-item :label="user.name">
-          <el-time-picker class="csv_picker" style="width: 226px;" type="fixed-time" placeholder="Pick a time" />
-        </el-form-item> -->
+      <!-- <el-form>
 
         <el-form-item :label="user.name">
 
@@ -22,7 +19,7 @@
           </el-select>
         </el-form-item>
 
-      </el-form>
+      </el-form> -->
 
       <el-form :data="tableData" border highlight-current-row>
         <div class="col-12">
@@ -34,6 +31,35 @@
         </div>
       </el-form>
     </div>
+
+    <el-dialog :title="'Import Csv'" :visible.sync="dialogFormVisible">
+      <div v-loading="userCreating" class="form-container">
+        <el-form ref="importForm" :rules="rules" :model="importForm" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="CSV Feed URL" prop="url" placeholder="Add your URL">
+            <el-input v-model="importForm.url" />
+          </el-form-item>
+          <el-form-item label="Frequency" prop="frequency">
+            <el-select v-model="importForm.frequency" placeholder="Please select frequency">
+              <el-option v-for="items in time" :key="items" :label="items" :value="items" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Delimiter" prop="delimiter">
+            <el-input v-model="importForm.delimiter" />
+          </el-form-item>
+        </el-form>
+        <!-- <template slot-scope="scope"> -->
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="createNewProfile(currentUserId);">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+        <!-- </template> -->
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -48,13 +74,24 @@ export default {
   components: { UploadExcelComponent },
   data() {
     return {
+      dialogFormVisible: false,
+      userCreating: false,
       form: {
-        time: '',
         attributes: [],
         supplier_attributeId: [],
         supplier_attributeVal: [],
       },
-      time: ['hourly', 'daily', 'weekly'],
+      time: ['daily', 'weekly', 'monthly'],
+      importForm: {
+        url: '',
+        delimiter: '',
+        frequency: '',
+      },
+      rules: {
+        url: [{ required: true, message: 'URL is required!', trigger: ['blur', 'change'] }],
+        delimiter: [{ required: true, message: 'Delimiter is required!', trigger: ['blur', 'change'] }],
+        frequency: [{ required: true, message: 'Frequency is required!', trigger: ['blur', 'change'] }],
+      },
       tableData: [],
       tableHeader: [],
       supplierHeader: [],
@@ -69,10 +106,60 @@ export default {
     console.log('params: ', this.$route.params.id);
   },
   methods: {
+    createNewProfile(){
+      // console.log('current user id: ', id);
+      this.$refs['importForm'].validate((valid) => {
+        if (valid) {
+          var self = this;
+          // this.newUser.roles = [this.newUser.role];
+          this.dialogFormVisible = true;
+          this.userCreating = true;
+          console.log('new import: ', self.importForm);
+
+          axios.post(self.$apiAdress + '/api/storeImportProfile', self.importForm)
+            .then(function(response) {
+              self.$message({
+                type: 'success',
+                message: 'Import Completed',
+                duration: 5 * 1000,
+              });
+
+              self.resetImportForm();
+              self.dialogFormVisible = false;
+              self.userCreating = false;
+              // console.log('import: ', response.data);
+            }).catch(function(error) {
+              self.$message({
+                type: 'error',
+                message: error,
+                duration: 5 * 1000,
+              });
+              console.log(error);
+              self.errorHandler(error.response);
+            });
+        } else {
+          self.$message({
+            type: 'error',
+            message: 'error submit!!',
+            duration: 5 * 1000,
+          });
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetImportForm() {
+      this.importForm = {
+        url: '',
+        delimiter: '',
+        frequency: '',
+      };
+    },
     async getUser() {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
+      console.log('user: ', self.user);
     },
     async getCSVData(){
       var self = this;
@@ -202,6 +289,13 @@ export default {
         type: 'warning',
       });
       return false;
+    },
+    handleCreate() {
+      this.resetImportForm();
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['importForm'].clearValidate();
+      });
     },
     async handleSuccess({ results, header }) {
       var self = this;

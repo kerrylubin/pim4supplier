@@ -24,7 +24,7 @@ class CreateAdminFiltersTable extends Migration
             $table->string('supplier');
             $table->string('brand');
             $table->timestamps();
-            $table->timestamp('last_synced_at');
+            $table->timestamp('last_synced_at')->nullable();
         });
     }
 

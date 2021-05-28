@@ -7,6 +7,7 @@
         Browse
       </el-button>
     </div>
+
   </div>
 </template>
 
@@ -24,6 +25,8 @@ export default {
       excelData: {
         header: null,
         results: null,
+        delimeter: null,
+        fileName: null,
       },
     };
   },
@@ -38,6 +41,7 @@ export default {
       this.onSuccess && this.onSuccess(this.excelData);
     },
     handleDrop(e) { // (e) has the files of the CSV
+    // can send to php to test importer
       e.stopPropagation();
       e.preventDefault();
       if (this.loading) {
@@ -49,8 +53,10 @@ export default {
         this.$message.error('Only support uploading one file!');
         return;
       }
-      const rawFile = files[0]; // only use files[0] You use this to save in DB
+      const rawFile = files[0];
+      this.excelData.fileName = rawFile.name; // only use files[0] You use this to save in DB
       console.log('rawFiles: ', rawFile);
+      console.log('fileName: ', this.excelData.fileName);
 
       if (!this.isExcel(rawFile)) {
         this.$message.error('Only supports upload .xlsx, .xls, .csv suffix files');

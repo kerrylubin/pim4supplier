@@ -16,7 +16,7 @@
   </a>
 </p>
 
-# Laravue
+# Pim4Supplier
 [Laravue](https://laravue.dev) (pronounced /ˈlarəvjuː/) is a beautiful dashboard combination of [Laravel](https://laravel.com/), [Vue.js](https://github.com/vuejs/vue) and the UI Toolkit [Element](https://github.com/ElemeFE/element). The work is inspired by  [vue-element-admin](http://panjiachen.github.io/vue-element-admin) with our love on top of that. With the powerful Laravel framework as the backend, Vue.js as the high performance on the frontend,  Laravue appears to be a full-stack solution for an enterprise application level.
 
 Documentation: [https://doc.laravue.dev](https://doc.laravue.dev)
@@ -33,28 +33,30 @@ Documentation: [https://doc.laravue.dev](https://doc.laravue.dev)
  * Laravue is positioned as an enterprise management solution, and it is highly recommended to use it to start from scratch.
  * For existing Laravel project, you should check [Laravue Core](https://github.com/tuandm/laravue-core) for integration.
  * Your machine needs to be ready for the latest [Laravel](https://laravel.com/docs/6.x#installation) and [Node.js](https://nodejs.org).
-
-
 ### Installing
-#### Manual
-
 ```bash
 # Clone the project and run composer
 composer create-project tuandm/laravue
 cd laravue
-
-# Migration and DB seeder (after changing your DB settings in .env)
-php artisan migrate --seed
-
-# Install dependency with NPM
-npm install
-
-# develop
-npm run dev # or npm run watch
-
-# Build on production
-npm run production
 ```
+### running:
+```bash
+composer install
+npm install
+php artisan key:generate
+php artisan migrate --seed
+```
+#### running in development mode
+```bash
+npm run dev
+php artisan serve
+```
+#### running in production mode
+```bash
+npm run production
+php artisan serve
+```
+
 
 #### Docker
 ```sh
@@ -113,5 +115,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 * [tui.editor](https://github.com/nhnent/tui.editor) - Markdown WYSIWYG Editor.
 * [Echarts](http://echarts.apache.org/) - A powerful, interactive charting and visualization library for browser.
 
-## Donate
-If you find this project useful, you can [buy me a coffee](https://www.buymeacoffee.com/tuandm)

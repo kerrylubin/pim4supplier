@@ -25,7 +25,7 @@ class CreateSupplierUsersTable extends Migration
             $table->string('price');
             $table->string('brand');
             $table->timestamps();
-            $table->timestamp('last_synced_at');
+            $table->timestamp('last_synced_at')->nullable();
         });
     }
 
