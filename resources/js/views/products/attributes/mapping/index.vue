@@ -7,6 +7,7 @@
         Browse
       </el-button>
     </div>
+
   </div>
 </template>
 
@@ -103,7 +104,6 @@ export default {
           const worksheet = workbook.Sheets[firstSheetName];
           const header = this.getHeaderRow(worksheet);
           const results = XLSX.utils.sheet_to_json(worksheet);
-          console.log('reader data: ', data);
           this.generateData({ header, results });
           this.loading = false;
           resolve();
