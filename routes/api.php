@@ -43,13 +43,18 @@ Route::namespace('Api')->group(function() {
         Route::post('storeAdminAttributes', 'AttributesController@storeAdminAttributes');
         Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
         Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
-        Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getAttributes', 'AttributesController@getAttributes');
+
+        Route::post('storeImportProfile', 'ImportProfile@storeImportProfile');
+
+
+        Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getUserCSVData', 'CsvController@getUserCSVData');
         Route::get('getSupCSVData/{id}', 'CsvController@getSupCSVData');
         Route::post('storeTableKeysData', 'CsvController@storeTableKeysData')->name('storeTableKeysData');
         Route::post('storeTableValData', 'CsvController@storeTableValData')->name('storeTableValData');
         Route::put('storeUserCSVData/{csvHeaderData}', 'CsvController@storeUserCSVData');
+
         Route::put('users/{user}', 'UserController@update');
         Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
         Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' .Acl::PERMISSION_PERMISSION_MANAGE);

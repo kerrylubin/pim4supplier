@@ -44,7 +44,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Delimiter" prop="delimiter">
-            <el-input v-model="importForm.delimiter" show-password />
+            <el-input v-model="importForm.delimiter" />
           </el-form-item>
         </el-form>
         <!-- <template slot-scope="scope"> -->
@@ -90,9 +90,7 @@ export default {
       rules: {
         url: [{ required: true, message: 'URL is required', trigger: ['blur', 'change'] }],
         delimiter: [{ required: true, message: 'Delimiter is required', trigger: ['blur', 'change'] }],
-        frequency: [
-          { required: true, message: 'Frequency is required', trigger: ['blur', 'change'] },
-        ],
+        frequency: [{ required: true, message: 'Frequency is required', trigger: ['blur', 'change'] }],
       },
       time: ['hourly', 'daily', 'weekly'],
       tableData: [],
@@ -119,7 +117,7 @@ export default {
           this.userCreating = true;
           console.log('new import: ', self.importForm);
 
-          axios.post(self.$apiAdress + '/api/importprofile', self.importForm)
+          axios.post(self.$apiAdress + '/api/storeImportProfile', self.importForm)
             .then(function(response) {
               self.$message({
                 type: 'success',
