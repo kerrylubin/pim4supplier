@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('pim4sup'),
         ]);
 
-        // $supplier = User::create([
-        //     'name' => 'Manager',
-        //     'email' => 'supplier@pim4sup.nl',
-        //     'password' => Hash::make('pim4sup'),
-        // ]);
+        $supplier = User::create([
+            'name' => 'Supplier',
+            'email' => 'supplier@pim4sup.nl',
+            'password' => Hash::make('pim4sup'),
+        ]);
         // $editor = User::create([
         //     'name' => 'Editor',
         //     'email' => 'editor@pim4sup.nl',
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_VISITOR);
 
         $admin->syncRoles($adminRole);
-        // $supplier->syncRoles($supplierRole);
+        $supplier->syncRoles($supplierRole);
         // $editor->syncRoles($editorRole);
         // $user->syncRoles($userRole);
         // $visitor->syncRoles($visitorRole);

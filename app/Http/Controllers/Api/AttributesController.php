@@ -92,11 +92,11 @@ class AttributesController extends BaseController
         // DB::table('attributes')->insert([$attr_data]);
     }
 
-    public function getSupAttributeId($label){
+    public function getSupAttributeId($labels){
 
         $attr_data = DB::table('supplier_attributes')
-        ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.attribute_label', '=', $label)
+        ->select('supplier_attributes.id')
+        ->whereIn('supplier_attributes.attribute_label', $labels)
         ->get();
         return json_encode($attr_data);
 
@@ -166,6 +166,7 @@ class AttributesController extends BaseController
                 if(count($user_id) <= 0){
                     // echo'low: ';
                     if(isset($supplier_attributes[$i]) ){
+
                         $attr_data = array(
                             'profile_id'  => $currentUser->id,
                             // 'attribute_id' => $supplier_attributes_id[$i],
@@ -256,9 +257,9 @@ class AttributesController extends BaseController
 
         //get the id's of the attributes that are chosen to be matched.
 
-        $sup_user_id = DB::table('attribute_mapping')
-        ->select('attribute_mapping.id')
-        ->where('attribute_mapping.id','=',$user_id)->get();
+        // $sup_user_id = DB::table('attribute_mapping')
+        // ->select('attribute_mapping.id')
+        // ->where('attribute_mapping.id','=',$user_id)->get();
 
         //get all the ids in a array
         // $json_id = $this->getSupAttrLabels($user_id);
@@ -269,18 +270,23 @@ class AttributesController extends BaseController
         $json_id = $this->getAdminAttributeId();
         // echo'json_id: '.var_dump($json_id);
         $admin_attr_id = json_decode($json_id, true);
-        echo'admin_attr_id: '.var_dump($admin_attr_id);
+        // echo'admin_attr_id: '.var_dump($admin_attr_id);
 
-        if(count($sup_user_id) >= 0){
-            echo'has the sup ID';
+        $json = $this->getSupAttributeId($attributes);
+        $sup_attr_id = json_decode($json, true);
+        echo'sup_attr_id: '.var_dump($sup_attr_id);
 
-            DB::table('attribute_mapping')
-            // ->select('attribute_mapping.attribute_supplier_id', 'attribute_mapping.attribute_label')
-            ->where('attribute_mapping.id', '=', $user_id)->delete();
 
-            for($i = 0; $i<= count($attributes); $i++){
+        // if(count($sup_user_id) >= 0){
+        //     echo'has the sup ID';
 
-                if(isset($attributes[$i])){
+        // DB::table('attribute_mapping')
+        // // ->select('attribute_mapping.attribute_supplier_id', 'attribute_mapping.attribute_label')
+        // ->where('attribute_mapping.id', '=', $user_id)->delete();
+
+            for($i = 0; $i<= count($sup_attr_id); $i++){
+
+                if(isset($sup_attr_id[$i])){
                     // $attr_sup_id = explode(" ", $attributes[$i]);
                     // $attr = explode(" ", $attributes[$i]);
                     // $attr_id = explode(" ", $attributes[$i]);
@@ -288,21 +294,18 @@ class AttributesController extends BaseController
                     // echo'attr_sup_id: '.var_dump($attr_sup_id[1]);
                     // echo'attr_id: '.var_dump($attr_id[2]);
 
-                    $json = $this->getSupAttributeId($attributes[$i]);
-                    $sup_attr_id = json_decode($json, true);
 
-                    // if(isset($sup_attr_id[$i])){
-
+                    if(isset($sup_attr_id[$i])){
 
                         $attr_mapping_data = array(
-                            'id'  => $user_id,
-                            'supplier_attribute_id'  => $sup_attr_id[0]['attribute_id'],
-                            'admin_attribute_id'  => $admin_attr_id[$i],
+                            // 'id'  => $user_id,
+                            'supplier_attribute_id'     => $sup_attr_id[$i]['id'],
+                            'admin_attribute_id'        => $admin_attr_id[$i],
                             // 'attribute_label'  => $attributes[$i],
                         );
 
                         DB::table('attribute_mapping')->insert([$attr_mapping_data]);
-                    // }
+                    }
 
 
                     // echo'attributes: '.var_dump($attributes[$i]);
@@ -320,7 +323,7 @@ class AttributesController extends BaseController
                 }
 
             }
-        }
+        // }
         // else if(count($sup_user_id) == 0){
         //     echo'dont have the sup ID';
         //     // $json_id = $this->getSupAttrLabels($user_id);
@@ -349,30 +352,29 @@ class AttributesController extends BaseController
         //     // DB::table('attribute_mapping')
         //     // ->where('attribute_mapping.supplier_id','=',$user_id )
         //     // ->update($attr_mapping_data);
-
         // }
 
     }
 
 
-    // public function getSupAttributes($id)
-    // {
-    //     $attr_data = DB::table('supplier_attributes')
-    //     ->select('supplier_attributes.attribute_label')
-    //     ->where('supplier_attributes.profile_id', '=', $id)
-    //     ->get();
-    //     return response()->json($attr_data);
-    // }
-
     public function getSupAttributes($id)
     {
-        $attr_data = DB::table('attribute_mapping')
-        ->select('attribute_mapping.attribute_id', 'attribute_mapping.attribute_supplier_id',
-        'attribute_mapping.attribute_label')
-        ->where('attribute_mapping.supplier_id', '=', $id)
+        $attr_data = DB::table('supplier_attributes')
+        ->select('supplier_attributes.attribute_label')
+        ->where('supplier_attributes.profile_id', '=', $id)
         ->get();
         return response()->json($attr_data);
     }
+
+    // public function getSupAttributes($id)
+    // {
+    //     $attr_data = DB::table('attribute_mapping')
+    //     ->select('attribute_mapping.attribute_id', 'attribute_mapping.attribute_supplier_id',
+    //     'attribute_mapping.attribute_label')
+    //     ->where('attribute_mapping.supplier_id', '=', $id)
+    //     ->get();
+    //     return response()->json($attr_data);
+    // }
 
     /**
      * Store a newly created resource in storage.

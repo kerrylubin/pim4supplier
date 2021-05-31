@@ -45,7 +45,8 @@ Route::namespace('Api')->group(function() {
         Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
         Route::get('getAttributes', 'AttributesController@getAttributes');
 
-        Route::post('storeImportProfile', 'ImportProfile@storeImportProfile');
+        Route::post('storeImportProfile', 'ImportProfileController@storeImportProfile');
+        Route::get('getEntities/{id}', 'ImportCSVController@getEntities');
         Route::get('getImportProfile/{id}', 'AttributesController@getImportProfile');
 
 

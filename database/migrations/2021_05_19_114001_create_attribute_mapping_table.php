@@ -28,21 +28,21 @@ class CreateAttributeMappingTable extends Migration
             $table->primary('id');
         });
 
-        // Schema::create('users', function (Blueprint $table) {
-        //     $table->unsignedInteger('id');
-        //     $table->string('name');
-        //     $table->string('email')->unique();
-        //     $table->timestamp('email_verified_at')->nullable();
-        //     $table->string('password');
-        //     $table->rememberToken();
-        //     $table->timestamps();
+        Schema::create('supplier_profile_users', function (Blueprint $table) {
+            $table->unsignedInteger('id');
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
+            $table->string('role');
+            $table->timestamps();
 
-        //     $table->foreign('id')
-        //     ->references('id')
-        //     ->on('suppliers')
-        //     ->onDelete('cascade')
-        //     ->onUpdate('cascade');
-        // });
+            $table->foreign('id')
+            ->references('id')
+            ->on('suppliers')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+
+        });
 
         Schema::create('supplier_profile', function (Blueprint $table) {
             $table->increments('id');
@@ -67,17 +67,15 @@ class CreateAttributeMappingTable extends Migration
             $table->unsignedInteger('profile_id');
             $table->string('attribute_label');
             $table->timestamps();
-            // $table->primary('id');
 
             $table->foreign('profile_id')
-            ->references('id')
+            ->references('supplier_id')
             ->on('supplier_profile')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
 
         Schema::create('admin_attributes', function (Blueprint $table) {
-            // $table->unsignedInteger('id');
             $table->increments('id');
             $table->string('code');
             $table->string('name');
@@ -85,8 +83,6 @@ class CreateAttributeMappingTable extends Migration
             $table->boolean('required');
             $table->boolean('unique');
             $table->timestamps();
-
-            // $table->primary('id');
 
         });
 
@@ -120,7 +116,7 @@ class CreateAttributeMappingTable extends Migration
     public function down()
     {
         Schema::dropIfExists('suppliers');
-        // Schema::dropIfExists('users');
+        Schema::dropIfExists('supplier_profile_users');
         Schema::dropIfExists('supplier_profile');
         Schema::dropIfExists('supplier_attributes');
         Schema::dropIfExists('admin_attributes');

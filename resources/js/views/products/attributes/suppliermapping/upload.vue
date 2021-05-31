@@ -4,6 +4,7 @@
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV()">
       Save
     </el-button>
+
     <div class="col-12 csv_mapping">
 
       <el-form>
@@ -15,11 +16,20 @@
       </el-form>
 
       <el-form :data="tableData" border highlight-current-row>
+
         <div class="col-12">
           <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id" :label="item.name">
+
             <el-select :id="'selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="csv_picker">
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label" />
             </el-select>
+
+            <div :class="'field_wrapper_'+index.toString()">
+              <div>
+                <el-button href="javascript:void(0);" class="filter-item add_button" style="float:left;" type="primary" icon="el-icon-plus" />
+              </div>
+            </div>
+
           </el-form-item>
         </div>
       </el-form>
@@ -28,7 +38,7 @@
 </template>
 
 <script>
-// import UploadExcelComponent from './index';
+import $ from 'jquery';
 import axios from 'axios';
 // import UserResource from '@/api/user';
 // const userResource = new UserResource();
@@ -62,6 +72,7 @@ export default {
   mounted: function() {
     this.getUser();
     this.getCSVData();
+    this.createInputs();
     console.log('params: ', this.$route.params.id);
   },
   methods: {
@@ -69,6 +80,53 @@ export default {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
+    },
+    createInputs() {
+      var self = this;
+      self.$nextTick(() => {
+        var maxField = 9; // Input fields increment limitation
+        var addButton = $('.add_button'); // Add button selector
+        var wrapper = $('.field_wrapper_'); // Input field wrapper
+        console.log('wrapper: ', $('.field_wrapper_') + 0);
+        var items = ['Canada', 'Denmark', 'Finland', 'Germany', 'Mexico'];
+
+        var x = 0; // Initial field counter is 1
+
+        // Once add button is clicked
+
+        // self.tableHeader.forEach((item, index) => {
+
+        //   });
+
+        for (var i = 0; i <= self.tableHeader; i++){
+          console.log('item: ', self.tableHeader);
+          // console.log('index: ', index );
+        }
+        console.log('pressed!!', self.tableHeader);
+
+        $(addButton).click(function(){
+          // Check maximum number of input fields
+          if (x < maxField){
+            x++; // Increment field counter
+            var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button"> - </button>';
+            var dropDown = '<div><select id="sel_' + x + '" name="field_name[]" ></select>' + delBtn + '</div>'; // New input field html
+            $(wrapper).append(dropDown); // Add field html
+
+            $.each(items, function(index, value) {
+              // APPEND OR INSERT DATA TO SELECT ELEMENT.
+              console.log('sel: ', index, value);
+              $('#sel_' + x).append('<option value="' + index + ' ">' + value + '</option>');
+            });
+            console.log('x: ', x);
+          }
+        });
+        // Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function(e){
+          e.preventDefault();
+          $(self).parent('div').remove(); // Remove field html
+          x--; // Decrement field counter
+        });
+      });
     },
     getSupAttributesLabels(){
       var self = this;
@@ -81,10 +139,10 @@ export default {
           self.errorHandler(error.response);
         });
     },
-    async getCSVData(){
+    getCSVData(){
       var self = this;
-      const data = await self.$store.dispatch('user/getInfo');
-      self.user = data;
+      // const data = await self.$store.dispatch('user/getInfo');
+      // self.user = data;
 
       console.log('user data: ', self.user);
       var userId = localStorage.getItem('user id');
@@ -119,6 +177,14 @@ export default {
       //     console.log(error);
       //     self.errorHandler(error.response);
       //   });
+
+      axios.get(self.$apiAdress + '/api/getEntities/' + userId)
+        .then(function(response) {
+          console.log('response.data: ', response.data);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
 
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
         .then(function(response) {
@@ -185,7 +251,7 @@ export default {
       // console.log('form edited: ', self.form.edited);
       // console.log('sup headers: ', self.supplierHeader);
 
-      // self.storeSupAttributes();
+      self.storeSupAttributes();
 
       // axios.put(self.$apiAdress + '/api/storeUserCSVData/' + csvHeaderData)
       //   .then(function(response) {

@@ -9,7 +9,8 @@ use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
 use App\Laravue\JsonResponse;
 use Illuminate\Http\Response;
-class ImportProfile extends BaseController
+
+class ImportProfileController extends BaseController
 {
     public function getCurrentUserId(){
         $currentUser = Auth::user();
