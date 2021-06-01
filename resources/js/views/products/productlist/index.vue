@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="wrapper">
 
-      <el-table :data="list.data" border fit highlight-current-row style="width: 100%;margin-top:20px;">
-        <el-table-column v-for="item of list.columns" :key="item" align="center" :prop="item" :label="item" />
+      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;margin-top:20px;">
+        <el-table-column v-for="item of listHeaders" :key="item" :prop="item" :label="item" align="center" heigth="10" />
       </el-table>
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList()" />
     </div>
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       list: null,
+      listHeaders: null,
       total: 0,
       loading: true,
       downloading: false,
@@ -95,14 +96,27 @@ export default {
       var self = this;
       const { limit, page } = this.query;
       this.loading = true;
+
+      const data = await this.$store.dispatch('user/getInfo');
+      self.userData = data;
+
       // const { data, meta } = await userResource.list(this.query);
 
-      self.list = self.tableData;
-      self.list.data.forEach((element, index) => { // handles pageination count
-        element['index'] = (page - 1) * limit + index + 1;
-      });
-      self.total = self.list.data.length;
-      self.loading = false;
+      axios.get(self.$apiAdress + '/api/getEntities/' + 5)
+        .then(function(response) {
+          self.list = response.data;
+          self.listHeaders = Object.keys(self.list[0]);
+          self.list.forEach((element, index) => { // handles pageination count
+            element['index'] = (page - 1) * limit + index + 1;
+          });
+
+          self.total = self.list.length;
+          self.loading = false;
+          // console.log('Object.keys: ', Object.keys(self.list[0]));
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
 
       // axios.get(self.$apiAdress + '/api/getAttributes')
       //   .then(function(response) {

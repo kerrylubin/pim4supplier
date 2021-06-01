@@ -236,6 +236,10 @@ class ImportCSVController extends BaseController
         foreach ($csvIterationObject as $row) {//loop through csv data. here you can set in database
             // $sku           = $row[$supplier->getSupplierFeedSkuField()];
             $supplier_attributes = array_keys($row);
+            $data[] = $row;
+
+
+
 
             // if ($this->product->getIdBySku($sku)) {
                 // $sku           = $row[$supplier->getSupplierFeedSkuField()];
@@ -255,41 +259,46 @@ class ImportCSVController extends BaseController
             else insert those values.
         */
 
-        $supplier_id = DB::table('supplier_attributes')
-        ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.profile_id','=',$supplierId)->get();
+        // $supplier_id = DB::table('supplier_attributes')
+        // ->select('supplier_attributes.profile_id')
+        // ->where('supplier_attributes.profile_id','=',$supplierId)->get();
 
-        if(count($supplier_id) <=0){
+        // if(count($supplier_id) <=0){
 
-            for($i = 0; $i <= count($supplier_attributes); $i++){
+        //     for($i = 0; $i <= count($supplier_attributes); $i++){
 
-                if(isset($supplier_attributes[$i])){
+        //         if(isset($supplier_attributes[$i])){
 
-                    $supplier_attributes_data = array(
-                        'profile_id'        =>  intval($supplierId),
-                        'attribute_label'   =>  $supplier_attributes[$i],
-                    );
-                    DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
-                }
-            }
-        }
-        else {
-            $this->deleteAttributes($supplierId);
+        //             $supplier_attributes_data = array(
+        //                 'profile_id'        =>  intval($supplierId),
+        //                 'attribute_label'   =>  $supplier_attributes[$i],
+        //             );
+        //             DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+        //         }
+        //     }
+        // }
+        // else {
+        //     $this->deleteAttributes($supplierId);
 
-            for($i = 0; $i <= count($supplier_attributes); $i++){
+        //     for($i = 0; $i <= count($supplier_attributes); $i++){
 
-                if(isset($supplier_attributes[$i])){
+        //         if(isset($supplier_attributes[$i])){
 
-                    $supplier_attributes_data = array(
-                        'profile_id'        =>  intval($supplierId),
-                        'attribute_label'   =>  $supplier_attributes[$i],
-                    );
-                    DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
-                }
-            }
-        }
+        //             $supplier_attributes_data = array(
+        //                 'profile_id'        =>  intval($supplierId),
+        //                 'attribute_label'   =>  $supplier_attributes[$i],
+        //             );
+        //             DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+
+        //             // DB::table('supplier_attributes')
+        //             // ->where('supplier_attributes.supplier_id','=',$user_id )
+        //             // ->update($attr_mapping_data);
+
+        //         }
+        //     }
+        // }
         // echo'supplier_attributes_data: '.var_dump($supplier_attributes_data);
-        // return $data;
+        return $data;
 
     }//end getEntities()
 

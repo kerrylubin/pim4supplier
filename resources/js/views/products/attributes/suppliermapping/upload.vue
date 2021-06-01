@@ -178,13 +178,13 @@ export default {
       //     self.errorHandler(error.response);
       //   });
 
-      axios.get(self.$apiAdress + '/api/getEntities/' + userId)
-        .then(function(response) {
-          console.log('response.data: ', response.data);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
+      // axios.get(self.$apiAdress + '/api/getEntities/' + userId)
+      //   .then(function(response) {
+      //     console.log('response.data: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
 
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
         .then(function(response) {
