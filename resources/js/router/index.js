@@ -210,32 +210,6 @@ export const constantRoutes = [
       },
     ],
   },
-  // {
-  //   path: '/importprofiles',
-  //   component: Layout,
-  //   redirect: '/importprofiles/index',
-  //   name: 'Imports Profiles',
-  //   meta: {
-  //     title: 'Imports Profiles',
-  //     icon: '',
-  //   },
-  //   children: [
-  //     {
-  //       path: 'newprofiles',
-  //       component: () => import('@/views/importprofiles/newprofiles/index'), // Parent router-view
-  //       name: 'New Profiles',
-  //       meta: {
-  //         title: 'New Profiles',
-  //         icon: 'list',
-  //       },
-  //     },
-  //     {
-  //       path: 'allprofiles',
-  //       component: () => import('@/views/importprofiles/allprofiles/index'),
-  //       meta: { title: 'All Profiles' },
-  //     },
-  //   ],
-  // },
   {
     path: '/settings',
     component: Layout,
@@ -264,6 +238,13 @@ export const constantRoutes = [
             component: () => import('@/views/settings/importprofiles/allprofiles/index'),
             name: 'All Profiles',
             meta: { title: 'All Profiles' },
+          },
+          {
+            path: 'supplierprofiles/:id',
+            component: () => import('@/views/settings/importprofiles/supplierprofiles/index'),
+            hidden: true,
+            name: 'Supplier Profiles',
+            meta: { title: 'Supplier Profiles' },
           },
         ],
       },

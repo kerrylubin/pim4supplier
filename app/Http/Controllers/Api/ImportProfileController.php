@@ -61,7 +61,7 @@ class ImportProfileController extends BaseController
         $params = $request->all();
         // echo'params: '.var_dump($params);
 
-        if(!$currentUser->isAdmin()){
+        if($currentUser->isAdmin()){
 
             $import_profile = array(
                 'supplier_id'   =>  $params['supplier_id'],
@@ -94,9 +94,16 @@ class ImportProfileController extends BaseController
         $supplier_profile = DB::table('supplier_profile')
         ->select('supplier_profile.feed_url', 'supplier_profile.delimiter',
         'supplier_profile.frequency','supplier_profile.supplier_id','supplier_profile.id')
-        ->where('supplier_profile.supplier_id', '=', $this->getCurrentUserId())
+        ->where('supplier_profile.supplier_id', '=', $id)
         ->get();
         return response()->json($supplier_profile);
+    }
+
+    public function deleteSupplierProfile($id){
+
+        $delete = DB::table('supplier_profile')
+        ->where('supplier_profile.id', '=', $id)->delete();
+        return response()->json($delete);
     }
 
 

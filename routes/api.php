@@ -49,6 +49,10 @@ Route::namespace('Api')->group(function() {
         Route::post('storeSupplierImportProfile', 'ImportProfileController@storeSupplierImportProfile');
         Route::get('getImportProfiles', 'ImportProfileController@getImportProfiles');
         Route::get('getSupplierImportProfile/{id}', 'ImportProfileController@getSupplierImportProfile');
+        Route::get('deleteSupplierProfile/{id}', 'ImportProfileController@deleteSupplierProfile');
+
+
+        Route::get('getSuppliers', 'ImportCSVController@getSuppliers');
         Route::get('getEntities/{id}', 'ImportCSVController@getEntities');
 
 
