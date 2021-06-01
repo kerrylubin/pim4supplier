@@ -49,14 +49,55 @@ class ImportProfileController extends BaseController
 
     }
 
-    public function getImportProfile($id)
+        /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeSupplierImportProfile(Request $request )
+    {
+        $currentUser = Auth::user();
+        $params = $request->all();
+        // echo'params: '.var_dump($params);
+
+        if(!$currentUser->isAdmin()){
+
+            $import_profile = array(
+                'supplier_id'   =>  $params['supplier_id'],
+                'frequency'     =>  $params['frequency'],
+                'feed_url'      =>  $params['url'],
+                'delimiter'     =>  $params['delimiter'],
+            );
+
+            DB::table('supplier_profile')->insert([$import_profile]);
+
+        }
+        // else{
+        //     return response()->json(new JsonResponse([], 'This is only for suppliers'), Response::HTTP_UNAUTHORIZED);
+        // }
+
+
+    }
+
+    public function getImportProfiles()
     {
         $supplier_profile = DB::table('supplier_profile')
         ->select('supplier_profile.feed_url', 'supplier_profile.delimiter',
-        'supplier_profile.frequency')
+        'supplier_profile.frequency','supplier_profile.supplier_id','supplier_profile.id')
+        ->get();
+        return response()->json($supplier_profile);
+    }
+
+    public function getSupplierImportProfile($id)
+    {
+        $supplier_profile = DB::table('supplier_profile')
+        ->select('supplier_profile.feed_url', 'supplier_profile.delimiter',
+        'supplier_profile.frequency','supplier_profile.supplier_id','supplier_profile.id')
         ->where('supplier_profile.supplier_id', '=', $this->getCurrentUserId())
         ->get();
         return response()->json($supplier_profile);
     }
+
 
 }

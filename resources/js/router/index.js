@@ -210,6 +210,32 @@ export const constantRoutes = [
       },
     ],
   },
+  // {
+  //   path: '/importprofiles',
+  //   component: Layout,
+  //   redirect: '/importprofiles/index',
+  //   name: 'Imports Profiles',
+  //   meta: {
+  //     title: 'Imports Profiles',
+  //     icon: '',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'newprofiles',
+  //       component: () => import('@/views/importprofiles/newprofiles/index'), // Parent router-view
+  //       name: 'New Profiles',
+  //       meta: {
+  //         title: 'New Profiles',
+  //         icon: 'list',
+  //       },
+  //     },
+  //     {
+  //       path: 'allprofiles',
+  //       component: () => import('@/views/importprofiles/allprofiles/index'),
+  //       meta: { title: 'All Profiles' },
+  //     },
+  //   ],
+  // },
   {
     path: '/settings',
     component: Layout,
@@ -222,20 +248,24 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'setting-1',
-        component: () => import('@/views/settings/setting-1/index'), // Parent router-view
-        name: 'Setting-1',
-        meta: { title: 'Setting 1' },
-      },
-      {
-        path: 'setting-2',
-        component: () => import('@/views/settings/setting-2/index'),
-        meta: { title: 'Setting 2' },
-      },
-      {
-        path: 'setting-3',
-        component: () => import('@/views/settings/setting-3/index'),
-        meta: { title: 'Setting-3' },
+        path: 'importprofiles',
+        component: () => import('@/views/settings/importprofiles/'),
+        meta: { title: 'Import Profiles' },
+        children:
+        [
+          {
+            path: 'newprofiles',
+            component: () => import('@/views/settings/importprofiles/newprofiles/index'),
+            name: 'new profiles',
+            meta: { title: 'New Profiles' },
+          },
+          {
+            path: 'allprofiles',
+            component: () => import('@/views/settings/importprofiles/allprofiles/index'),
+            name: 'All Profiles',
+            meta: { title: 'All Profiles' },
+          },
+        ],
       },
     ],
   },

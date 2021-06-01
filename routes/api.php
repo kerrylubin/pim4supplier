@@ -46,8 +46,11 @@ Route::namespace('Api')->group(function() {
         Route::get('getAttributes', 'AttributesController@getAttributes');
 
         Route::post('storeImportProfile', 'ImportProfileController@storeImportProfile');
+        Route::post('storeSupplierImportProfile', 'ImportProfileController@storeSupplierImportProfile');
+        Route::get('getImportProfiles', 'ImportProfileController@getImportProfiles');
+        Route::get('getSupplierImportProfile/{id}', 'ImportProfileController@getSupplierImportProfile');
         Route::get('getEntities/{id}', 'ImportCSVController@getEntities');
-        Route::get('getImportProfile/{id}', 'AttributesController@getImportProfile');
+
 
 
         Route::get('getCSVData', 'CsvController@getCSVData');
