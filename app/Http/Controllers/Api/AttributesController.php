@@ -102,14 +102,13 @@ class AttributesController extends BaseController
 
     }
 
-    public function getAdminAttributeId(){
+    public function getAdminAttributeId($label){
 
-        // $attr_data = DB::table('supplier_attributes')
-        // ->select('supplier_attributes.attribute_id')
-        // ->where('supplier_attributes.attribute_label', '=', $label)
-        // ->get();
-
-        $attr_data = DB::table('admin_attributes')->pluck('id');
+        $attr_data = DB::table('admin_attributes')
+        ->select('admin_attributes.id')
+        ->whereIn('admin_attributes.name', '=', $label)
+        ->get();
+        // $attr_data = DB::table('admin_attributes')->pluck('id');
 
         return json_encode($attr_data);
     }
@@ -275,22 +274,26 @@ class AttributesController extends BaseController
     {
         $currentUser = Auth::user();
         $params = $request->all();
-        $sup_attributes = $params['attributes'];
-        $user_id = $params['userId'];
+        // echo'params'.var_dump($params['supplier']['attributes']);
+
+        $sup_attributes = $params['supplier']['attributes'];
+        $admin_attributes = $params['admin']['attributes'];
+
+        /*
+            store the added inputs in admin attributes
+
+        */
+
+        $user_id = $params['supplier']['userId'];
 
         //get the id's of the attributes that are chosen to be matched.
-
         $sup_user_id = DB::table('supplier_attributes')
         ->select('supplier_attributes.profile_id')
         ->where('supplier_attributes.profile_id','=',$user_id)->get();
 
         //get all the ids in a array
-        // $json_id = $this->getSupAttrLabels($user_id);
-        // echo'json_id: '.var_dump($json_id);
-        // $admin_attr_id = json_decode($json_id, true);
-        // echo'admin_attr_id: '.var_dump($admin_attr_id);
 
-        $json_id = $this->getAdminAttributeId();
+        $json_id = $this->getAdminAttributeId($admin_attributes);
         // echo'json_id: '.var_dump($json_id);
         $admin_attr_id = json_decode($json_id, true);
         // echo'admin_attr_id: '.var_dump($admin_attr_id);
@@ -334,7 +337,7 @@ class AttributesController extends BaseController
                         $attr_mapping_data = array(
                             // 'id'  => $user_id,
                             'supplier_attribute_id'     => $sup_attr_id[$i]['id'],
-                            'admin_attribute_id'        => $admin_attr_id[$i],
+                            'admin_attribute_id'        => $admin_attr_id[$i]['id'],
                             // 'attribute_label'  => $attributes[$i],
                         );
 

@@ -13,10 +13,10 @@ Vue.use(Router);
 import Layout from '@/layout';
 
 /* Router for modules */
-// import elementUiRoutes from './modules/element-ui';
+import elementUiRoutes from './modules/element-ui';
 // import componentRoutes from './modules/components';
 // import chartsRoutes from './modules/charts';
-import tableRoutes from './modules/table';
+// import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 // import nestedRoutes from './modules/nested';
 // import errorRoutes from './modules/error';
@@ -276,7 +276,7 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-  // elementUiRoutes,
+
 ];
 
 export const asyncRoutes = [
@@ -284,7 +284,9 @@ export const asyncRoutes = [
   // componentRoutes,
   // chartsRoutes,
   // nestedRoutes,
-  tableRoutes,
+  // tableRoutes,
+  excelRoutes,
+  elementUiRoutes,
   adminRoutes,
   // {
   //   path: '/theme',
@@ -314,7 +316,7 @@ export const asyncRoutes = [
   //   ],
   // },
   // errorRoutes,
-  excelRoutes,
+  //
   // {
   //   path: '/zip',
   //   component: Layout,

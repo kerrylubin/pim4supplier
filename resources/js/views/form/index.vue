@@ -10,6 +10,7 @@
           <el-option label="Zone two" value="beijing" />
         </el-select>
       </el-form-item>
+
       <el-form-item label="Activity time">
 
         <el-col :span="11">
@@ -25,6 +26,7 @@
         </el-col>
 
       </el-form-item>
+
       <el-form-item label="Instant delivery">
         <el-switch v-model="form.delivery" />
       </el-form-item>
