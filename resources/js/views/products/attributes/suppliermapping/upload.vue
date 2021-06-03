@@ -5,34 +5,73 @@
       Save
     </el-button>
 
+    <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+      Add Inputs
+    </el-button>
+
+    <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateAttributes">
+      Adds New Attributes
+    </el-button> -->
+
+    <!-- <div class="field_wrapper">
+        <div>
+          <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+            Add Inputs
+          </el-button>
+        </div>
+      </div> -->
+
     <div class="col-12 csv_mapping">
 
-      <el-form>
+      <!-- <el-form>
         <el-form-item :label="user.name">
           <el-select v-model="form.time" class="csv_picker" placeholder="Please select time">
             <el-option v-for="items in time" :key="items" :label="items" :value="items" />
           </el-select>
         </el-form-item>
-      </el-form>
+      </el-form> -->
 
       <el-form :data="tableData" border highlight-current-row>
 
-        <div class="col-12">
-          <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id" :label="item.name">
+        <div class="col-6 field_wrapper">
 
-            <el-select :id="'selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="csv_picker">
+          <el-form-item v-for="(item, index) of tableHeader" :key="index" :name="item.id">
+
+            <el-select :id="'admin_selected_'+index.toString()" v-model="formAdmin.attributes[item.id]" :name="item.code" class="admin_attribute_picker">
+              <el-option v-for="(attr, int) in tableHeader" :key="int" :name="attr" :prop="int" :label="attr.name" :value="attr.name" />
+            </el-select>
+
+          </el-form-item>
+
+        </div>
+
+        <div class="col-6">
+          <el-form-item v-for="(item, index) of supplierHeader" :key="index" :name="item.id">
+
+            <!-- <el-select :id="'admin_selected_'+index.toString()" v-model="formAdmin.attributes[item.id]" :name="item.code" class="admin_attribute_picker">
+              <el-option v-for="(attr, int) in tableHeader" :key="int" :name="attr" :prop="int" :label="attr.name" :value="attr.name" />
+            </el-select> -->
+
+            <el-select :id="'supplier_selected_'+index.toString()" v-model="form.attributes[item.id]" :name="item.code" class="supplier_attribute_picker">
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label" />
             </el-select>
 
-            <div :class="'field_wrapper_'+index.toString()">
+            <!-- <div :class="'field_wrapper_'+index.toString()">
               <div>
-                <el-button href="javascript:void(0);" class="filter-item add_button" style="float:left;" type="primary" icon="el-icon-plus" />
+                <el-button href="javascript:void(0);" class="filter-item"
+                @click="createInputs($event.target)"
+                :id="'addButton_'+index.toString()"
+                style="float:left;" type="primary"
+                icon="el-icon-plus"
+                />
               </div>
-            </div>
+            </div> -->
 
           </el-form-item>
         </div>
+
       </el-form>
+
     </div>
   </div>
 </template>
@@ -54,10 +93,17 @@ export default {
         edited: [],
         userId: '',
       },
+      formAdmin: {
+        time: '',
+        attributes: [],
+        edited: [],
+        userId: '',
+      },
       map: {
         userId: '',
         supAttrId: [],
       },
+      dialogAttributeFormVisible: false,
       time: ['hourly', 'daily', 'weekly'],
       tableData: [],
       tableHeader: [],
@@ -86,48 +132,85 @@ export default {
       self.$nextTick(() => {
         var maxField = 9; // Input fields increment limitation
         var addButton = $('.add_button'); // Add button selector
-        var wrapper = $('.field_wrapper_'); // Input field wrapper
-        console.log('wrapper: ', $('.field_wrapper_') + 0);
-        var items = ['Canada', 'Denmark', 'Finland', 'Germany', 'Mexico'];
+        var wrapper = $('.field_wrapper'); // Input field wrapper
+        // var items = ['Canada', 'Denmark', 'Finland', 'Germany', 'Mexico'];
 
         var x = 0; // Initial field counter is 1
-
         // Once add button is clicked
 
-        // self.tableHeader.forEach((item, index) => {
-
-        //   });
-
-        for (var i = 0; i <= self.tableHeader; i++){
-          console.log('item: ', self.tableHeader);
-          // console.log('index: ', index );
-        }
-        console.log('pressed!!', self.tableHeader);
-
         $(addButton).click(function(){
+          console.log('self.supplierHeader: ', self.supplierHeader);
           // Check maximum number of input fields
           if (x < maxField){
             x++; // Increment field counter
-            var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button"> - </button>';
+            var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button el-icon-remove-outline"> - </button>';
             var dropDown = '<div><select id="sel_' + x + '" name="field_name[]" ></select>' + delBtn + '</div>'; // New input field html
             $(wrapper).append(dropDown); // Add field html
 
-            $.each(items, function(index, value) {
+            $.each(self.supplierHeader, function(index, value) {
               // APPEND OR INSERT DATA TO SELECT ELEMENT.
               console.log('sel: ', index, value);
-              $('#sel_' + x).append('<option value="' + index + ' ">' + value + '</option>');
+              $('#sel_' + x).append('<option value="' + index + ' ">' + value.attribute_label + '</option>');
             });
             console.log('x: ', x);
           }
         });
+
         // Once remove button is clicked
         $(wrapper).on('click', '.remove_button', function(e){
           e.preventDefault();
-          $(self).parent('div').remove(); // Remove field html
+          $(this).parent('div').remove(); // Remove field html
           x--; // Decrement field counter
         });
       });
     },
+    // createInputs(e) {
+    //   var self = this;
+    //   // self.$nextTick(() => {
+    //     var maxField = 9; // Input fields increment limitation
+    //     var items = ['Canada', 'Denmark', 'Finland', 'Germany', 'Mexico'];
+
+    //     var x = 0; // Initial field counter is 1
+
+    //     var btnId = $(e).attr('id').split('_')[1];
+
+    //     console.log('btnId: ', btnId);
+    //     // Once add button is clicked
+
+    //     var addButton = $('#addButton_'+ x ); // Add button selector
+    //     var wrapper = $('.field_wrapper_' + x); // Input field wrapper
+    //     console.log('wrapper: ', wrapper );
+    //     console.log('addButton: ', addButton );
+
+    //     // $(addButton).click(function(){
+    //       // Check maximum number of input fields
+    //       if (x < self.tableHeader.length){
+    //         x++; // Increment field counter
+    //         // z = parseInt(btnId)++;  // Increment field counter
+    //         // console.log('x: ', x, z);
+
+    //         var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="removeButton_' + x + '"> - </button>';
+    //         var dropDown = '<div><select id="sel_' + x + '" name="field_name[]" ></select>' + delBtn + '</div>'; // New input field html
+
+    //         $('.field_wrapper_' + btnId).append(dropDown); // Add field html
+
+    //         $.each(self.tableHeader, function(index, value) {
+    //           // APPEND OR INSERT DATA TO SELECT ELEMENT.
+    //           console.log('sel: ', index, value);
+    //           $('#sel_' + x).append('<option value="' + index + ' ">' + value.name + '</option>');
+    //         });
+    //       }
+    //     // });
+    //     // Once remove button is clicked
+
+    //     // $('.field_wrapper_' + btnId).on('click', '.removeButton_' + btnId, function(e){
+    //     //   console.log('delete')
+    //     //   e.preventDefault();
+    //     //   $(self).parent('div').remove(); // Remove field html
+    //     //   x--; // Decrement field counter
+    //     // });
+    //   // });
+    // },
     getSupAttributesLabels(){
       var self = this;
       axios.post(self.$apiAdress + '/api/getSupAttributesLabels', self.map)
@@ -152,6 +235,18 @@ export default {
       axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
           self.tableHeader = response.data;
+          // this sets the dropdown value
+          // for (var i = 0; i < self.tableHeader.length; i++){
+          //   // self.map.supAttrId.push(self.tableHeader[i].attribute_supplier_id);
+          //   var attrId = self.tableHeader[i].id;
+          //   // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
+          //   var attributeLabel = self.tableHeader[i].name;
+          //   self.formAdmin.attributes[attrId];// sets json key to the attribute Id
+          //   self.formAdmin.attributes[attrId] = attributeLabel;// this sets the value
+          // }
+          console.log('formAdmin: ', self.formAdmin);
+          // console.log('formAdmin attrId: ', attrId);
+          console.log('formAdmin attributes: ', self.formAdmin.attributes);
           console.log('tableHeaders: ', self.tableHeader);
         }).catch(function(error) {
           console.log(error);
@@ -178,20 +273,20 @@ export default {
       //     self.errorHandler(error.response);
       //   });
 
-      axios.get(self.$apiAdress + '/api/getEntities/' + userId)
-        .then(function(response) {
-          // console.log('response.data: ', response.data);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
+      // axios.get(self.$apiAdress + '/api/getEntities/' + userId)
+      //   .then(function(response) {
+      //     // console.log('response.data: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
 
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
         .then(function(response) {
           self.supplierHeader = response.data;
           for (var i = 0; i < self.supplierHeader.length; i++){
             self.map.supAttrId.push(self.supplierHeader[i].attribute_supplier_id);
-            var attrId = self.supplierHeader[i].attribute_id;
+            var attrId = self.supplierHeader[i].id;
             // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
             var attributeLabel = self.supplierHeader[i].attribute_label;
             self.form.attributes[attrId];// sets json key to the attribute Id
@@ -203,7 +298,7 @@ export default {
           }
           // self.getSupAttributesLabels();
           console.log('form: ', self.form);
-          console.log('map: ', self.map);
+          console.log('attrId: ', attrId);
           console.log('form edited: ', self.form.edited);
           console.log('form attributes: ', self.form.attributes);
 
@@ -315,6 +410,13 @@ export default {
         //   });
       }
     },
+    handleCreateAttributes() {
+      this.resetNewAttributes();
+      this.dialogAttributeFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['attributeForm'].clearValidate();
+      });
+    },
     setValue(){
       console.log('CLICK!!');
     },
@@ -364,11 +466,18 @@ export default {
 .csv_mapping{
   margin-top: 10px;
   padding: 15px;
-  text-align: end;
+  /* text-align: end; */
 }
 
-.csv_picker{
+.admin_attribute_picker, .supplier_attribute_picker{
   margin-bottom: 10px;
 }
+
+/* .admin_attribute_picker{
+  margin-bottom: 10px;
+}
+.supplier_attribute_picker{
+  margin-bottom: 10px;
+} */
 
 </style>

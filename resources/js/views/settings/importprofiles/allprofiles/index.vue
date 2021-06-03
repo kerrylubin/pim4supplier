@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
 
-    <div class="filter-container">
+    <!-- <div class="filter-container">
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateUser">
         Create New Supplier
       </el-button>
-    </div>
+    </div> -->
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="Id" width="80">
@@ -56,6 +56,7 @@
               Show Import Profiles
             </el-button>
           </router-link>
+
         </template>
       </el-table-column>
 
@@ -78,7 +79,6 @@
             <el-input v-model="profileForm.delimiter" />
           </el-form-item>
         </el-form>
-        <!-- <template slot-scope="scope"> -->
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogProfileFormVisible = false">
             {{ $t('table.cancel') }}
@@ -87,11 +87,10 @@
             {{ $t('table.confirm') }}
           </el-button>
         </div>
-        <!-- </template> -->
       </div>
     </el-dialog>
 
-    <el-dialog :title="'Create New Supplier'" :visible.sync="dialogUserFormVisible">
+    <!-- <el-dialog :title="'Create New Supplier'" :visible.sync="dialogUserFormVisible">
       <div v-loading="formCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('user.role')" prop="role">
@@ -112,7 +111,6 @@
             <el-input v-model="newUser.confirmPassword" show-password />
           </el-form-item>
         </el-form>
-        <!-- <template slot-scope="scope"> -->
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogUserFormVisible = false">
             {{ $t('table.cancel') }}
@@ -121,11 +119,11 @@
             {{ $t('table.confirm') }}
           </el-button>
         </div>
-        <!-- </template> -->
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
   </div>
+
 </template>
 
 <script>
@@ -358,7 +356,7 @@ export default {
       });
     },
     handleCreateUser() {
-      this.resetTemp();
+      // this.resetTemp();
       // this.dialogStatus = 'create';
       // this.profileForm.supplier_id = id;
       this.dialogUserFormVisible = true;

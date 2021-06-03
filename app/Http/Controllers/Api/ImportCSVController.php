@@ -227,6 +227,27 @@ class ImportCSVController extends BaseController
 
     }
 
+    public function interateSupplierId($supplierId, $supplier_attributes){
+
+        $id = [];
+        for($i = 0; $i <= count($supplier_attributes); $i++){
+            if(isset($supplier_attributes[$i])){
+
+                $id[] = $supplierId;
+            }
+        }
+        return $id;
+    }
+
+    public function interateSupplierAttributes($supplier_attributes_data){
+
+        foreach($supplier_attributes_data as $index=>$item) {
+            return $index;
+        }
+
+    }
+
+
 
     public function getEntities($supplierId)//get contents in the csv. this can be called with cron
     {
@@ -263,7 +284,7 @@ class ImportCSVController extends BaseController
         ->select('supplier_attributes.profile_id')
         ->where('supplier_attributes.profile_id','=',$supplierId)->get();
 
-        if(count($supplier_id) ==0){
+        if(count($supplier_id) == 0){
 
             for($i = 0; $i <= count($supplier_attributes); $i++){
 
@@ -278,28 +299,41 @@ class ImportCSVController extends BaseController
             }
         }
         else {
-            $this->deleteAttributes($supplierId);
+
+            echo'already filled!!';
+            // $this->deleteAttributes($supplierId);
+            $id = [];
+            $supplier_attributes_data = [];
 
             for($i = 0; $i <= count($supplier_attributes); $i++){
 
                 if(isset($supplier_attributes[$i])){
 
-                    $supplier_attributes_data = array(
-                        'profile_id'        =>  intval($supplierId),
-                        'attribute_label'   =>  $supplier_attributes[$i],
-                    );
-                    DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+                    $id[] = $supplierId;
+
+                    // $supplier_attributes_data[] = [
+                    //     'attribute_label'   =>  $supplier_attributes[$i],
+                    // ];
+
+                    // array_push($supplier_attributes_data, [
+                    //     'attribute_label'   =>  $supplier_attributes[$i]
+                    // ]);
+
+                    // $profile_ids = $this->interateSupplierId($supplierId ,$supplier_attributes);
 
                     // DB::table('supplier_attributes')
-                    // ->where('supplier_attributes.supplier_id','=',$user_id )
-                    // ->update($attr_mapping_data);
+                    // ->whereIn('supplier_attributes.profile_id', $profile_ids )
+                    // ->update($supplier_attributes_data[$i]);
 
+
+                    // DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
                 }
             }
-        }
-        // echo'supplier_attributes_data: '.var_dump($supplier_attributes_data);
-        return $data;
 
+            // $index = $this->interateSupplierAttributes($supplier_attributes_data);
+        }
+
+        // return $index;
     }//end getEntities()
 
 

@@ -8,7 +8,7 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button> -->
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateAttributes">
         Adds New Attributes
       </el-button>
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
@@ -263,7 +263,7 @@ export default {
       this.query.page = 1;
       this.getList();
     },
-    handleCreate() {
+    handleCreateAttributes() {
       this.resetNewAttributes();
       this.dialogFormVisible = true;
       this.$nextTick(() => {

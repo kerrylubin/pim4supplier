@@ -45,8 +45,6 @@ class ImportProfileController extends BaseController
         else{
             return response()->json(new JsonResponse([], 'This is only for suppliers'), Response::HTTP_UNAUTHORIZED);
         }
-
-
     }
 
         /**
