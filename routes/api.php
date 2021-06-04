@@ -44,6 +44,7 @@ Route::namespace('Api')->group(function() {
         Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
         Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
         Route::get('getAttributes', 'AttributesController@getAttributes');
+        Route::get('getSupplierMapping/{id}', 'AttributesController@getSupplierMapping');
 
         Route::post('storeImportProfile', 'ImportProfileController@storeImportProfile');
         Route::post('storeSupplierImportProfile', 'ImportProfileController@storeSupplierImportProfile');

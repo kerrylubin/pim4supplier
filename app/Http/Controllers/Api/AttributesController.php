@@ -102,14 +102,12 @@ class AttributesController extends BaseController
 
     }
 
-    public function getAdminAttributeId($label){
+    public function getAdminAttributeId($labels){
 
         $attr_data = DB::table('admin_attributes')
         ->select('admin_attributes.id')
-        ->whereIn('admin_attributes.name', '=', $label)
+        ->whereIn('admin_attributes.name', $labels)
         ->get();
-        // $attr_data = DB::table('admin_attributes')->pluck('id');
-
         return json_encode($attr_data);
     }
 
@@ -274,22 +272,20 @@ class AttributesController extends BaseController
     {
         $currentUser = Auth::user();
         $params = $request->all();
-        // echo'params'.var_dump($params['supplier']['attributes']);
+        // echo'admin: '.var_dump($params['admin']['attributes']);
 
         $sup_attributes = $params['supplier']['attributes'];
         $admin_attributes = $params['admin']['attributes'];
 
         /*
             store the added inputs in admin attributes
-
         */
-
         $user_id = $params['supplier']['userId'];
 
         //get the id's of the attributes that are chosen to be matched.
         $sup_user_id = DB::table('supplier_attributes')
         ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.profile_id','=',$user_id)->get();
+        ->where('supplier_attributes.profile_id','=', $user_id)->get();
 
         //get all the ids in a array
 
@@ -300,7 +296,7 @@ class AttributesController extends BaseController
 
         $json_attr = $this->getSupAttributeId($sup_attributes);
         $sup_attr_id = json_decode($json_attr, true);
-        // echo'sup_attr_id: '.var_dump($sup_attr_id);
+        echo'sup_attr_id: '.var_dump($sup_attr_id);
 
         /* get all sup_attr_label by userId
             those label you make an id for each of them.
@@ -311,7 +307,7 @@ class AttributesController extends BaseController
         // $labels = json_decode($json_sup_attr, true);
         // echo'sup_attributes'.var_dump($sup_attributes)."\n";
 
-        // if(count($sup_user_id) >= 0){
+        if(count($sup_user_id) >= 0){
 
             // DB::table('attribute_mapping')
             // ->where('attribute_mapping.id', '=', $user_id)->delete();
@@ -358,7 +354,7 @@ class AttributesController extends BaseController
                     // ->update($attr_mapping_data);
                 // }
             }
-        // }
+        }
         // else if(count($sup_user_id) == 0){
         //     echo'dont have the sup ID';
         //     // $json_id = $this->getSupAttrLabels($user_id);
@@ -398,6 +394,32 @@ class AttributesController extends BaseController
         ->where('supplier_attributes.profile_id', '=', $id)
         ->get();
         return response()->json($attr_data);
+    }
+
+    public function getSupplierMapping($id){
+
+        $attr_mapping = DB::table('attribute_mapping')
+        ->select('attribute_mapping.supplier_attribute_id')
+        ->get();
+
+        $supplier_attributes_id = DB::table('supplier_attributes')
+        ->select('supplier_attributes.id')
+        ->where('supplier_attributes.profile_id', '=', $id)
+        ->get();
+        // echo'supplier_attributes_id: '.var_dump(json_decode($supplier_attributes_id, true));
+
+        $supplier_attributes_label = DB::table('supplier_attributes')
+        ->select('supplier_attributes.attribute_label','supplier_attributes.id')
+        ->whereIn('supplier_attributes.id', json_decode($attr_mapping, true))
+        ->get();
+
+        return $supplier_attributes_label;
+
+        // $json = $this->getSupAttributeId($attr[0]);
+        // $sup_attr_id = json_decode($json, true);
+
+
+
     }
 
     // public function getSupAttributes($id)

@@ -168,26 +168,26 @@ export default {
         var addButton = $('.add_button'); // Add button selector
         var wrapper = $('.field_wrapper'); // Input field wrapper
 
-        var x = 0; // Initial field counter is 1
         // Once add button is clicked
+        var x = 0; // Initial field counter is 1
 
         $(addButton).click(function(){
           var maxInputs = (self.supplierHeader.length - self.tableHeader.length);
-          var y = (wrapper.children('div').length - 1);
+          // var y = (wrapper.children('div').length - 1);
           console.log('length: ', wrapper.children('div').length);
-          console.log('wrapper: ', $('#form_' + y));
+          console.log('wrapper: ', $('#form_' + x));
           // Check maximum number of input fields
           if (x < maxInputs){
             // var dropDown = wrapper.children('div').show()[y];
-            var dropDown = $('#form_' + y);
+            var dropDown = $('#form_' + x);
             console.log('dropDown: ', dropDown);
             x++;
-            y++; // Increment field counter
+            // y++; // Increment field counter
             // var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button el-icon-remove-outline"> - </button>';
             // var dropDown = '<div><select class="admin_input" style="margin-bottom:22px" id="sel_' + x + '" name="added_inputs" ></select>' + delBtn + '</div>'; // New input field html
             // dropDown.attr('name', 'form_' + y);
 
-            $(wrapper).append(dropDown.clone().prop('id', 'form_' + y)); // Add field html
+            $(wrapper).append(dropDown.clone().prop('id', 'form_' + x)); // Add field html
 
             // $.each(self.supplierHeader, function(index, value) {
             //   // APPEND OR INSERT DATA TO SELECT ELEMENT.
@@ -284,31 +284,45 @@ export default {
         .then(function(response) {
           self.tableHeader = response.data;
           // this sets the dropdown value
-          // for (var i = 0; i < self.tableHeader.length; i++){
-          //   // self.map.supAttrId.push(self.tableHeader[i].attribute_supplier_id);
-          //   var attrId = self.tableHeader[i].id;
-          //   // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
-          //   var attributeLabel = self.tableHeader[i].name;
-          //   self.formAdmin.attributes[attrId];// sets json key to the attribute Id
-          //   self.formAdmin.attributes[attrId] = attributeLabel;// this sets the value
-          // }
-          console.log('formAdmin: ', self.formAdmin);
+          for (var i = 0; i < self.tableHeader.length; i++){
+            // self.map.supAttrId.push(self.tableHeader[i].attribute_supplier_id);
+            // var attrId = self.tableHeader[i].id;
+            // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
+            var attributeLabel = self.tableHeader[i].name;
+            self.form.admin.attributes[i];// sets json key to the attribute Id
+            self.form.admin.attributes[i] = attributeLabel;// this sets the value
+          }
+          console.log('self.form.admin: ', self.form.admin);
           // console.log('formAdmin attrId: ', attrId);
-          console.log('formAdmin attributes: ', self.formAdmin.attributes);
+          console.log('self.form.admin attributes: ', self.form.admin.attributes);
           console.log('tableHeaders: ', self.tableHeader);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
         });
 
-      // axios.get(self.$apiAdress + '/api/getUserCSVData')
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('supplierHeader: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
+      axios.get(self.$apiAdress + '/api/getSupplierMapping/' + userId)
+        .then(function(response) {
+          var supplierHeader = response.data;
+          for (var i = 0; i < supplierHeader.length; i++){
+            // var attrId = self.supplierHeader[i].id;
+            // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
+            var attributeLabel = supplierHeader[i].attribute_label;
+            self.form.supplier.attributes[i];// sets json key to the attribute Id
+            self.form.supplier.attributes[i] = attributeLabel;// this sets the value
+          }
+          // self.getSupAttributesLabels();
+          console.log('form: ', self.form);
+          // console.log('attrId: ', attrId);
+          console.log('form edited: ', self.form.edited);
+          console.log('form attributes: ', self.form.attributes);
+
+          console.log('attributeLabel: ', attributeLabel);
+          console.log('supplierHeader: ', response.data);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
 
       // if (!self.user.roles[0] === 'admin'){
 
@@ -321,43 +335,22 @@ export default {
       //     self.errorHandler(error.response);
       //   });
 
-      // axios.get(self.$apiAdress + '/api/getEntities/' + userId)
-      //   .then(function(response) {
-      //     // console.log('response.data: ', response.data);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
+      axios.get(self.$apiAdress + '/api/getEntities/' + userId)
         .then(function(response) {
-          self.supplierHeader = response.data;
-          for (var i = 0; i < self.supplierHeader.length; i++){
-            self.map.supAttrId.push(self.supplierHeader[i].attribute_supplier_id);
-            // var attrId = self.supplierHeader[i].id;
-            // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
-            var attributeLabel = self.supplierHeader[i].attribute_label;
-            self.form.supplier.attributes[i];// sets json key to the attribute Id
-            self.form.supplier.attributes[i] = attributeLabel;// this sets the value
-            // self.form.edited[attrId] = attributeLabel;
-            // self.form.edited[attrId];
-            // self.form.edited[attrId] = attributeLabel + ' ' + attrSupId + ' ' + attrId;
-            // self.form.edited[attrId].attributeLabel[attrSupId];
-          }
-          // self.getSupAttributesLabels();
-          console.log('form: ', self.form);
-          // console.log('attrId: ', attrId);
-          console.log('form edited: ', self.form.edited);
-          console.log('form attributes: ', self.form.attributes);
-
-          // console.log('attributeLabel: ', attributeLabel);
-          console.log('sup Header: ', self.supplierHeader);
+          // console.log('response.data: ', response.data);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
         });
 
-      // }
+      axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
+        .then(function(response) {
+          self.supplierHeader = response.data;
+          console.log('sup Header: ', self.supplierHeader);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
     },
     storeSupAttributes(form){
       var self = this;
@@ -395,7 +388,7 @@ export default {
       // for(var i = 1; i <= addedInputs.length; i++){
       //   self.form.admin.attributes.push($('#sel_' + i).find(':selected').text());
       // }
-      console.log('self.form.: ', self.form);
+      console.log('self.form: ', self.form);
       // console.log('name: ',name);
 
       // self.user.roles[0] === 'admin' ? csvHeaderData = self.tableHeader : csvHeaderData = self.supplierHeader;
