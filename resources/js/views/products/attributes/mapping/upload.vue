@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV()">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" @click="saveCSV()">
       Save
     </el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-upload" @click="handleCreate">
       Import CSV
     </el-button>
 
@@ -52,7 +52,7 @@
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createNewProfile(currentUserId);">
+          <el-button type="primary" @click="createNewProfile();">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -337,7 +337,7 @@ export default {
 .csv_mapping{
   margin-top: 10px;
   padding: 15px;
-  text-align: end;
+  /* text-align: end; */
 }
 
 .csv_picker{

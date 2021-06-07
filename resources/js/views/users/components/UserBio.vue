@@ -1,4 +1,5 @@
 <template>
+
   <el-card class="box-card user-bio">
     <div slot="header" class="clearfix">
       <span>About me</span>
@@ -39,6 +40,7 @@
       </div>
     </div>
   </el-card>
+
 </template>
 
 <script>

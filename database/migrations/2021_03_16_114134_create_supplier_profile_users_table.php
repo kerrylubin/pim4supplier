@@ -13,15 +13,14 @@ class CreateSupplierProfileUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_profile_users', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->integer('id');
-            $table->string('name');
-            $table->string('email');
-            $table->string('password');
-            $table->string('role');
-            $table->timestamps();
-        });
+        // Schema::create('supplier_profile_users', function (Blueprint $table) {
+        //     $table->integer('id');
+        //     $table->string('name');
+        //     $table->string('email');
+        //     $table->string('password');
+        //     $table->string('role');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -31,6 +30,6 @@ class CreateSupplierProfileUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_profile_users');
+        // Schema::dropIfExists('supplier_profile_users');
     }
 }

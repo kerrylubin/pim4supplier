@@ -13,14 +13,14 @@ class CreateSupplierProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_profile', function (Blueprint $table) {
-            $table->id();
-            $table->integer('supplier_id');
-            $table->string('feed_url');
-            $table->string('delimiter');
-            $table->string('frequency');
-            $table->timestamps();
-        });
+        // Schema::create('supplier_profile', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->integer('supplier_id');
+        //     $table->string('feed_url');
+        //     $table->string('delimiter');
+        //     $table->string('frequency');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateSupplierProfileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_profile');
+        // Schema::dropIfExists('supplier_profile');
     }
 }

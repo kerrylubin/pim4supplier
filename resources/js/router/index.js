@@ -13,7 +13,7 @@ Vue.use(Router);
 import Layout from '@/layout';
 
 /* Router for modules */
-// import elementUiRoutes from './modules/element-ui';
+import elementUiRoutes from './modules/element-ui';
 // import componentRoutes from './modules/components';
 // import chartsRoutes from './modules/charts';
 // import tableRoutes from './modules/table';
@@ -222,20 +222,31 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'setting-1',
-        component: () => import('@/views/settings/setting-1/index'), // Parent router-view
-        name: 'Setting-1',
-        meta: { title: 'Setting 1' },
-      },
-      {
-        path: 'setting-2',
-        component: () => import('@/views/settings/setting-2/index'),
-        meta: { title: 'Setting 2' },
-      },
-      {
-        path: 'setting-3',
-        component: () => import('@/views/settings/setting-3/index'),
-        meta: { title: 'Setting-3' },
+        path: 'importprofiles',
+        component: () => import('@/views/settings/importprofiles/'),
+        meta: { title: 'Import Profiles' },
+        children:
+        [
+          {
+            path: 'newprofiles',
+            component: () => import('@/views/settings/importprofiles/newprofiles/index'),
+            name: 'new profiles',
+            meta: { title: 'New Profiles' },
+          },
+          {
+            path: 'allprofiles',
+            component: () => import('@/views/settings/importprofiles/allprofiles/index'),
+            name: 'All Profiles',
+            meta: { title: 'All Profiles' },
+          },
+          {
+            path: 'supplierprofiles/:id',
+            component: () => import('@/views/settings/importprofiles/supplierprofiles/index'),
+            hidden: true,
+            name: 'Supplier Profiles',
+            meta: { title: 'Supplier Profiles' },
+          },
+        ],
       },
     ],
   },
@@ -265,7 +276,7 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-  // elementUiRoutes,
+
 ];
 
 export const asyncRoutes = [
@@ -274,6 +285,8 @@ export const asyncRoutes = [
   // chartsRoutes,
   // nestedRoutes,
   // tableRoutes,
+  excelRoutes,
+  elementUiRoutes,
   adminRoutes,
   // {
   //   path: '/theme',
@@ -303,7 +316,7 @@ export const asyncRoutes = [
   //   ],
   // },
   // errorRoutes,
-  excelRoutes,
+  //
   // {
   //   path: '/zip',
   //   component: Layout,

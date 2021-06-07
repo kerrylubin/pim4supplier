@@ -42,7 +42,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="350" @click="goToUser()">
+      <el-table-column align="center" label="Actions" width="450" @click="goToUser()">
         <template slot-scope="scope">
           <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
@@ -62,6 +62,7 @@
           </router-link>
         </template>
       </el-table-column>
+
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
@@ -132,6 +133,7 @@
         <!-- </template> -->
       </div>
     </el-dialog>
+
   </div>
 </template>
 
