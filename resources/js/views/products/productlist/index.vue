@@ -101,7 +101,6 @@ export default {
       self.userData = data;
 
       // const { data, meta } = await userResource.list(this.query);
-
       axios.get(self.$apiAdress + '/api/getEntities/' + 5)
         .then(function(response) {
           self.list = response.data;
@@ -113,6 +112,7 @@ export default {
           self.total = self.list.length;
           self.loading = false;
           // console.log('Object.keys: ', Object.keys(self.list[0]));
+          console.log('Object.list: ', self.list);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);

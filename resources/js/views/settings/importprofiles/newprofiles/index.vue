@@ -156,7 +156,7 @@ export default {
 .csv_mapping{
   margin-top: 10px;
   padding: 15px;
-  text-align: end;
+  /* text-align: end; */
 }
 
 .csv_picker{

@@ -273,7 +273,7 @@ export default {
                 duration: 5 * 1000,
               });
 
-              self.resetprofileForm();
+              self.resetImportForm();
               self.dialogProfileFormVisible = false;
               self.formCreating = false;
               // console.log('import: ', response.data);
@@ -338,7 +338,7 @@ export default {
         role: 'supplier',
       };
     },
-    resetprofileForm() {
+    resetImportForm() {
       this.profileForm = {
         supplier_id: '',
         url: '',
@@ -348,7 +348,7 @@ export default {
     },
     handleCreateProfile(){
       var self = this;
-      self.resetprofileForm();
+      self.resetImportForm();
       self.profileForm.supplier_id = localStorage.getItem('user id');
       self.dialogProfileFormVisible = true;
       self.$nextTick(() => {

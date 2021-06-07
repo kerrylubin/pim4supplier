@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" /> -->
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="saveCSV()">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="storeMapping()">
       Save
     </el-button>
 
@@ -152,7 +152,7 @@ export default {
   },
   mounted: function() {
     this.getUser();
-    this.getCSVData();
+    this.getSupplierAttributeData();
     this.createInputs();
     console.log('params: ', this.$route.params.id);
   },
@@ -212,74 +212,19 @@ export default {
         // });
       });
     },
-    // createInputs(e) {
+    // getSupAttributesLabels(){
     //   var self = this;
-    //   // self.$nextTick(() => {
-    //     var maxInputs = 9; // Input fields increment limitation
-    //     var items = ['Canada', 'Denmark', 'Finland', 'Germany', 'Mexico'];
-
-    //     var x = 0; // Initial field counter is 1
-
-    //     var btnId = $(e).attr('id').split('_')[1];
-
-    //     console.log('btnId: ', btnId);
-    //     // Once add button is clicked
-
-    //     var addButton = $('#addButton_'+ x ); // Add button selector
-    //     var wrapper = $('.field_wrapper_' + x); // Input field wrapper
-    //     console.log('wrapper: ', wrapper );
-    //     console.log('addButton: ', addButton );
-
-    //     // $(addButton).click(function(){
-    //       // Check maximum number of input fields
-    //       if (x < self.tableHeader.length){
-    //         x++; // Increment field counter
-    //         // z = parseInt(btnId)++;  // Increment field counter
-    //         // console.log('x: ', x, z);
-
-    //         var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="removeButton_' + x + '"> - </button>';
-    //         var dropDown = '<div><select id="sel_' + x + '" name="field_name[]" ></select>' + delBtn + '</div>'; // New input field html
-
-    //         $('.field_wrapper_' + btnId).append(dropDown); // Add field html
-
-    //         $.each(self.tableHeader, function(index, value) {
-    //           // APPEND OR INSERT DATA TO SELECT ELEMENT.
-    //           console.log('sel: ', index, value);
-    //           $('#sel_' + x).append('<option value="' + index + ' ">' + value.name + '</option>');
-    //         });
-    //       }
-    //     // });
-    //     // Once remove button is clicked
-
-    //     // $('.field_wrapper_' + btnId).on('click', '.removeButton_' + btnId, function(e){
-    //     //   console.log('delete')
-    //     //   e.preventDefault();
-    //     //   $(self).parent('div').remove(); // Remove field html
-    //     //   x--; // Decrement field counter
-    //     // });
-    //   // });
+    //   axios.post(self.$apiAdress + '/api/getSupAttributesLabels', self.map)
+    //     .then(function(response) {
+    //       self.labels = response.data;
+    //       console.log('sup labels: ', self.labels);
+    //     }).catch(function(error) {
+    //       console.log(error);
+    //       self.errorHandler(error.response);
+    //     });
     // },
-    getSupAttributesLabels(){
+    getAdminAtrributes(){
       var self = this;
-      axios.post(self.$apiAdress + '/api/getSupAttributesLabels', self.map)
-        .then(function(response) {
-          self.labels = response.data;
-          console.log('sup labels: ', self.labels);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
-    },
-    getCSVData(){
-      var self = this;
-      // const data = await self.$store.dispatch('user/getInfo');
-      // self.user = data;
-
-      console.log('user data: ', self.user);
-      var userId = localStorage.getItem('user id');
-      self.form.supplier.userId = localStorage.getItem('user id');
-      // self.map.userId = localStorage.getItem('user id');
-
       axios.get(self.$apiAdress + '/api/getAttributes')
         .then(function(response) {
           self.tableHeader = response.data;
@@ -300,8 +245,10 @@ export default {
           console.log(error);
           self.errorHandler(error.response);
         });
-
-      axios.get(self.$apiAdress + '/api/getSupplierMapping/' + userId)
+    },
+    getSupplierMapping(supplierId){
+      var self = this;
+      axios.get(self.$apiAdress + '/api/getSupplierMapping/' + supplierId)
         .then(function(response) {
           var supplierHeader = response.data;
           for (var i = 0; i < supplierHeader.length; i++){
@@ -323,27 +270,10 @@ export default {
           console.log(error);
           self.errorHandler(error.response);
         });
-
-      // if (!self.user.roles[0] === 'admin'){
-
-      // axios.get(self.$apiAdress + '/api/getSupCSVData/' + userId)
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('sup Header: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      axios.get(self.$apiAdress + '/api/getEntities/' + userId)
-        .then(function(response) {
-          // console.log('response.data: ', response.data);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
-
-      axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
+    },
+    getSupplierAttributes(supplierId){
+      var self = this;
+      axios.get(self.$apiAdress + '/api/getSupAttributes/' + supplierId)
         .then(function(response) {
           self.supplierHeader = response.data;
           console.log('sup Header: ', self.supplierHeader);
@@ -351,6 +281,93 @@ export default {
           console.log(error);
           self.errorHandler(error.response);
         });
+    },
+    getEntities(supplierId){
+      var self = this;
+      axios.get(self.$apiAdress + '/api/getEntities/' + supplierId)
+        .then(function(response) {
+          // console.log('response.data: ', response.data);
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
+    },
+    getSupplierAttributeData(){
+      var self = this;
+      // const data = await self.$store.dispatch('user/getInfo');
+      // self.user = data;
+      console.log('user data: ', self.user);
+      var userId = localStorage.getItem('user id');
+      self.form.supplier.userId = localStorage.getItem('user id');
+      // self.map.userId = localStorage.getItem('user id');
+
+      // axios.get(self.$apiAdress + '/api/getAttributes')
+      //   .then(function(response) {
+      //     self.tableHeader = response.data;
+      //     // this sets the dropdown value
+      //     for (var i = 0; i < self.tableHeader.length; i++){
+      //       // self.map.supAttrId.push(self.tableHeader[i].attribute_supplier_id);
+      //       // var attrId = self.tableHeader[i].id;
+      //       // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
+      //       var attributeLabel = self.tableHeader[i].name;
+      //       self.form.admin.attributes[i];// sets json key to the attribute Id
+      //       self.form.admin.attributes[i] = attributeLabel;// this sets the value
+      //     }
+      //     console.log('self.form.admin: ', self.form.admin);
+      //     // console.log('formAdmin attrId: ', attrId);
+      //     console.log('self.form.admin attributes: ', self.form.admin.attributes);
+      //     console.log('tableHeaders: ', self.tableHeader);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+
+      self.getAdminAtrributes();
+      self.getSupplierMapping(userId);
+      self.getEntities(userId);
+      self.getSupplierAttributes(userId);
+
+      // axios.get(self.$apiAdress + '/api/getSupplierMapping/' + userId)
+      //   .then(function(response) {
+      //     var supplierHeader = response.data;
+      //     for (var i = 0; i < supplierHeader.length; i++){
+      //       // var attrId = self.supplierHeader[i].id;
+      //       // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
+      //       var attributeLabel = supplierHeader[i].attribute_label;
+      //       self.form.supplier.attributes[i];// sets json key to the attribute Id
+      //       self.form.supplier.attributes[i] = attributeLabel;// this sets the value
+      //     }
+      //     // self.getSupAttributesLabels();
+      //     console.log('form: ', self.form);
+      //     // console.log('attrId: ', attrId);
+      //     console.log('form edited: ', self.form.edited);
+      //     console.log('form attributes: ', self.form.attributes);
+
+      //     console.log('attributeLabel: ', attributeLabel);
+      //     console.log('supplierHeader: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+
+      // // if (!self.user.roles[0] === 'admin'){
+
+      // axios.get(self.$apiAdress + '/api/getEntities/' + userId)
+      //   .then(function(response) {
+      //     // console.log('response.data: ', response.data);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
+
+      // axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
+      //   .then(function(response) {
+      //     self.supplierHeader = response.data;
+      //     console.log('sup Header: ', self.supplierHeader);
+      //   }).catch(function(error) {
+      //     console.log(error);
+      //     self.errorHandler(error.response);
+      //   });
     },
     storeSupAttributes(form){
       var self = this;
@@ -375,7 +392,7 @@ export default {
           self.errorHandler(error.response);
         });
     },
-    async saveCSV(){
+    async storeMapping(){
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
@@ -571,7 +588,6 @@ export default {
 .csv_mapping{
   margin-top: 10px;
   padding: 15px;
-  /* text-align: end; */
 }
 
 .attribute_picker{

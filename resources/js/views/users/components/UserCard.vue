@@ -1,4 +1,5 @@
 <template>
+
   <el-card v-if="user.name">
     <div class="user-profile">
       <div class="user-avatar box-center">
@@ -29,6 +30,7 @@
       </div>
     </div>
   </el-card>
+
 </template>
 
 <script>

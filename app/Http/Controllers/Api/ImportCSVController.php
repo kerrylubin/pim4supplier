@@ -259,9 +259,6 @@ class ImportCSVController extends BaseController
             $supplier_attributes = array_keys($row);
             $data[] = $row;
 
-
-
-
             // if ($this->product->getIdBySku($sku)) {
                 // $sku           = $row[$supplier->getSupplierFeedSkuField()];
                 // $supplierStock = $row[$supplier->getSupplierFeedStockField()];
@@ -300,7 +297,7 @@ class ImportCSVController extends BaseController
         }
         else {
 
-            echo'already filled!!';
+            // echo'already filled!!';
             // $this->deleteAttributes($supplierId);
             $id = [];
             $supplier_attributes_data = [];
@@ -333,7 +330,7 @@ class ImportCSVController extends BaseController
             // $index = $this->interateSupplierAttributes($supplier_attributes_data);
         }
 
-        // return $index;
+        return $data;
     }//end getEntities()
 
 
