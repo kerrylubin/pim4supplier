@@ -37,13 +37,19 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column align="center" label="Actions" width="350" @click="goToUser()">
+      <el-table-column align="center" label="Unique Code" width="120">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id);">
-            Delete
+          <span>{{ scope.row.unique_code }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Actions" width="350" @click="goToUser()">
+        <template slot-scope="scope">
+          <el-button type="primary" size="small" icon="el-icon-download" @click="handleImport(scope.row.id);">
+            Import Products
           </el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
     </el-table>
 
@@ -105,6 +111,7 @@ export default {
   },
   data() {
     return {
+      page: 'supplierprofile',
       tableKey: 0,
       loading: true,
       list: null,
@@ -249,38 +256,63 @@ export default {
         this.$refs['profileForm'].clearValidate();
       });
     },
-    handleDelete(id){
+    handleImport(id){
       var self = this;
 
-      self.$confirm('This will permanently delete this profile. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      }).then(() => {
-        axios.get('/api/deleteSupplierProfile/' + id)
-          .then(function(response) {
-            self.$message({
-              type: 'success',
-              message: 'Profile Deleted',
-              duration: 5 * 1000,
-            });
-            self.$router.go();
-          }).catch(function(error) {
-            self.$message({
-              type: 'error',
-              message: error,
-              duration: 5 * 1000,
-            });
+      this.loading = true;
 
-            console.log(error);
-            self.errorHandler(error.response);
+      var products = [];
+
+      axios.get(self.$apiAdress + '/api/getEntities/' + id + '/' + self.page)
+        .then(function(response) {
+          products = response.data;
+          // self.listHeaders = Object.keys(self.list[0]);
+          // self.list.forEach((element, index) => { // handles pageination count
+          //   element['index'] = (page - 1) * limit + index + 1;
+          // });
+          // self.total = self.list.length;
+          self.loading = false;
+          console.log('products: ', products);
+          self.$message({
+            type: 'success',
+            message: 'Products Imported',
+            duration: 5 * 1000,
           });
-      }).catch(() => {
-        self.$message({
-          type: 'info',
-          message: 'Delete canceled',
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
         });
-      });
+
+      // self.$confirm('This will permanently delete this profile. Continue?', 'Warning', {
+      //   confirmButtonText: 'OK',
+      //   cancelButtonText: 'Cancel',
+      //   type: 'warning',
+      // }).then(() => {
+
+      //   axios.get('/api/deleteSupplierProfile/' + id)
+      //     .then(function(response) {
+      //       self.$message({
+      //         type: 'success',
+      //         message: 'Profile Deleted',
+      //         duration: 5 * 1000,
+      //       });
+      //       self.$router.go();
+      //     }).catch(function(error) {
+      //       self.$message({
+      //         type: 'error',
+      //         message: error,
+      //         duration: 5 * 1000,
+      //       });
+
+      //       console.log(error);
+      //       self.errorHandler(error.response);
+      //     });
+      // }).catch(() => {
+      //   self.$message({
+      //     type: 'info',
+      //     message: 'Delete canceled',
+      //   });
+      // });
     },
   },
 };

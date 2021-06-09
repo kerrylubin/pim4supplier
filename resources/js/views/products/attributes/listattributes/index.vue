@@ -5,7 +5,7 @@
       Save
     </el-button>
 
-    <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+    <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="add()">
       Add Inputs
     </el-button>
 
@@ -25,16 +25,21 @@
 
       <div v-for="(item, k) of inputs" :key="k" class="form-group">
         <!-- <input type="text" class="form-control" v-model="input.name"> -->
-        <select id="cars" v-model="inputs.admin.attributes[k]" name="cars">
+        <select id="cars" v-model="inputs.name" name="cars">
           <option value="volvo">Volvo</option>
         </select>
-        <select id="cars" v-model="inputs.supplier.attributes[k]" name="cars">
+        <select id="cars" v-model="inputs.party" name="cars">
           <option value="volvo">Volvo</option>
         </select>
 
+        <!-- <span>
+          <i class="fas fa-minus-circle" @click="remove(k)" v-show="k || ( !k && inputs.length > 1)"></i>
+          <i class="fas fa-plus-circle" @click="add(k)" v-show="k == inputs.length-1"></i>
+        </span> -->
+
         <span>
-          <i v-show="k || ( !k && inputs.admin.attributes.length > 1)" class="fas fa-minus-circle" @click="remove(k)">Remove</i>
-          <i v-show="k == inputs.admin.length-1" class="fas fa-plus-circle" @click="add(k)">Add fields</i>
+          <i class="fas fa-minus-circle" @click="remove(k)">Remove</i>
+          <!-- <i class="fas fa-plus-circle" @click="add(k)">Add fields</i> -->
         </span>
       </div>
 
@@ -136,11 +141,17 @@ export default {
           userId: '',
         },
       },
+      inputs: [
+        {
+          name: '',
+          party: '',
+        },
+      ],
       map: {
         userId: '',
         supAttrId: [],
       },
-      inputs: {
+      input: {
         admin: {
           time: '',
           attributes: [],
@@ -177,25 +188,14 @@ export default {
   },
   mounted: function() {
     this.getUser();
-    this.getCSVData();
+    // this.getCSVData();
     this.createInputs();
     console.log('params: ', this.$route.params.id);
   },
   methods: {
-    add() {
-      // var x = this.form.admin.attributes.length;
-
-      var ObjAdmin = this.tableHeader;
-      var ObjSupplier = this.supplierHeader;
-
-      this.inputs.admin.attributes.push(ObjAdmin);
-      this.inputs.supplier.attributes.push(ObjSupplier);
-
-      // this.form.admin.attributes.push(Obj);
-      // this.form.supplier.attributes.push(Obj);
-      console.log(this.tableHeader[0]);
-    },
-    remove(index) {
+    add(index) {
+      this.inputs.push({ name: '', party: '' });
+    }, remove(index) {
       this.inputs.splice(index, 1);
     },
     async getUser() {
@@ -412,7 +412,7 @@ export default {
     },
     storeSupAttributes(form){
       var self = this;
-      axios.post(self.$apiAdress + '/api/storeEditedSupAttributes', form)
+      axios.post(self.$apiAdress + '/api/storeSupplierMappings', form)
         .then(function(response) {
           self.$message({
             type: 'success',

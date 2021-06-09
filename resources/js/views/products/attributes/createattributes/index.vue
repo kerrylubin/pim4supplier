@@ -23,15 +23,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Code">
-        <template slot-scope="scope">
-          <span>{{ scope.row.code }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="Name">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Code">
+        <template slot-scope="scope">
+          <span>{{ scope.row.code }}</span>
         </template>
       </el-table-column>
 
@@ -236,7 +236,7 @@ export default {
     async getList() {
       var self = this;
       const { limit, page } = this.query;
-      this.loading = true;
+      self.loading = true;
       // const { data, meta } = await userResource.list(this.query);
 
       // self.list = self.atrList;
@@ -318,7 +318,7 @@ export default {
         if (valid) {
           var self = this;
           // this.newUser.roles = [this.newUser.role];
-          this.attributeCreating = true;
+          self.attributeCreating = true;
           // console.log('new attr: ', self.newAttributes);
 
           axios.post(self.$apiAdress + '/api/storeAdminAttributes', self.newAttributes)
@@ -330,9 +330,9 @@ export default {
               });
 
               self.resetNewAttributes();
+              self.attributeCreating = false;
               self.dialogFormVisible = false;
               // self.handleFilter();
-              self.attributeCreating = false;
               self.$router.go();
 
               // console.log('storeAttributes: ', response.data);

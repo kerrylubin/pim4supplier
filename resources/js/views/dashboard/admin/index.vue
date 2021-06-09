@@ -10,8 +10,9 @@
 
           </div>
           <div class="card-panel-description">
+
             <div class="card-panel-text">
-              {{ item.sku }}
+              {{ item.unique_code }}
             </div>
             <!-- <div class="card-panel-text">
             {{item.Productname}}
@@ -148,15 +149,17 @@ export default {
 
       // const { data, meta } = await userResource.list(this.query);
 
-      axios.get(self.$apiAdress + '/api/getEntities/' + 5)
+      axios.get(self.$apiAdress + '/api/getAllProducts')
         .then(function(response) {
           self.list = response.data;
           self.listHeaders = Object.keys(self.list[0]);
-          self.list.forEach((element, index) => { // handles pageination count
+
+          self.list.forEach((element, index) => {
+            console.log('element: ', element); // handles pageination count
             element['index'] = (page - 1) * limit + index + 1;
           });
 
-          self.total = self.list.length;
+          // self.total = self.list.length;
           self.loading = false;
           console.log('list: ', self.list);
         }).catch(function(error) {

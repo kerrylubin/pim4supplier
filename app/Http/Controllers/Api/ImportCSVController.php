@@ -7,183 +7,36 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
+use App\Http\Controllers\Api\ImportProfileController;
 use App\Laravue\JsonResponse;
 use Illuminate\Http\Response;
-
-
-// use FalconMedia\SupplierInventory\Model\SupplierRepository;
-// use FireGento\FastSimpleImport\Model\Adapters\NestedArrayAdapterFactory;
-// use FireGento\FastSimpleImport\Model\Importer;
 
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
 
-// use Magento\Catalog\Api\ProductRepositoryInterface;
-// use Magento\Catalog\Model\Product;
-// use Magento\CatalogInventory\Model\Stock\StockItemRepository;
-// use Magento\Framework\App\Filesystem\DirectoryList;
-// use Magento\Framework\App\ResourceConnection;
-// use Magento\Framework\App\State;
-// use Magento\Framework\Filesystem\Directory\ReadFactory;
-// use Magento\ImportExport\Model\Import;
-// use Symfony\Component\Console\Command\Command;
-// use Symfony\Component\Console\Input\InputArgument;
-// use Symfony\Component\Console\Input\InputInterface;
-// use Symfony\Component\Console\Output\OutputInterface;
-// use Symfony\Component\Filesystem\Filesystem;
-// use Symfony\Component\Finder\Finder;
-
 class ImportCSVController extends BaseController
 {
-    // const NAME_ARGUMENT = 'ID';
+    const VIEW = ['supplierprofile', 'suppliermapping'];
 
-    // /**
-    //  * @var DirectoryList
-    //  */
-    // private $directoryList;
+    public function getSupplierImportProfileData($id){
 
-    // /**
-    //  * @var Importer
-    //  */
-    // protected $importer;
-
-    // /**
-    //  * @var NestedArrayAdapterFactory
-    //  */
-    // protected $nestedArrayAdapterFactory;
-
-    // /**
-    //  * @var ReadFactory
-    //  */
-    // private $readFactory;
-
-    // /**
-    //  * @var StockItemRepository
-    //  */
-    // private $stockItemRepository;
-
-    // /**
-    //  * @var Product
-    //  */
-    // private $product;
-
-    // /**
-    //  * @var string
-    //  */
-    // protected $behavior;
-
-    // /**
-    //  * @var string
-    //  */
-    // protected $entityCode;
-
-    // /**
-    //  * @var boolean|bool[]|null
-    //  */
-    // private $delimiter;
-
-    // /**
-    //  * @var ProductRepositoryInterface
-    //  */
-    // private $productRepository;
-
-    // /**
-    //  * @var State
-    //  */
-    // private $state;
-
-    // /**
-    //  * @var SupplierRepository
-    //  */
-    // private $supplierRepository;
-
-
-    // /**
-    //  * Import constructor.
-    //  *
-    //  * @param DirectoryList              $directoryList
-    //  * @param ReadFactory                $readFactory
-    //  * @param ProductRepositoryInterface $productRepository
-    //  * @param State                      $state
-    //  * @param SupplierRepository         $supplierRepository
-    //  * @param Filesystem                 $filesystem
-    //  * @param ResourceConnection         $resourceConnection
-    //  * @param StockItemRepository        $stockItemRepository
-    //  * @param Product                    $product
-    //  * @param Importer                   $importer
-    //  * @param NestedArrayAdapterFactory  $nestedArrayAdapterFactory
-    //  * @param Finder                     $finder
-    //  */
-    // public function __construct(
-    //     DirectoryList $directoryList,
-    //     ReadFactory $readFactory,
-    //     ProductRepositoryInterface $productRepository,
-    //     State $state,
-    //     SupplierRepository $supplierRepository,
-    //     ResourceConnection $resourceConnection,
-    //     StockItemRepository $stockItemRepository,
-    //     Product $product,
-    //     Importer $importer,
-    //     NestedArrayAdapterFactory $nestedArrayAdapterFactory,
-    //     Finder $finder
-    // ) {
-    //     $this->directoryList       = $directoryList;
-    //     $this->readFactory         = $readFactory;
-    //     $this->productRepository   = $productRepository;
-    //     $this->state               = $state;
-    //     $this->supplierRepository  = $supplierRepository;
-    //     $this->resourceConnection  = $resourceConnection;
-    //     $this->stockItemRepository = $stockItemRepository;
-    //     $this->product             = $product;
-    //     $this->importer            = $importer;
-    //     $this->nestedArrayAdapterFactory = $nestedArrayAdapterFactory;
-    //     $this->finder                    = $finder;
-    //     parent::__construct();
-
-    // }//end __construct()
-
-
-    // /**
-    //  * {@inheritdoc}
-    //  */
-    // protected function execute(InputInterface $input, OutputInterface $output)
-    // {
-    //     $this->updateSupplierStock($input->getArgument(self::NAME_ARGUMENT));
-    // }//end execute()
-
-
-    // /**
-    //  * {@inheritdoc}
-    //  */
-    // protected function configure()
-    // {
-    //     $this->setName('falconmedia:supplierstock:import');
-    //     $this->setDescription('Import supplier stock per SKU from csv');
-    //     $this->setBehavior(Import::BEHAVIOR_ADD_UPDATE);
-    //     $this->setDefinition(
-    //         [
-    //             new InputArgument(
-    //                 self::NAME_ARGUMENT,
-    //                 InputArgument::REQUIRED,
-    //                 'Supplier ID'
-    //             ),
-    //         ]
-    //     );
-    //     $this->setEntityCode('catalog_product');
-    //     parent::configure();
-
-    // }//end configure()
-
-    public function getSupplierProfileData($id){
-
-        $csv_feed_data = DB::table('supplier_profile')
-        ->select('supplier_profile.feed_url', 'supplier_profile.delimiter',
-        'supplier_profile.frequency')
-        ->where('supplier_profile.supplier_id', '=', $id)
+        $csv_feed_data = DB::table('supplier_import_profile')
+        ->where('supplier_import_profile.id', '=', $id)
         ->get();
         return json_encode($csv_feed_data);
+
     }
+
+    public function getSupplierProfileData($supplierId){
+
+        $csv_feed_data = DB::table('supplier_import_profile')
+        ->where('supplier_import_profile.supplier_id', '=', $supplierId)
+        ->get();
+        return json_encode($csv_feed_data);
+
+    }
+
 
     public function getSuppliers(){
 
@@ -193,14 +46,48 @@ class ImportCSVController extends BaseController
         return json_encode($suppliers);
     }
 
+    public function getAllProducts(){
 
-    public function readCSVUrl($supplierId)
-    {
-        $json_supplier_profile_data = $this->getSupplierProfileData($supplierId);
+        $products = DB::table('products')
+        ->get();
+        return json_encode($products);
+    }
+
+    public function getSupplierMappedAttributes(){
+
+        $attribute_mapping_id = DB::table('attribute_mapping')
+        ->select('attribute_mapping.supplier_attribute_id')
+        ->get();
+
+        $supplier_mapped_labels = DB::table('supplier_attributes')
+        ->select('supplier_attributes.attribute_label')
+        ->whereIn('supplier_attributes.id', json_decode($attribute_mapping_id, true) )
+        ->pluck('attribute_label');
+
+        return $supplier_mapped_labels;
+    }
+
+    public function getSupplierCSVHeaders($id, $page){
+
+        $json_supplier_profile_data = $this->getSupplierProfileData($id);
         $supplier_profile_data = json_decode($json_supplier_profile_data, true);
 
         // echo'supplier_profile_data: '.var_dump($supplier_profile_data);
 
+        $importId = $supplier_profile_data[0]['id'];
+
+        $supplier_attributes = $this->getEntities($importId, $page);
+
+    }
+
+
+    public function readCSVUrl($importId)
+    {
+        $json_supplier_profile_data = $this->getSupplierImportProfileData($importId);
+        $supplier_profile_data = json_decode($json_supplier_profile_data, true);
+
+        // echo'supplier_profile_data: '.var_dump($supplier_profile_data);
+        $supplier_id = $supplier_profile_data[0]['supplier_id'];
         $csv_file = $supplier_profile_data[0]['feed_url'];
         $delimiter = $supplier_profile_data[0]['delimiter'];
         $csvContent = file_get_contents($csv_file);
@@ -227,7 +114,7 @@ class ImportCSVController extends BaseController
 
     }
 
-    public function interateSupplierId($supplierId, $supplier_attributes){
+    public function interateId($supplierId, $supplier_attributes){
 
         $id = [];
         for($i = 0; $i <= count($supplier_attributes); $i++){
@@ -247,29 +134,127 @@ class ImportCSVController extends BaseController
 
     }
 
+    public function removeHeaders($arr, $keys){//this removes unwanted keys from array
+
+        $saved = [];
+
+        foreach ($keys as $key => $value) {
+
+            if (is_int($key) || is_int($value)) {
+                $keysKey = $value;
+            } else {
+                $keysKey = $key;
+            }
+
+            if (isset($arr[$keysKey])) {
+
+                $saved[$keysKey] = $arr[$keysKey];
+                if (is_array($value)) {
+
+                    $saved[$keysKey] = allow_keys($saved[$keysKey], $keys[$keysKey]);
+                }
+            }
+        }
+        return $saved;
+
+    }
 
 
-    public function getEntities($supplierId)//get contents in the csv. this can be called with cron
+    public function getEntities($importId, $page)//get contents in the csv. this can be called with cron
     {
-        $csvIterationObject = $this->readCSVUrl($supplierId);
-        $data               = [];
-        $supplier_attributes = null;
+        $json_supplier_profile_data = $this->getSupplierImportProfileData($importId);
+        $supplier_profile_data = json_decode($json_supplier_profile_data, true);
+
+        // echo'supplier_profile_data: '.var_dump($supplier_profile_data);
+
+        $importId = $supplier_profile_data[0]['id'];
+        $supplier_ID = $supplier_profile_data[0]['supplier_id'];
+        $unique_code = $supplier_profile_data[0]['unique_code'];
+        $view = ['supplierprofiles','suppliermapping'];
+
+        $csvIterationObject = $this->readCSVUrl($importId);
+        $products               = [];
+        $supplier_attributes= null;
+        $mapped_attributes  = json_decode($this->getSupplierMappedAttributes(), true);
+        // echo'M_A: '.var_dump($mapped_attributes);
         foreach ($csvIterationObject as $row) {//loop through csv data. here you can set in database
-            // $sku           = $row[$supplier->getSupplierFeedSkuField()];
+            // $sku  = $row[$supplier->getSupplierFeedSkuField()];
             $supplier_attributes = array_keys($row);
-            $data[] = $row;
+            // echo'S_A: '.var_dump($supplier_attributes);
+            // echo'Row: '.var_dump($test);
 
-            // if ($this->product->getIdBySku($sku)) {
-                // $sku           = $row[$supplier->getSupplierFeedSkuField()];
-                // $supplierStock = $row[$supplier->getSupplierFeedStockField()];
-                // $supplierName  = $supplier->getSupplierName();
+            // function to fill products table
+            if($mapped_attributes == null ){
+                /*
+                    Tables to fill when not mapped
 
-                // $data[]        = [
-                //     'sku'            => $sku,
-                //     'supplier_stock' => $supplierStock,
-                //     'supplier'       => $supplierName,
-                // ];
-            // }
+                    1.  products table.
+                    2.  attribute_values
+
+                */
+
+                $products[] = $row;
+
+                //can be a function
+                /*
+                    get supplier attributes that is
+                    mapped with admin attributes Name so you can use for unique_code
+                */
+            }
+            else if($page == $view[0] ){
+
+                /*
+                    Tables to fill when  mapped
+                    1.  products table.
+                    2.  attribute_values.
+
+                    Tables that are filled when mapped
+                    1. product_attributes table.
+                    2. attribute_mapping table.
+
+                */
+
+                $mapped_headers = $this->removeHeaders($row, $mapped_attributes);
+                $products[] = $mapped_headers;
+
+                $products_data = array(
+                    'supplier_id'        =>  intval($supplier_ID),
+                    'unique_code'   =>  $mapped_headers['Productnaam'],
+                );
+                DB::table('products')->insert([$products_data]);
+
+                $attribute_values_data = array(
+                    'name'   =>  $mapped_headers['Productnaam'],
+                );
+                DB::table('attributes_values')->insert([$attribute_values_data]);
+
+            }
+            //end of function
+        }
+
+        if($page == $view[0]){
+
+            /* can be a function updateProfileCode($products, $supplier_ID)
+                $update_supplier_import_profile =  [
+                    'unique_code'   =>  $products[0]['sku']
+                ];
+
+                //get Import count
+                $supplier_profile_data = DB::table('supplier_import_profile')
+                ->select('supplier_import_profile.id')
+                ->where('supplier_import_profile.supplier_id', '=', $supplier_ID)
+                ->get();
+
+                $ids = $this->interateId( $supplier_ID ,json_decode($supplier_profile_data, true) );
+
+                echo'profile_id: '.var_dump($profile_ids);
+
+                DB::table('supplier_import_profile')
+                ->whereIn('supplier_import_profile.supplier_id', $ids )
+                ->update($update_supplier_import_profile);
+
+                end function
+            */
         }
 
         /*  get the the id you're looking for in the DB.
@@ -277,60 +262,65 @@ class ImportCSVController extends BaseController
             else insert those values.
         */
 
-        $supplier_id = DB::table('supplier_attributes')
-        ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.profile_id','=',$supplierId)->get();
+        //can be a function storeSupplierAttributes($supplier_ID, $importId, $supplier_attributes)
+        if($page == $view[1] ){
 
-        if(count($supplier_id) == 0){
+            $profile_id = DB::table('supplier_attributes')
+            ->select('supplier_attributes.profile_id')
+            ->where('supplier_attributes.profile_id','=',$supplier_ID)->get();
 
-            for($i = 0; $i <= count($supplier_attributes); $i++){
+            if(count($profile_id) == 0){
 
-                if(isset($supplier_attributes[$i])){
+                for($i = 0; $i <= count($supplier_attributes); $i++){
 
-                    $supplier_attributes_data = array(
-                        'profile_id'        =>  intval($supplierId),
-                        'attribute_label'   =>  $supplier_attributes[$i],
-                    );
-                    DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+                    if(isset($supplier_attributes[$i])){
+
+                        $supplier_attributes_data = array(
+                            'profile_id'        =>  $supplier_ID,
+                            'attribute_label'   =>  $supplier_attributes[$i],
+                        );
+                        DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+                    }
                 }
             }
-        }
-        else {
+            else {
 
-            // echo'already filled!!';
-            // $this->deleteAttributes($supplierId);
-            $id = [];
-            $supplier_attributes_data = [];
+                // echo'already filled!!';
+                // $this->deleteAttributes($supplierId);
+                $id = [];
+                $supplier_attributes_data = [];
 
-            for($i = 0; $i <= count($supplier_attributes); $i++){
+                for($i = 0; $i <= count($supplier_attributes); $i++){
 
-                if(isset($supplier_attributes[$i])){
+                    if(isset($supplier_attributes[$i])){
 
-                    $id[] = $supplierId;
+                        $id[] = $supplier_ID;
 
-                    // $supplier_attributes_data[] = [
-                    //     'attribute_label'   =>  $supplier_attributes[$i],
-                    // ];
+                        // $supplier_attributes_data[] = [
+                        //     'attribute_label'   =>  $supplier_attributes[$i],
+                        // ];
 
-                    // array_push($supplier_attributes_data, [
-                    //     'attribute_label'   =>  $supplier_attributes[$i]
-                    // ]);
+                        // array_push($supplier_attributes_data, [
+                        //     'attribute_label'   =>  $supplier_attributes[$i]
+                        // ]);
 
-                    // $profile_ids = $this->interateSupplierId($supplierId ,$supplier_attributes);
+                        // $profile_ids = $this->interateId($supplierId ,$supplier_attributes);
 
-                    // DB::table('supplier_attributes')
-                    // ->whereIn('supplier_attributes.profile_id', $profile_ids )
-                    // ->update($supplier_attributes_data[$i]);
+                        // DB::table('supplier_attributes')
+                        // ->whereIn('supplier_attributes.profile_id', $profile_ids )
+                        // ->update($supplier_attributes_data[$i]);
 
 
-                    // DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+                        // DB::table('supplier_attributes')->insert([$supplier_attributes_data]);
+                    }
                 }
+
+                // $index = $this->interateSupplierAttributes($supplier_attributes_data);
             }
-
-            // $index = $this->interateSupplierAttributes($supplier_attributes_data);
         }
+        //end of function
 
-        return $data;
+        return $products;
     }//end getEntities()
 
 

@@ -108,9 +108,6 @@
           <el-form-item label="Name" prop="name" placeholder="Add your Name and Brand">
             <el-input v-model="newUser.name" />
           </el-form-item>
-          <el-form-item label="Brand" prop="brand" placeholder="Add your Brand">
-            <el-input v-model="newUser.brand" />
-          </el-form-item>
           <el-form-item :label="$t('user.email')" prop="email">
             <el-input v-model="newUser.email" />
           </el-form-item>
@@ -307,17 +304,18 @@ export default {
         axios.get('/api/getSupUsers')
           .then(function(response) {
             self.list = response.data;
+
+            self.list.forEach((element, index) => {
+              element['index'] = (page - 1) * limit + index + 1;
+            });
+
+            self.total = self.list.length;
             console.log('sup list: ', self.list.data);
           }).catch(function(error) {
             console.log(error);
             self.errorHandler(error.response);
           });
-
-        this.list.forEach((element, index) => {
-          element['index'] = (page - 1) * limit + index + 1;
-        });
-        this.total = self.list.length;
-        this.loading = false;
+        self.loading = false;
 
         // const { data, meta } = await userResource.supplier_list(this.query);
         // this.list = data;
@@ -332,10 +330,10 @@ export default {
       } else {
         const { data, meta } = await userResource.list(this.query);
         this.list = data;
-        console.log('currentUserId: ', this.currentUserId);
-        console.log('currentUser: ', this.currentUser);
         console.log('list: ', this.list);
+        console.log('currentUser: ', this.currentUser);
         this.list.forEach((element, index) => {
+          console.log('element: ', element);
           element['index'] = (page - 1) * limit + index + 1;
         });
         this.total = meta.total;

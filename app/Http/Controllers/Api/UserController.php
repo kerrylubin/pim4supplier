@@ -52,7 +52,7 @@ class UserController extends BaseController
             $keyword = Arr::get($searchParams, 'keyword', '' );
 
             $userQuery = DB::table('supplier_profile_users')
-            ->select('supplier_profile_users.user_id','supplier_profile_users.name',
+            ->select('supplier_profile_users.id','supplier_profile_users.name',
             'supplier_profile_users.email', 'supplier_profile_users.role')
             ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
 
@@ -96,10 +96,8 @@ class UserController extends BaseController
         $currentUser = Auth::user();
 
         $userQuery = DB::table('supplier_profile_users')
-        ->select('supplier_profile_users.user_id','supplier_profile_users.name',
-        'supplier_profile_users.email', 'supplier_profile_users.role')
         ->where('supplier_profile_users.id', '=', $currentUser->id)->get();
-        return SupplierUserResource::collection($userQuery);
+        return response()->json($userQuery);
     }
 
 
@@ -140,7 +138,6 @@ class UserController extends BaseController
             $user->syncRoles($role);
 
             $supplier_user = array(
-                'user_id'    => $user->id,
                 'id' => $currentUser->id,
                 'name' => $params['name'],
                 'email' => $params['email'],
