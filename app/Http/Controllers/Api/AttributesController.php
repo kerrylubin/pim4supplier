@@ -268,7 +268,7 @@ class AttributesController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeEditedSupAttributes(Request $request )
+    public function storeSupplierMappings(Request $request )
     {
         $currentUser = Auth::user();
         $params = $request->all();
@@ -314,7 +314,7 @@ class AttributesController extends BaseController
         the labels that have been picked are then given those id
         */
 
-        // $labels  = $this->getSupplierAttributeLabel($user_id);
+        $labels  = $this->getSupplierAttributeLabel($user_id);
         // $labels = json_decode($json_sup_attr, true);
         // echo'sup_attributes'.var_dump($sup_attributes)."\n";
 
@@ -341,7 +341,7 @@ class AttributesController extends BaseController
 
                         if(isset($sup_attr_id[$i])){
 
-                            // echo'sup_attr_id: '.$i.var_dump($sup_attr_id[$i]);
+                            // echo'sup_attr_id: '.$i.var_dump($admin_attr_id[$i]);
 
                             $attr_mapping_data = array(
                                 'supplier_attribute_id'     => $sup_attr_id[$i]['id'],

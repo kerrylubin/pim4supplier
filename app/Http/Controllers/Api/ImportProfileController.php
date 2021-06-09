@@ -59,18 +59,38 @@ class ImportProfileController extends BaseController
         $params = $request->all();
         // echo'params: '.var_dump($params);
 
-        if($currentUser->isAdmin()){
+        // if($currentUser->isAdmin()){
 
-            $import_profile = array(
-                'supplier_id'   =>  $params['supplier_id'],
-                'frequency'     =>  $params['frequency'],
-                'feed_url'      =>  $params['url'],
-                'delimiter'     =>  $params['delimiter'],
-            );
+            $supplier_profile_data = DB::table('supplier_import_profile')
+            ->where('supplier_import_profile.supplier_id', '=', $params['supplier_id'])
+            ->get();
 
-            DB::table('supplier_profile')->insert([$import_profile]);
+            $unique_code = json_decode($supplier_profile_data, true);
 
-        }
+            if($unique_code[0]['unique_code'] == null){
+
+                $import_profile = array(
+                    'supplier_id'   =>  $params['supplier_id'],
+                    'frequency'     =>  $params['frequency'],
+                    'feed_url'      =>  $params['url'],
+                    'delimiter'     =>  $params['delimiter'],
+                    'unique_code'   =>  'Artikelnummer',
+                );
+            }
+            else{
+
+                $import_profile = array(
+                    'supplier_id'   =>  $params['supplier_id'],
+                    'frequency'     =>  $params['frequency'],
+                    'feed_url'      =>  $params['url'],
+                    'delimiter'     =>  $params['delimiter'],
+                    'unique_code'   =>  $unique_code[0]['unique_code'],
+                );
+            }
+
+            DB::table('supplier_import_profile')->insert([$import_profile]);
+
+        // }
         // else{
         //     return response()->json(new JsonResponse([], 'This is only for suppliers'), Response::HTTP_UNAUTHORIZED);
         // }
@@ -89,10 +109,8 @@ class ImportProfileController extends BaseController
 
     public function getSupplierImportProfile($id)
     {
-        $supplier_profile = DB::table('supplier_profile')
-        ->select('supplier_profile.feed_url', 'supplier_profile.delimiter',
-        'supplier_profile.frequency','supplier_profile.supplier_id','supplier_profile.id')
-        ->where('supplier_profile.supplier_id', '=', $id)
+        $supplier_profile = DB::table('supplier_import_profile')
+        ->where('supplier_import_profile.supplier_id', '=', $id)
         ->get();
         return response()->json($supplier_profile);
     }

@@ -22,7 +22,7 @@ import adminRoutes from './modules/admin';
 // import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
-import categoriesRoutes from './modules/categories';
+// import categoriesRoutes from './modules/categories';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -149,7 +149,7 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-  categoriesRoutes,
+  // categoriesRoutes,
   {
     path: '/products',
     component: Layout,

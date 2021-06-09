@@ -101,10 +101,11 @@ export default {
       self.userData = data;
 
       // const { data, meta } = await userResource.list(this.query);
-      axios.get(self.$apiAdress + '/api/getEntities/' + 5)
+      axios.get(self.$apiAdress + '/api/getAllProducts')
         .then(function(response) {
           self.list = response.data;
           self.listHeaders = Object.keys(self.list[0]);
+
           self.list.forEach((element, index) => { // handles pageination count
             element['index'] = (page - 1) * limit + index + 1;
           });
@@ -112,7 +113,7 @@ export default {
           self.total = self.list.length;
           self.loading = false;
           // console.log('Object.keys: ', Object.keys(self.list[0]));
-          console.log('Object.list: ', self.list);
+          console.log('list: ', self.list);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);

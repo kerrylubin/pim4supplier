@@ -35,14 +35,14 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('roles', 'RoleController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
         Route::apiResource('users', 'UserController')->middleware('permission:' . Acl::PERMISSION_USER_MANAGE);
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::get('getSupUsers', 'UserController@getSupUsers')->middleware('permission:' . Acl::PERMISSION_USER_MANAGE);
 
-        // Custom routes        Route::get('getCSVData', 'CsvController@getCSVData');
+        // Custom routes Route::get('getCSVData', 'CsvController@getCSVData');
         Route::get('getSupAttributes/{id}', 'AttributesController@getSupAttributes');
         Route::post('getSupAttributesLabels', 'AttributesController@getSupAttributesLabels');
         Route::post('storeAttributesMapping', 'AttributesController@storeAttributesMapping');
         Route::post('storeAdminAttributes', 'AttributesController@storeAdminAttributes');
-        Route::post('storeSupAttributes', 'AttributesController@storeSupAttributes');
-        Route::post('storeEditedSupAttributes', 'AttributesController@storeEditedSupAttributes');
+        Route::post('storeSupplierMappings', 'AttributesController@storeSupplierMappings');
         Route::get('getAttributes', 'AttributesController@getAttributes');
         Route::get('getSupplierMapping/{id}', 'AttributesController@getSupplierMapping');
 
@@ -53,9 +53,10 @@ Route::namespace('Api')->group(function() {
         Route::get('deleteSupplierProfile/{id}', 'ImportProfileController@deleteSupplierProfile');
 
 
+        Route::get('getAllProducts', 'ImportCSVController@getAllProducts');
         Route::get('getSuppliers', 'ImportCSVController@getSuppliers');
-        Route::get('getEntities/{id}', 'ImportCSVController@getEntities');
-
+        Route::get('getEntities/{id}/{page}', 'ImportCSVController@getEntities');
+        Route::get('getSupplierCSVHeaders/{id}/{page}', 'ImportCSVController@getSupplierCSVHeaders');
 
 
         Route::get('getCSVData', 'CsvController@getCSVData');

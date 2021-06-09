@@ -346,10 +346,10 @@ export default {
         frequency: '',
       };
     },
-    handleCreateProfile(){
+    handleCreateProfile(id){
       var self = this;
       self.resetImportForm();
-      self.profileForm.supplier_id = localStorage.getItem('user id');
+      self.profileForm.supplier_id = id;
       self.dialogProfileFormVisible = true;
       self.$nextTick(() => {
         self.$refs['profileForm'].clearValidate();

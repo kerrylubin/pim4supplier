@@ -109,6 +109,7 @@ export default {
   // components: { UploadExcelComponent },
   data() {
     return {
+      page: 'suppliermapping',
       form: {
         admin: {
           time: '',
@@ -174,14 +175,15 @@ export default {
         $(addButton).click(function(){
           var maxInputs = (self.supplierHeader.length - self.tableHeader.length);
           // var y = (wrapper.children('div').length - 1);
-          console.log('length: ', wrapper.children('div').length);
+          // console.log('length: ', wrapper.children('div').length);
           console.log('wrapper: ', $('#form_' + x));
           // Check maximum number of input fields
           if (x < maxInputs){
             // var dropDown = wrapper.children('div').show()[y];
             var dropDown = $('#form_' + x);
-            console.log('dropDown: ', dropDown);
+            // console.log('dropDown: ', dropDown);
             x++;
+
             // y++; // Increment field counter
             // var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button el-icon-remove-outline"> - </button>';
             // var dropDown = '<div><select class="admin_input" style="margin-bottom:22px" id="sel_' + x + '" name="added_inputs" ></select>' + delBtn + '</div>'; // New input field html
@@ -282,9 +284,9 @@ export default {
           self.errorHandler(error.response);
         });
     },
-    getEntities(supplierId){
+    getSupplierCSVHeaders(supplierId, page){
       var self = this;
-      axios.get(self.$apiAdress + '/api/getEntities/' + supplierId)
+      axios.get(self.$apiAdress + '/api/getSupplierCSVHeaders/' + supplierId + '/' + page)
         .then(function(response) {
           // console.log('response.data: ', response.data);
         }).catch(function(error) {
@@ -299,79 +301,17 @@ export default {
       console.log('user data: ', self.user);
       var userId = localStorage.getItem('user id');
       self.form.supplier.userId = localStorage.getItem('user id');
-      // self.map.userId = localStorage.getItem('user id');
 
-      // axios.get(self.$apiAdress + '/api/getAttributes')
-      //   .then(function(response) {
-      //     self.tableHeader = response.data;
-      //     // this sets the dropdown value
-      //     for (var i = 0; i < self.tableHeader.length; i++){
-      //       // self.map.supAttrId.push(self.tableHeader[i].attribute_supplier_id);
-      //       // var attrId = self.tableHeader[i].id;
-      //       // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
-      //       var attributeLabel = self.tableHeader[i].name;
-      //       self.form.admin.attributes[i];// sets json key to the attribute Id
-      //       self.form.admin.attributes[i] = attributeLabel;// this sets the value
-      //     }
-      //     console.log('self.form.admin: ', self.form.admin);
-      //     // console.log('formAdmin attrId: ', attrId);
-      //     console.log('self.form.admin attributes: ', self.form.admin.attributes);
-      //     console.log('tableHeaders: ', self.tableHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
+      self.getSupplierCSVHeaders(userId, self.page);
       self.getAdminAtrributes();
       self.getSupplierMapping(userId);
-      self.getEntities(userId);
       self.getSupplierAttributes(userId);
 
-      // axios.get(self.$apiAdress + '/api/getSupplierMapping/' + userId)
-      //   .then(function(response) {
-      //     var supplierHeader = response.data;
-      //     for (var i = 0; i < supplierHeader.length; i++){
-      //       // var attrId = self.supplierHeader[i].id;
-      //       // var attrSupId = self.supplierHeader[i].attribute_supplier_id;
-      //       var attributeLabel = supplierHeader[i].attribute_label;
-      //       self.form.supplier.attributes[i];// sets json key to the attribute Id
-      //       self.form.supplier.attributes[i] = attributeLabel;// this sets the value
-      //     }
-      //     // self.getSupAttributesLabels();
-      //     console.log('form: ', self.form);
-      //     // console.log('attrId: ', attrId);
-      //     console.log('form edited: ', self.form.edited);
-      //     console.log('form attributes: ', self.form.attributes);
-
-      //     console.log('attributeLabel: ', attributeLabel);
-      //     console.log('supplierHeader: ', response.data);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      // // if (!self.user.roles[0] === 'admin'){
-
-      // axios.get(self.$apiAdress + '/api/getEntities/' + userId)
-      //   .then(function(response) {
-      //     // console.log('response.data: ', response.data);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-
-      // axios.get(self.$apiAdress + '/api/getSupAttributes/' + userId)
-      //   .then(function(response) {
-      //     self.supplierHeader = response.data;
-      //     console.log('sup Header: ', self.supplierHeader);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
+      // if (!self.user.roles[0] === 'admin'){
     },
     storeSupAttributes(form){
       var self = this;
-      axios.post(self.$apiAdress + '/api/storeEditedSupAttributes', form)
+      axios.post(self.$apiAdress + '/api/storeSupplierMappings', form)
         .then(function(response) {
           self.$message({
             type: 'success',
