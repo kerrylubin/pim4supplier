@@ -46,14 +46,13 @@ composer install
 #stap 2
 npm install
 #stap 3
-php artisan key:generate
-#stap 4
 # change env.txt to .env 
 # change database info in .env
 DB_DATABASE=databasename
 DB_USERNAME=vsom2
 DB_PASSWORD=vsom2
-
+#stap 4
+php artisan key:generate
 #stap 5
 php artisan migrate --seed
 #stap 6
