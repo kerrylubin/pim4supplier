@@ -43,12 +43,13 @@ class CreateSupplierDataTable extends Migration
 
         });
 
-        Schema::create('supplier_profile', function (Blueprint $table) {
+        Schema::create('import_profile', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('supplier_id');
             $table->string('feed_url');
             $table->string('delimiter');
             $table->string('frequency');
+            $table->string('unique_attribute');
             $table->timestamps();
 
             // $table->primary('id');
@@ -63,34 +64,15 @@ class CreateSupplierDataTable extends Migration
 
         Schema::create('supplier_attributes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('profile_id');
+            $table->unsignedInteger('import_profile_id');
             $table->string('attribute_label');
             $table->timestamps();
 
-            $table->foreign('profile_id')
-            ->references('supplier_id')
-            ->on('supplier_profile')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
-        });
-
-        Schema::create('supplier_import_profile', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('supplier_id');
-            $table->string('feed_url');
-            $table->string('delimiter');
-            $table->string('frequency');
-            $table->string('unique_code');
-            $table->timestamps();
-
-            // $table->primary('id');
-
-            $table->foreign('supplier_id')
+            $table->foreign('import_profile_id')
             ->references('id')
-            ->on('suppliers')
+            ->on('import_profile')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-
         });
 
         Schema::create('admin_attributes', function (Blueprint $table) {
@@ -128,15 +110,16 @@ class CreateSupplierDataTable extends Migration
         Schema::create('attributes_values', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            // $table->index('name');
             $table->timestamps();
-            // $table->primary('id');
+            // $table->primary('name');
 
         });
 
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('supplier_id');
-            $table->string('unique_code');
+            $table->string('unique_attribute_value');
             $table->timestamps();
 
             // $table->primary('id');
@@ -149,34 +132,26 @@ class CreateSupplierDataTable extends Migration
 
         });
 
-        Schema::create('product_atttributes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('product_id');
-            $table->unsignedInteger('mapping_id');
-            $table->string('value');
-            $table->timestamps();
+        // Schema::create('product_attributes', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('product_id');
+        //     $table->unsignedInteger('mapping_id');
+        //     $table->string('value');
+        //     $table->timestamps();
 
-            // $table->primary('id');
+        //     // $table->primary('id');
+        //     $table->foreign('product_id')
+        //     ->references('id')
+        //     ->on('products')
+        //     ->onDelete('cascade')
+        //     ->onUpdate('cascade');
 
-            $table->foreign('product_id')
-            ->references('id')
-            ->on('products')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
-
-            $table->foreign('mapping_id')
-            ->references('id')
-            ->on('attribute_mapping')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
-
-            $table->foreign('value')
-            ->references('unique_code')
-            ->on('products')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
-
-        });
+        //     $table->foreign('mapping_id')
+        //     ->references('id')
+        //     ->on('attribute_mapping')
+        //     ->onDelete('cascade')
+        //     ->onUpdate('cascade');
+        // });
 
         Schema::create('products_attributes', function (Blueprint $table) {
             $table->increments('id');
@@ -217,9 +192,9 @@ class CreateSupplierDataTable extends Migration
     {
         Schema::dropIfExists('suppliers');
         Schema::dropIfExists('supplier_profile_users');
-        Schema::dropIfExists('supplier_profile');
+        Schema::dropIfExists('import_profile');
+        // Schema::dropIfExists('supplier_profile');
         Schema::dropIfExists('supplier_attributes');
-        Schema::dropIfExists('supplier_import_profile');
         Schema::dropIfExists('products');
         Schema::dropIfExists('admin_attributes');
         Schema::dropIfExists('attribute_mapping');

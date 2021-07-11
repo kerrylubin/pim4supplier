@@ -92,6 +92,15 @@ class AttributesController extends BaseController
         // DB::table('attributes')->insert([$attr_data]);
     }
 
+    public function getImportId($id){
+        $import_id = DB::table('import_profile')
+        ->select('import_profile.id')
+        ->where('import_profile.supplier_id','=',$id)->pluck('id');
+
+        return $import_id;
+
+    }
+
     public function getSupAttributeId($labels){
 
         $attr_data = DB::table('supplier_attributes')
@@ -125,7 +134,7 @@ class AttributesController extends BaseController
     public function getSupplierAttributeLabel($supplierId){
         $attr_data = DB::table('supplier_attributes')
         ->select('supplier_attributes.attribute_label')
-        ->where('supplier_attributes.profile_id', '=', $supplierId)
+        ->where('supplier_attributes.import_profile_id', '=', $supplierId)
         ->get();
 
         $json = json_encode($attr_data);
@@ -167,11 +176,14 @@ class AttributesController extends BaseController
         // echo'supplier_attributes_id: '.var_dump($supplier_attributes);
         // echo'supplier_attributes_id: '.var_dump($supplier_attributes_id);
 
+
+        $import_id = $this->getImportId($currentUser->id);
+
         //check the sup_attr_label that are in the DB.
         //compare to see if there the same if not store them
         $user_id = DB::table('supplier_attributes')
-        ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.profile_id','=',$currentUser->id)->get();
+        ->select('supplier_attributes.import_profile_id')
+        ->where('supplier_attributes.import_profile_id','=',$import_id)->get();
 
         $mapping_user_id = DB::table('attribute_mapping')
         ->select('attribute_mapping.id')
@@ -188,7 +200,7 @@ class AttributesController extends BaseController
                     if(isset($supplier_attributes[$i]) ){
 
                         $attr_data = array(
-                            'profile_id'  => $currentUser->id,
+                            'import_profile_id'  => $import_id,
                             // 'attribute_id' => $supplier_attributes_id[$i],
                             'attribute_label'  => $supplier_attributes[$i],
                         );
@@ -282,14 +294,19 @@ class AttributesController extends BaseController
         */
         $user_id = $params['supplier']['userId'];
 
+        $import_id = $this->getImportId($user_id);
+
+        echo'import_id: '.var_dump($import_id);
+
         //get the id's of the attributes that are chosen to be matched.
         $sup_user_id = DB::table('supplier_attributes')
-        ->select('supplier_attributes.profile_id')
-        ->where('supplier_attributes.profile_id','=', $user_id)->get();
+        ->select('supplier_attributes.import_profile_id')
+        ->where('supplier_attributes.import_profile_id','=', json_decode($import_id, true))->get();
 
+        //can be a function getSupplierAttributeMappingsId($supplierID)
         $supplier_attributes_id = DB::table('supplier_attributes')
         ->select('supplier_attributes.id')
-        ->where('supplier_attributes.profile_id', '=', $user_id)
+        ->where('supplier_attributes.import_profile_id', '=', json_decode($import_id, true))
         ->get();
 
         $attr_mapping_ids = DB::table('attribute_mapping')
@@ -404,9 +421,11 @@ class AttributesController extends BaseController
 
     public function getSupAttributes($id)
     {
+        $import_id = $this->getImportId($id);
+
         $attr_data = DB::table('supplier_attributes')
         ->select('supplier_attributes.attribute_label', 'supplier_attributes.id')
-        ->where('supplier_attributes.profile_id', '=', $id)
+        ->where('supplier_attributes.import_profile_id', '=', json_decode($import_id, true))
         ->get();
         return response()->json($attr_data);
     }

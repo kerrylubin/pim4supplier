@@ -1,6 +1,7 @@
 <template>
 
   <el-card v-if="user.name">
+
     <div class="user-profile">
       <div class="user-avatar box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false" />
@@ -29,6 +30,7 @@
         </el-button>
       </div>
     </div>
+
   </el-card>
 
 </template>

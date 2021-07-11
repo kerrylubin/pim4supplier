@@ -1,38 +1,44 @@
 <template slot-scope="scope">
   <div class="app-container">
+    <div class="wrapper">
 
-    <el-row :gutter="40" class="panel-group">
-      <el-col v-for="item of list" :key="item" :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
+      <el-card>
+        <div class="product-view">
+          <div class="card-panel box-center">
             <svg-icon icon-class="theme" class-name="card-panel-icon" />
-          <!-- <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false" /> -->
-
           </div>
-          <div class="card-panel-description">
-
-            <div class="card-panel-text">
-              {{ item.unique_attribute_value }}
+          <div class="box-center">
+            <div v-for="name of productData.supplier" :key="name" class="user-name text-center">
+              {{ name }}
             </div>
-            <router-link :to="'/products/productview/' + item.unique_attribute_value +'/'+ item.id">
-              <el-button type="primary" size="small" icon="el-icon-goods" @click="viewProduct(item.id)">
-                View Product
-              </el-button>
-            </router-link>
-            <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          </div>
+          <div class="box-social text-center">
+
+            <div class="attributes">
+              <div class="attributes-labels">
+                <span v-for="attributes of productData.attributes" :key="attributes" class="label">
+                  {{ attributes }}
+                </span>
+              </div>
+              <div class="attributes-values">
+                <span v-for="attributes_values of productData.attributes_values" :key="attributes_values" class="value">
+                  {{ attributes_values }}
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
-      </el-col>
-    </el-row>
 
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList()" />
+      </el-card>
+
+    </div>
 
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
@@ -43,13 +49,13 @@ const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
-  name: 'CreateAttributes',
-  components: { Pagination },
+  name: 'Productview',
   directives: { waves, permission },
   data() {
     return {
       list: null,
       listHeaders: null,
+      productData: [],
       total: 0,
       loading: true,
       downloading: false,
@@ -67,34 +73,14 @@ export default {
         permissions: [],
         rolePermissions: [],
       },
-      tableData: {
-        columns: [
-          'Id',
-          'Image',
-          'Name',
-          'Quantity',
-          'Price',
-          'Seller',
-        ],
-        data: [
-          { Id: 1, Quantity: 1, Name: 'Joya Broek', Seller: 'Joya', Price: '123.00$', ImagePath: '/images/a.jpg' },
-          { Id: 2, Quantity: 1, Name: 'Venum Broek', Seller: 'Venum', Price: '50.00$', ImagePath: '/images/b.jpg' },
-          { Id: 3, Quantity: 3, Name: 'G4F Broek', Seller: 'Gear 4 Fighters', Price: '78.10$', ImagePath: '/images/c.jpg' },
-          { Id: 4, Quantity: 1, Name: 'Vso Handshoenen', Seller: 'VSO', Price: '99.99$', ImagePath: '/images/d.jpg' },
-          { Id: 5, Quantity: 5, Name: 'Supreme Broek', Seller: 'Supreme', Price: '41.20$', ImagePath: '/images/e.jpg' },
-          { Id: 6, Quantity: 6, Name: 'Leo Broek', Seller: 'Leo', Price: '41.20$', ImagePath: '/images/f.jpg' },
-        ],
-      },
     };
   },
   computed: {
   },
   created() {
-    this.resetNewUser();
     this.getList();
   },
   mounted: function(){
-    this.getList();
     this.getUser();
   },
   methods: {
@@ -109,86 +95,28 @@ export default {
     async getUser() {
       const data = await this.$store.dispatch('user/getInfo');
       this.userData = data;
-      localStorage.setItem('user id', this.userData.id);
-      // this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
+      this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
       console.log('userData: ', this.userData);
-    },
-    viewProduct(id){
-      localStorage.setItem('product', id);
     },
     async getList() {
       var self = this;
-      const { limit, page } = this.query;
       this.loading = true;
+      var productId = localStorage.getItem('product');
 
       const data = await this.$store.dispatch('user/getInfo');
       self.userData = data;
 
       // const { data, meta } = await userResource.list(this.query);
+      axios.get(self.$apiAdress + '/api/getProduct/' + productId)
+        .then(function(response) {
+          self.productData = response.data;
 
-      if (self.userData.roles[0] === 'admin'){
-        axios.get(self.$apiAdress + '/api/getAllProducts')
-          .then(function(response) {
-            self.list = response.data;
-
-            self.list.forEach((element, index) => {
-              element['index'] = (page - 1) * limit + index + 1;
-            });
-
-            self.loading = false;
-            self.total = self.list.length;
-            console.log('list: ', self.list);
-          }).catch(function(error) {
-            console.log(error);
-            self.errorHandler(error.response);
-          });
-
-        console.log('admin products');
-      } else {
-        axios.get(self.$apiAdress + '/api/getAllSupplierProducts/' + self.userData.id)
-          .then(function(response) {
-            self.list = response.data;
-
-            self.list.forEach((element, index) => {
-              element['index'] = (page - 1) * limit + index + 1;
-            });
-
-            self.loading = false;
-            self.total = self.list.length;
-            console.log('list: ', self.list);
-          }).catch(function(error) {
-            console.log(error);
-            self.errorHandler(error.response);
-          });
-
-        console.log('supplier products');
-      }
-
-      // axios.get(self.$apiAdress + '/api/getAllProducts')
-      //   .then(function(response) {
-      //     self.list = response.data;
-
-      //     self.list.forEach((element, index) => {
-      //       element['index'] = (page - 1) * limit + index + 1;
-      //     });
-
-      //     self.loading = false;
-      //     console.log('list: ', self.list);
-      //   }).catch(function(error) {
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
-    },
-    handleFilter() {
-      this.query.page = 1;
-      this.getList();
-    },
-    handleCreate() {
-      this.resetNewUser();
-      this.dialogFormVisible = true;
-      this.$nextTick(() => {
-        this.$refs['userForm'].clearValidate();
-      });
+          console.log('productData: ', self.productData);
+          self.loading = false;
+        }).catch(function(error) {
+          console.log(error);
+          self.errorHandler(error.response);
+        });
     },
     handleDelete(id, name) {
       this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
@@ -347,12 +275,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel-group {
-  margin-top: 18px;
-  .card-panel-col{
-    margin-bottom: 32px;
-  }
-  .card-panel {
+.product-view {
+    .card-panel {
     height: 108px;
     cursor: pointer;
     font-size: 12px;
@@ -418,7 +342,29 @@ export default {
       }
     }
   }
+
+  .user-name {
+    font-weight: bold;
+  }
+  .box-center {
+    padding-top: 10px;
+  }
+  .user-role {
+    padding-top: 10px;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .box-social {
+    padding-top: 30px;
+    .el-table {
+      border-top: 1px solid #dfe6ec;
+    }
+  }
+  .user-follow {
+    padding-top: 20px;
+  }
 }
+
 .filter-container {
   padding-bottom: 10px;
   float: right;
@@ -448,6 +394,27 @@ export default {
   }
   .clear-left {
     clear: left;
+  }
+}
+.attributes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+
+  &-labels,
+  &-values {
+    width: 50%;
+  }
+  span {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 30px;
+    padding: 5px 10px;
+    border-bottom: 1px solid;
   }
 
 }

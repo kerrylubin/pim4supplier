@@ -54,6 +54,10 @@ Route::namespace('Api')->group(function() {
 
 
         Route::get('getAllProducts', 'ImportCSVController@getAllProducts');
+        Route::get('getProduct/{id}', 'ImportCSVController@getProduct');
+        Route::get('getAllSupplierProducts/{id}', 'ImportCSVController@getAllSupplierProducts');
+        Route::get('getAttributeValuesId', 'ImportCSVController@getAttributeValuesId');
+        Route::get('checkMapping/{id}', 'ImportCSVController@checkMapping');
         Route::get('getSuppliers', 'ImportCSVController@getSuppliers');
         Route::get('getEntities/{id}/{page}', 'ImportCSVController@getEntities');
         Route::get('getSupplierCSVHeaders/{id}/{page}', 'ImportCSVController@getSupplierCSVHeaders');

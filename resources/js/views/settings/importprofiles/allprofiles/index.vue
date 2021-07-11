@@ -20,24 +20,6 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column align="center" label="Url">
-        <template slot-scope="scope">
-          <span>{{ scope.row.feed_url }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Delimiter" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.delimeter }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Frequency" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.frequency }}</span>
-        </template>
-      </el-table-column> -->
-
       <el-table-column align="center" label="Actions" min-width="250" @click="goToUser()">
         <template slot-scope="scope">
 

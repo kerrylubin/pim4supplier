@@ -195,6 +195,7 @@ export default {
               self.resetprofileForm();
               self.dialogFormVisible = false;
               self.profileCreating = false;
+              self.$router.go(); // refresh
               // console.log('import: ', response.data);
             }).catch(function(error) {
               self.$message({

@@ -13,16 +13,16 @@ Vue.use(Router);
 import Layout from '@/layout';
 
 /* Router for modules */
-import elementUiRoutes from './modules/element-ui';
+// import elementUiRoutes from './modules/element-ui';
 // import componentRoutes from './modules/components';
 // import chartsRoutes from './modules/charts';
 // import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 // import nestedRoutes from './modules/nested';
 // import errorRoutes from './modules/error';
-import excelRoutes from './modules/excel';
-import permissionRoutes from './modules/permission';
-// import categoriesRoutes from './modules/categories';
+// import excelRoutes from './modules/excel';
+// import permissionRoutes from './modules/permission';
+import categoriesRoutes from './modules/categories';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -149,7 +149,7 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-  // categoriesRoutes,
+  categoriesRoutes,
   {
     path: '/products',
     component: Layout,
@@ -167,6 +167,15 @@ export const constantRoutes = [
         meta: {
           title: 'Product List',
           icon: 'list',
+        },
+      },
+      {
+        path: 'productview/:sku/:id',
+        component: () => import('@/views/products/productview/index'), // Parent router-view
+        name: 'Productview',
+        hidden: true,
+        meta: {
+          title: 'Product View',
         },
       },
       {
@@ -280,13 +289,13 @@ export const constantRoutes = [
 ];
 
 export const asyncRoutes = [
-  permissionRoutes,
+  // permissionRoutes,
   // componentRoutes,
   // chartsRoutes,
   // nestedRoutes,
   // tableRoutes,
-  excelRoutes,
-  elementUiRoutes,
+  // excelRoutes,
+  // elementUiRoutes,
   adminRoutes,
   // {
   //   path: '/theme',

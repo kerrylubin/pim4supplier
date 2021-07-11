@@ -2,9 +2,43 @@
   <div class="app-container">
     <div class="wrapper">
 
-      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;margin-top:20px;">
+      <!-- <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;margin-top:20px;">
         <el-table-column v-for="item of listHeaders" :key="item" :prop="item" :label="item" align="center" heigth="10" />
+      </el-table> -->
+
+      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+        <el-table-column align="center" label="Id" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" min-width="250" label="Supplier Id">
+          <template slot-scope="scope">
+            <span>{{ scope.row.supplier_id }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" min-width="250" label="SKU">
+          <template slot-scope="scope">
+            <span>{{ scope.row.unique_attribute_value }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="Actions" min-width="250" @click="goToUser()">
+          <template slot-scope="scope">
+
+            <router-link :to="'/products/productview/' + scope.row.unique_attribute_value +'/'+ scope.row.id">
+              <el-button type="primary" size="small" icon="el-icon-goods" @click="viewProduct(scope.row.id)">
+                View Product
+              </el-button>
+            </router-link>
+
+          </template>
+        </el-table-column>
+
       </el-table>
+
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList()" />
     </div>
 
@@ -48,24 +82,6 @@ export default {
         permissions: [],
         rolePermissions: [],
       },
-      tableData: {
-        columns: [
-          'Id',
-          'Image',
-          'Name',
-          'Quantity',
-          'Price',
-          'Seller',
-        ],
-        data: [
-          { Id: 1, Quantity: 1, Name: 'Joya Broek', Seller: 'Joya', Price: '123.00$', ImagePath: '/images/a.jpg' },
-          { Id: 2, Quantity: 1, Name: 'Venum Broek', Seller: 'Venum', Price: '50.00$', ImagePath: '/images/b.jpg' },
-          { Id: 3, Quantity: 3, Name: 'G4F Broek', Seller: 'Gear 4 Fighters', Price: '78.10$', ImagePath: '/images/c.jpg' },
-          { Id: 4, Quantity: 1, Name: 'Vso Handshoenen', Seller: 'VSO', Price: '99.99$', ImagePath: '/images/d.jpg' },
-          { Id: 5, Quantity: 5, Name: 'Supreme Broek', Seller: 'Supreme', Price: '41.20$', ImagePath: '/images/e.jpg' },
-          { Id: 6, Quantity: 6, Name: 'Leo Broek', Seller: 'Leo', Price: '41.20$', ImagePath: '/images/f.jpg' },
-        ],
-      },
     };
   },
   computed: {
@@ -92,6 +108,9 @@ export default {
       this.userData.roles[0] === 'supplier' ? this.roles = this.nonAdminRoles : this.roles;
       console.log('userData: ', this.userData);
     },
+    viewProduct(id){
+      localStorage.setItem('product', id);
+    },
     async getList() {
       var self = this;
       const { limit, page } = this.query;
@@ -101,39 +120,43 @@ export default {
       self.userData = data;
 
       // const { data, meta } = await userResource.list(this.query);
-      axios.get(self.$apiAdress + '/api/getAllProducts')
-        .then(function(response) {
-          self.list = response.data;
-          self.listHeaders = Object.keys(self.list[0]);
+      if (self.userData.roles[0] === 'admin'){
+        axios.get(self.$apiAdress + '/api/getAllProducts')
+          .then(function(response) {
+            self.list = response.data;
 
-          self.list.forEach((element, index) => { // handles pageination count
-            element['index'] = (page - 1) * limit + index + 1;
+            self.list.forEach((element, index) => {
+              element['index'] = (page - 1) * limit + index + 1;
+            });
+
+            self.loading = false;
+            self.total = self.list.length;
+            console.log('list: ', self.list);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
           });
 
-          self.total = self.list.length;
-          self.loading = false;
-          // console.log('Object.keys: ', Object.keys(self.list[0]));
-          console.log('list: ', self.list);
-        }).catch(function(error) {
-          console.log(error);
-          self.errorHandler(error.response);
-        });
+        console.log('admin products');
+      } else {
+        axios.get(self.$apiAdress + '/api/getAllSupplierProducts/' + self.userData.id)
+          .then(function(response) {
+            self.list = response.data;
 
-      // axios.get(self.$apiAdress + '/api/getAttributes')
-      //   .then(function(response) {
-      //     self.list = response.data;
-      //     self.total = self.list.length;
-      //     self.loading = false;
-      //     console.log('getAttributes: ', response.data);
-      //   }).catch(function(error) {
-      //     self.$message({
-      //       type: 'error',
-      //       message: error,
-      //       duration: 5 * 1000,
-      //     });
-      //     console.log(error);
-      //     self.errorHandler(error.response);
-      //   });
+            self.list.forEach((element, index) => {
+              element['index'] = (page - 1) * limit + index + 1;
+            });
+
+            self.loading = false;
+            self.total = self.list.length;
+            console.log('list: ', self.list);
+          }).catch(function(error) {
+            console.log(error);
+            self.errorHandler(error.response);
+          });
+
+        console.log('supplier products');
+      }
     },
     handleFilter() {
       this.query.page = 1;

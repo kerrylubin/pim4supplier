@@ -41,10 +41,24 @@ cd laravue
 ```
 ### running:
 ```bash
+#stap 1
 composer install
+#stap 2
 npm install
+#stap 3
 php artisan key:generate
+#stap 4
+#database info toevoegen in .env
+DB_DATABASE=pim4sup
+DB_USERNAME=vsom2
+DB_PASSWORD=vsom2
+
+#stap 5
 php artisan migrate --seed
+#stap 6
+npm run dev
+#stap 7
+php artisan serve
 ```
 #### running in development mode
 ```bash

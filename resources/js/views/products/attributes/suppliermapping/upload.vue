@@ -5,21 +5,13 @@
       Save
     </el-button>
 
-    <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+    <!-- <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
       Add Inputs
-    </el-button>
+    </el-button> -->
 
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateAttributes">
+    <el-button v-if="isVisible" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateAttributes">
       Adds New Attributes
     </el-button>
-
-    <!-- <div class="field_wrapper">
-        <div>
-          <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
-            Add Inputs
-          </el-button>
-        </div>
-      </div> -->
 
     <div class="col-12 csv_mapping">
 
@@ -37,7 +29,7 @@
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :prop="ind" :label="items.attribute_label" :value="items.attribute_label" />
             </el-select>
 
-            <el-button href="javascript:void(0);" class="filter-item remove_button" style="margin-left: 10px;" type="primary" icon="el-icon-minus" />
+            <!-- <el-button href="javascript:void(0);" class="filter-item remove_button" style="margin-left: 10px;" type="primary" icon="el-icon-minus" /> -->
 
           </el-form-item>
 
@@ -110,6 +102,7 @@ export default {
   data() {
     return {
       page: 'suppliermapping',
+      isVisible: '',
       form: {
         admin: {
           time: '',
@@ -162,6 +155,12 @@ export default {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
+      if (self.user.roles[0] !== 'admin'){
+        self.isVisible = false;
+        // return true;
+      } else {
+        self.isVisible = true;
+      }
     },
     createInputs() {
       var self = this;
@@ -261,13 +260,8 @@ export default {
             self.form.supplier.attributes[i] = attributeLabel;// this sets the value
           }
           // self.getSupAttributesLabels();
-          console.log('form: ', self.form);
-          // console.log('attrId: ', attrId);
-          console.log('form edited: ', self.form.edited);
-          console.log('form attributes: ', self.form.attributes);
-
-          console.log('attributeLabel: ', attributeLabel);
-          console.log('supplierHeader: ', response.data);
+          console.log('forms: ', self.form);
+          console.log('forms supplier: ', self.form.supplier);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
@@ -278,8 +272,18 @@ export default {
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + supplierId)
         .then(function(response) {
           self.supplierHeader = response.data;
+          self.$message({
+            type: 'success',
+            message: 'Supplier Attributes Successfully Imported',
+            duration: 5 * 1000,
+          });
           console.log('sup Header: ', self.supplierHeader);
         }).catch(function(error) {
+          self.$message({
+            type: 'error',
+            message: 'Supplier Attributes Are Not Yet Imported',
+            duration: 5 * 1000,
+          });
           console.log(error);
           self.errorHandler(error.response);
         });
@@ -302,10 +306,10 @@ export default {
       var userId = localStorage.getItem('user id');
       self.form.supplier.userId = localStorage.getItem('user id');
 
-      self.getSupplierCSVHeaders(userId, self.page);
-      self.getAdminAtrributes();
-      self.getSupplierMapping(userId);
-      self.getSupplierAttributes(userId);
+      self.getSupplierCSVHeaders(userId, self.page);// #1
+      self.getSupplierMapping(userId);// #2
+      self.getAdminAtrributes();// #3
+      self.getSupplierAttributes(userId);// #4
 
       // if (!self.user.roles[0] === 'admin'){
     },
@@ -327,7 +331,7 @@ export default {
             duration: 5 * 1000,
           });
           console.log(error);
-          // self.$router.go();
+          self.$router.go();
 
           self.errorHandler(error.response);
         });
@@ -440,7 +444,7 @@ export default {
               self.dialogAttributeFormVisible = false;
               // self.handleFilter();
               self.attributeCreating = false;
-              // self.$router.go();
+              self.$router.go();
 
               // console.log('storeAttributes: ', response.data);
             }).catch(function(error) {

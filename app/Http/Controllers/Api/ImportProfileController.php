@@ -57,39 +57,43 @@ class ImportProfileController extends BaseController
     {
         $currentUser = Auth::user();
         $params = $request->all();
-        // echo'params: '.var_dump($params);
 
         // if($currentUser->isAdmin()){
 
-            $supplier_profile_data = DB::table('supplier_import_profile')
-            ->where('supplier_import_profile.supplier_id', '=', $params['supplier_id'])
+            $supplier_profile_data = DB::table('import_profile')
+            ->where('import_profile.supplier_id', '=', $params['supplier_id'])
             ->get();
 
-            $unique_code = json_decode($supplier_profile_data, true);
+            echo'supplier_profile_data: '.var_dump($supplier_profile_data);
 
-            if($unique_code[0]['unique_code'] == null){
 
+            $unique_attribute = json_decode($supplier_profile_data, true);
+            // echo'unique_attributes: '.var_dump($unique_attribute);
+
+            if(count($unique_attribute) == 0){
                 $import_profile = array(
                     'supplier_id'   =>  $params['supplier_id'],
                     'frequency'     =>  $params['frequency'],
                     'feed_url'      =>  $params['url'],
                     'delimiter'     =>  $params['delimiter'],
-                    'unique_code'   =>  'Artikelnummer',
+                    'unique_attribute'   =>  'Artikelnummer',
                 );
+                DB::table('import_profile')->insert([$import_profile]);
             }
             else{
+                if(isset($unique_attribute[0]['unique_attribute'])){
 
-                $import_profile = array(
-                    'supplier_id'   =>  $params['supplier_id'],
-                    'frequency'     =>  $params['frequency'],
-                    'feed_url'      =>  $params['url'],
-                    'delimiter'     =>  $params['delimiter'],
-                    'unique_code'   =>  $unique_code[0]['unique_code'],
-                );
+                    $import_profile = array(
+                        'supplier_id'   =>  $params['supplier_id'],
+                        'frequency'     =>  $params['frequency'],
+                        'feed_url'      =>  $params['url'],
+                        'delimiter'     =>  $params['delimiter'],
+                        'unique_attribute'   =>  $unique_attribute[0]['unique_attribute'],
+                    );
+                    DB::table('import_profile')->insert([$import_profile]);
+                }
+
             }
-
-            DB::table('supplier_import_profile')->insert([$import_profile]);
-
         // }
         // else{
         //     return response()->json(new JsonResponse([], 'This is only for suppliers'), Response::HTTP_UNAUTHORIZED);
@@ -109,8 +113,8 @@ class ImportProfileController extends BaseController
 
     public function getSupplierImportProfile($id)
     {
-        $supplier_profile = DB::table('supplier_import_profile')
-        ->where('supplier_import_profile.supplier_id', '=', $id)
+        $supplier_profile = DB::table('import_profile')
+        ->where('import_profile.supplier_id', '=', $id)
         ->get();
         return response()->json($supplier_profile);
     }

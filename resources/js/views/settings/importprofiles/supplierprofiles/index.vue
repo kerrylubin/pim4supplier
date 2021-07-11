@@ -37,9 +37,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Unique Code" width="120">
+      <el-table-column align="center" label="Unique Attribute" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.unique_code }}</span>
+          <span>{{ scope.row.unique_attribute }}</span>
         </template>
       </el-table-column>
 
@@ -111,12 +111,13 @@ export default {
   },
   data() {
     return {
-      page: 'supplierprofile',
+      page: 'supplierprofiles',
       tableKey: 0,
       loading: true,
       list: null,
       listHeaders: null,
       profileCreating: false,
+      mappings: false,
       frequency: ['daily', 'weekly', 'monthly'],
       total: 0,
       listQuery: {
@@ -152,12 +153,45 @@ export default {
     setSupplierId(id){
       localStorage.setItem('user id', id);
     },
+    checkMapping(id){
+      var self = this;
+      axios.get(self.$apiAdress + '/api/checkMapping/' + id)
+        .then(function(response) {
+          var mapping = response.data;
+          console.log('mapping: ', mapping);
+          mapping.length === 0 ? self.mappings = false : self.mappings = true;
+          console.log('this.mappings: ', self.mappings);
+          if (self.mappings === false){
+            self.$message({
+              type: 'success',
+              message: 'Supplier Has No Mappings',
+              duration: 5 * 1000,
+            });
+          } else {
+            self.$message({
+              type: 'success',
+              message: 'Ready To Import Products',
+              duration: 5 * 1000,
+            });
+          }
+        }).catch(function(error) {
+          self.$message({
+            type: 'error',
+            message: error,
+            duration: 5 * 1000,
+          });
+          console.log(error);
+          self.errorHandler(error.response);
+        });
+    },
     async getList() {
       var self = this;
       const { limit, page } = self.listQuery;
       self.loading = true;
       var userId = localStorage.getItem('user id');
       // const { data, meta } = await userResource.list(this.query);
+
+      // self.checkMapping(userId);
 
       axios.get(self.$apiAdress + '/api/getSupplierImportProfile/' + userId)
         .then(function(response) {
@@ -179,10 +213,6 @@ export default {
           self.errorHandler(error.response);
         });
     },
-    // handleFilter() {
-    //   this.listQuery.page = 1;
-    //   this.getList();
-    // },
     sortChange(data) {
       const { prop, order } = data;
       if (prop === 'id') {
@@ -195,7 +225,6 @@ export default {
       } else {
         this.listQuery.sort = '-id';
       }
-      // this.handleFilter();
     },
     createNewProfile(){
       // console.log('current user id: ', id);
@@ -210,6 +239,7 @@ export default {
 
           axios.post(self.$apiAdress + '/api/storeSupplierImportProfile', self.profileForm)
             .then(function(response) {
+              console.log('response: ', response.data);
               self.$message({
                 type: 'success',
                 message: 'Profile Created',
@@ -219,6 +249,7 @@ export default {
               self.resetprofileForm();
               self.dialogFormVisible = false;
               self.profileCreating = false;
+              self.$router.go();
               // console.log('import: ', response.data);
             }).catch(function(error) {
               self.$message({
@@ -258,26 +289,39 @@ export default {
     },
     handleImport(id){
       var self = this;
-
       this.loading = true;
-
       var products = [];
 
       axios.get(self.$apiAdress + '/api/getEntities/' + id + '/' + self.page)
         .then(function(response) {
           products = response.data;
-          // self.listHeaders = Object.keys(self.list[0]);
-          // self.list.forEach((element, index) => { // handles pageination count
-          //   element['index'] = (page - 1) * limit + index + 1;
-          // });
-          // self.total = self.list.length;
+          if (products === 'No Mappings'){
+            self.$message({
+              type: 'error',
+              message: 'Profile Has No Mappings',
+              duration: 5 * 1000,
+            });
+          } else if (products === 'Update'){
+            self.$message({
+              type: 'success',
+              message: 'Products Successfuly Updated',
+              duration: 5 * 1000,
+            });
+          } else if (products === 'Same'){
+            self.$message({
+              type: 'error',
+              message: 'Duplicate Products Detected',
+              duration: 5 * 1000,
+            });
+          } else {
+            self.$message({
+              type: 'success',
+              message: 'Products Imported',
+              duration: 5 * 1000,
+            });
+          }
           self.loading = false;
           console.log('products: ', products);
-          self.$message({
-            type: 'success',
-            message: 'Products Imported',
-            duration: 5 * 1000,
-          });
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);

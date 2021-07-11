@@ -4,23 +4,17 @@
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" @click="storeMapping()">
       Save
     </el-button>
-
+    <!--
     <el-button href="javascript:void(0);" class="filter-item add_button" style="margin-left: 10px;" type="primary" icon="el-icon-plus">
       Add Inputs
     </el-button>
+    -->
+
+    <el-button v-if="isVisible" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreateAttributes">
+      Adds New Attributes
+    </el-button>
 
     <div class="col-12 csv_mapping">
-
-      <!-- <el-form>
-
-        <el-form-item :label="user.name">
-
-          <el-select v-model="form.time" class="csv_picker" placeholder="Please select time">
-            <el-option v-for="items in time" :key="items" :label="items" :value="items" />
-          </el-select>
-        </el-form-item>
-
-      </el-form> -->
 
       <el-form :data="tableData" border highlight-current-row>
 
@@ -36,7 +30,7 @@
               <el-option v-for="(items, ind) in supplierHeader" :key="ind" :name="items" :prop="ind" :label="items.attribute_label" :value="items.attribute_label" />
             </el-select>
 
-            <el-button href="javascript:void(0);" class="filter-item remove_button" style="margin-left: 10px;" type="primary" icon="el-icon-minus" />
+            <!-- <el-button href="javascript:void(0);" class="filter-item remove_button" style="margin-left: 10px;" type="primary" icon="el-icon-minus" /> -->
 
           </el-form-item>
 
@@ -44,27 +38,37 @@
       </el-form>
     </div>
 
-    <el-dialog :title="'Import Csv'" :visible.sync="dialogFormVisible">
-      <div v-loading="userCreating" class="form-container">
-        <el-form ref="importForm" :rules="rules" :model="importForm" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="CSV Feed URL" prop="url" placeholder="Add your URL">
-            <el-input v-model="importForm.url" />
+    <el-dialog :title="'Create New Attributes'" :visible.sync="dialogAttributeFormVisible">
+      <div v-loading="attributeCreating" class="form-container">
+        <el-form ref="attributeForm" :rules="rules" :model="newAttributes" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('Name')" prop="name">
+            <el-input v-model="newAttributes.name" />
           </el-form-item>
-          <el-form-item label="Frequency" prop="frequency">
-            <el-select v-model="importForm.frequency" placeholder="Please select frequency">
-              <el-option v-for="items in time" :key="items" :label="items" :value="items" />
+          <el-form-item :label="$t('Code')" prop="code">
+            <el-input v-model="newAttributes.code" />
+          </el-form-item>
+          <el-form-item :label="$t('Type')" prop="type">
+            <el-select v-model="newAttributes.type" class="filter-item" placeholder="type">
+              <el-option v-for="item in type" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Delimiter" prop="delimiter">
-            <el-input v-model="importForm.delimiter" />
+          <el-form-item :label="$t('Required')" prop="required">
+            <el-select v-model="newAttributes.required" class="filter-item" placeholder="required">
+              <el-option v-for="item in choice" :key="item" :label="item | uppercaseFirst" :value="item" />
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('Unique')" prop="unique">
+            <el-select v-model="newAttributes.unique" class="filter-item" placeholder="unique">
+              <el-option v-for="item in choice" :key="item" :label="item | uppercaseFirst" :value="item" />
+            </el-select>
           </el-form-item>
         </el-form>
         <!-- <template slot-scope="scope"> -->
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogAttributeFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createNewProfile();">
+          <el-button type="primary" @click="createAttribute();">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -76,7 +80,7 @@
 </template>
 
 <script>
-import $ from 'jquery';
+// import $ from 'jquery';
 // import UploadExcelComponent from './index';
 import axios from 'axios';
 // import UserResource from '@/api/user';
@@ -87,23 +91,28 @@ export default {
   // components: { UploadExcelComponent },
   data() {
     return {
+      page: 'suppliermapping',
       dialogFormVisible: false,
+      dialogAttributeFormVisible: false,
+      attributeCreating: false,
       userCreating: false,
+      isVisible: '',
+      newAttributes: {},
+      choice: ['yes', 'no'],
+      type: ['text', 'dropdown', 'date', 'price', 'image', 'tax'],
+      time: ['daily', 'weekly', 'monthly'],
       form: {
         admin: {
-          time: '',
           attributes: [],
           edited: [],
           userId: '',
         },
         supplier: {
-          time: '',
           attributes: [],
           edited: [],
           userId: '',
         },
       },
-      time: ['daily', 'weekly', 'monthly'],
       importForm: {
         url: '',
         delimiter: '',
@@ -125,7 +134,6 @@ export default {
     // this.storeFile();
     this.getUser();
     this.getSupplierAttributeData();
-    this.createInputs();
     console.log('params: ', this.$route.params.id);
   },
   methods: {
@@ -178,54 +186,78 @@ export default {
         frequency: '',
       };
     },
+    createAttribute(){
+      // console.log('current user id: ', id);
+      this.$refs['attributeForm'].validate((valid) => {
+        console.log('valid: ', valid);
+        if (valid) {
+          var self = this;
+          // this.newUser.roles = [this.newUser.role];
+          this.attributeCreating = true;
+          // console.log('new attr: ', self.newAttributes);
+
+          axios.post(self.$apiAdress + '/api/storeAdminAttributes', self.newAttributes)
+            .then(function(response) {
+              self.$message({
+                type: 'success',
+                message: 'Attributes Saved',
+                duration: 5 * 1000,
+              });
+
+              self.resetNewAttributes();
+              self.dialogAttributeFormVisible = false;
+              // self.handleFilter();
+              self.attributeCreating = false;
+              self.$router.go();
+
+              // console.log('storeAttributes: ', response.data);
+            }).catch(function(error) {
+              self.$message({
+                type: 'error',
+                message: error,
+                duration: 5 * 1000,
+              });
+              console.log(error);
+              self.errorHandler(error.response);
+            });
+        } else {
+          self.$message({
+            type: 'error',
+            message: 'error submit!!',
+            duration: 5 * 1000,
+          });
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetNewAttributes() {
+      this.newAttributes = {
+        name: '',
+        code: '',
+        type: '',
+        required: '',
+        unique: '',
+      };
+    },
     async getUser() {
       var self = this;
       const data = await self.$store.dispatch('user/getInfo');
       self.user = data;
+
+      if (self.user.roles[0] !== 'admin'){
+        self.isVisible = false;
+        // return true;
+      } else {
+        self.isVisible = true;
+      }
       console.log('user: ', self.user);
     },
-    createInputs() {
-      var self = this;
-      self.$nextTick(() => {
-        var addButton = $('.add_button'); // Add button selector
-        var wrapper = $('.field_wrapper'); // Input field wrapper
-
-        // Once add button is clicked
-        var x = 0; // Initial field counter is 1
-
-        $(addButton).click(function(){
-          var maxInputs = (self.supplierHeader.length - self.tableHeader.length);
-          // var y = (wrapper.children('div').length - 1);
-          // console.log('length: ', wrapper.children('div').length);
-          console.log('wrapper: ', wrapper.children('div').length);
-          // Check maximum number of input fields
-          if (x < maxInputs){
-            // var dropDown = wrapper.children('div').show()[y];
-            var dropDown = $('#form_' + x);
-            // console.log('dropDown: ', dropDown);
-            x++;
-
-            // y++; // Increment field counter
-            // var delBtn = '<button href="javascript:void(0);" type="primary" style="width:50px;" class="remove_button el-icon-remove-outline"> - </button>';
-            // var dropDown = '<div><select class="admin_input" style="margin-bottom:22px" id="sel_' + x + '" name="added_inputs" ></select>' + delBtn + '</div>'; // New input field html
-            // dropDown.attr('name', 'form_' + y);
-
-            $(wrapper).append(dropDown.clone().prop('id', 'form_' + x)); // Add field html
-          }
-        });
-
-        // Once remove button is clicked
-        $(wrapper).on('click', '.remove_button', function(e){
-          e.preventDefault();
-          $(this).parent('div').remove(); // Remove field html
-          x--; // Decrement field counter
-        });
-
-        // $(wrapper).on('click', '.remove_button', function(e){
-        //   e.preventDefault();
-        //   $(this).parent('div').remove(); // Remove field html
-        //   x--; // Decrement field counter
-        // });
+    handleCreateAttributes() {
+      this.resetNewAttributes();
+      this.dialogAttributeFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['attributeForm'].clearValidate();
       });
     },
     getAdminAtrributes(){
@@ -281,7 +313,27 @@ export default {
       axios.get(self.$apiAdress + '/api/getSupAttributes/' + supplierId)
         .then(function(response) {
           self.supplierHeader = response.data;
+          self.$message({
+            type: 'success',
+            message: 'Supplier Attributes Successfully Imported',
+            duration: 5 * 1000,
+          });
           console.log('sup Header: ', self.supplierHeader);
+        }).catch(function(error) {
+          self.$message({
+            type: 'error',
+            message: 'Supplier Attributes Are Not Yet Imported',
+            duration: 5 * 1000,
+          });
+          console.log(error);
+          self.errorHandler(error.response);
+        });
+    },
+    getSupplierCSVHeaders(supplierId, page){
+      var self = this;
+      axios.get(self.$apiAdress + '/api/getSupplierCSVHeaders/' + supplierId + '/' + page)
+        .then(function(response) {
+          // console.log('response.data: ', response.data);
         }).catch(function(error) {
           console.log(error);
           self.errorHandler(error.response);
@@ -293,7 +345,7 @@ export default {
       self.user = data;
 
       console.log('user data: ', self.user);
-
+      // self.getSupplierCSVHeaders(userId, self.page);
       self.getAdminAtrributes();
       self.getSupplierMapping(self.user.id);
       // self.getEntities(userId);
