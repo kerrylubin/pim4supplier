@@ -48,8 +48,9 @@ npm install
 #stap 3
 php artisan key:generate
 #stap 4
-#database info toevoegen in .env
-DB_DATABASE=pim4sup
+# change env.txt to .env 
+# change database info in .env
+DB_DATABASE=databasename
 DB_USERNAME=vsom2
 DB_PASSWORD=vsom2
 
@@ -70,7 +71,6 @@ php artisan serve
 npm run production
 php artisan serve
 ```
-
 
 #### Docker
 ```sh
