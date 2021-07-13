@@ -49,8 +49,8 @@ npm install
 # change env.txt to .env 
 # change database info in .env
 DB_DATABASE=databasename
-DB_USERNAME=vsom2
-DB_PASSWORD=vsom2
+DB_USERNAME=password
+DB_PASSWORD=password
 #stap 4
 php artisan key:generate
 #stap 5
