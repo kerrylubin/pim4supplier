@@ -2,7 +2,9 @@
   <img width="320" src="https://cp5.sgp1.cdn.digitaloceanspaces.com/zoro/laravue-cdn/laravue-logo-line.png">
 </p>
 <p align="center">
-  <img width="320" src="https://i.imgur.com/Sch5c05.png">
+  <a href="https://lubicode.com">
+    <img width="320" src="https://i.imgur.com/Sch5c05.png">
+  </a>
 </p>
 <p align="center">
   <a href="https://laravel.com">
