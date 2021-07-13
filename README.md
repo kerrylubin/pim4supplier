@@ -33,28 +33,23 @@ Documentation: [https://doc.laravue.dev](https://doc.laravue.dev)
 ### Installing
 ```bash
 # Clone the project and run composer
-composer create-project tuandm/laravue
-cd laravue
-```
-### running:
-```bash
-#stap 1
+#step 1
 composer install
-#stap 2
+#step 2
 npm install
-#stap 3
+#step 3
 # change env.txt to .env 
 # change database info in .env
 DB_DATABASE=databasename
 DB_USERNAME=password
 DB_PASSWORD=password
-#stap 4
+#step 4
 php artisan key:generate
-#stap 5
+#step 5
 php artisan migrate --seed
-#stap 6
+#step 6
 npm run dev
-#stap 7
+#step 7
 php artisan serve
 ```
 #### running in development mode
